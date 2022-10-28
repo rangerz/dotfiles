@@ -24,8 +24,8 @@ macosx_only () {
     alias redocker="test -z $(docker ps -q 2>/dev/null) && osascript -e 'quit app \"Docker\"' && open --background -a Docker"
     alias brewery='brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor'
     alias brewdeps='brew deps --tree --installed'
-    brewrm () { brew rm $1 && brew rm $(join <(brew leaves) <(brew deps $1)) }
-    trash () { command mv "$@" ~/.Trash ; }
+    brewrm () { brew rm $1 && brew rm $(join <(brew leaves) <(brew deps $1)); }
+    trash () { command mv "$@" ~/.Trash; }
     alias fr='open -a Finder '
     alias diff='colordiff'
     alias update='omz update; mas upgrade; brewery'

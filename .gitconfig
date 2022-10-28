@@ -22,11 +22,13 @@
     template = ~/config/.stCommitMsg
 [gc]
     auto = 0
+[init]
+    defaultBranch = main
 [pull]
     rebase = true
 [merge]
     ff = only
 [rebase]
     autoStash = true
-[init]
-    defaultBranch = main
+[push]
+    autoSetupRemote = true
