@@ -1,3 +1,4 @@
+# Required: brew install --cask diffmerge
 [alias]
     dft = difftool
 [diff]

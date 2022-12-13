@@ -1,8 +1,6 @@
-# config
+# rangerz/config
 
-Ranger's Shell Config
-
-
+[rangerz](https://github.com/rangerz)'s Shell Config
 
 ### Install Config
 
@@ -13,24 +11,16 @@ git clone https://github.com/rangerz/config.git
 exec $SHELL
 ```
 
-
-
 ### Feature
 
-- bash alias
+- shell alias
 - git config
-  - alias
-  - diffmerge alias
+  - common alias
+  - diffmerge alias (Mac Only), required: `brew install --cask diffmerge`
+  - delta alias (Mac Only), reqired: `brew install git-delta`
   - global gitignore
 - vim config
-
-
 
 ### My MacOSX Config
 
 - https://rangerz.github.io/blog/posts/20270909/
-
-
-
-
-
