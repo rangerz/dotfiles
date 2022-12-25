@@ -32,8 +32,8 @@ git config --add --global include.path "$DIR/.gitconfig"
 # DiffMerge: https://sourcegear.com/diffmerge/webhelp/sec__git.html
 # Detla: https://github.com/dandavison/delta
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    git config --add --global include.path "$DIR/.gitconfig_diffmerge_macosx"
-    git config --add --global include.path "$DIR/.gitconfig_detla"
+    git config --add --global include.path "$DIR/.gitconfig_diffmerge_mac"
+    git config --add --global include.path "$DIR/.gitconfig_delta_mac"
 fi
 
 # SSH Config
