@@ -29,6 +29,7 @@ macosx_only () {
     trash () { command mv "$@" ~/.Trash; }
     alias fr='open -a Finder '
     alias diff='colordiff'
+    alias down='sudo shutdown -r now'
     alias update='omz update; mas upgrade; brewery'
 }
 
@@ -46,6 +47,7 @@ linux_only () {
     alias pscpu='ps auxf | sort -nr -k 3'
     alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
     alias cpuinfo='lscpu'
+    alias down='sudo shutdown -h now'
 }
 
 msys_only () {
