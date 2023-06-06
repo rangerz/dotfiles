@@ -18,14 +18,19 @@
     ll = log --stat
     la = log --graph --decorate --pretty=oneline --abbrev-commit --all
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    count = !git shortlog -sn
 [commit]
     template = ~/config/.stCommitMsg
 [log]
     date = iso
 [gc]
     auto = 0
+[help]
+    autocorrect = 1
 [init]
     defaultBranch = main
+[apply]
+    whitespace = nowarn
 [pull]
     rebase = true
 [merge]
@@ -34,3 +39,4 @@
     autoStash = true
 [push]
     autoSetupRemote = true
+    default = simple
