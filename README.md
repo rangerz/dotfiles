@@ -1,25 +1,26 @@
-# rangerz/config
+# rangerz/dotfiles
 
-[rangerz](https://github.com/rangerz)'s Shell Config
+My dotfiles, such as bash alias, git, vim, and ssh setting.
 
 ### Install Config
 
 ```bash
 cd ~
-git clone https://github.com/rangerz/config.git
-~/config/install.sh
+git clone https://github.com/rangerz/dotfiles.git .dotfiles
+~/.dotfiles/install.sh
 exec $SHELL
 ```
 
-### Feature
+### Features
 
 - shell alias
 - git config
   - common alias
   - diffmerge alias (Mac Only), required: `brew install --cask diffmerge`
-  - delta alias (Mac Only), reqired: `brew install git-delta`
+  - delta alias (Mac Only), required: `brew install git-delta`
   - global gitignore
 - vim config
+- macos config
 
 ### My MacOSX Config
 

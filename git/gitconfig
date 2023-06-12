@@ -1,6 +1,6 @@
 [core]
     editor = vim
-    excludesfile = ~/config/.gitignore_global
+    excludesfile = ~/.dotfiles/git/gitignore
 [color]
     ui = auto
     diff = auto
@@ -20,13 +20,13 @@
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     count = !git shortlog -sn
 [commit]
-    template = ~/config/.stCommitMsg
+    template = ~/.dotfiles/git/git_commit_templete
 [log]
     date = iso
 [gc]
     auto = 0
 [help]
-    autocorrect = 1
+    #autocorrect = 1
 [init]
     defaultBranch = main
 [apply]
