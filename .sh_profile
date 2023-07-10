@@ -10,6 +10,9 @@ export BLOCKSIZE=1k
 # git commit for gpg
 export GPG_TTY=$(tty)
 
+# brew settings
+export HOMEBREW_NO_ANALYTICS=1
+
 unix_like () {
     alias sudo='sudo '
 }
