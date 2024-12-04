@@ -2,11 +2,12 @@
 
 set -e
 
-# Source the shared config file
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source "$CUR_DIR/config.sh"
+DOT_VIMRC="$HOME/.vimrc"
+SOURCE_VIMRC="source $CUR_DIR/vimrc"
+VIM_DIRS=("$HOME/.vim/.backup" "$HOME/.vim/.swp" "$HOME/.vim/.undo")
 
-# Remove the vimrc configuration
+# Remove the configuration
 if grep -q "$SOURCE_VIMRC" "$DOT_VIMRC"; then
     grep -vF "$SOURCE_VIMRC" "$DOT_VIMRC" > "$DOT_VIMRC.tmp" && mv "$DOT_VIMRC.tmp" "$DOT_VIMRC"
     echo "Vim config successfully removed from $DOT_VIMRC"
@@ -23,4 +24,4 @@ for dir in "${VIM_DIRS[@]}"; do
     fi
 done
 
-echo "[Vim] Uninstallation completed."
+echo "[VIM] Uninstallation completed."

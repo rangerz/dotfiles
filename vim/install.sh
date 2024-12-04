@@ -2,9 +2,10 @@
 
 set -e
 
-# Source the shared config file
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source "$CUR_DIR/config.sh"
+DOT_VIMRC="$HOME/.vimrc"
+SOURCE_VIMRC="source $CUR_DIR/vimrc"
+VIM_DIRS=("$HOME/.vim/.backup" "$HOME/.vim/.swp" "$HOME/.vim/.undo")
 
 # Ensure the .vimrc file exists
 if [ ! -f "$DOT_VIMRC" ]; then
@@ -12,7 +13,7 @@ if [ ! -f "$DOT_VIMRC" ]; then
     echo "Created $DOT_VIMRC"
 fi
 
-# Check if the target configuration already exists in .vimrc
+# Check if the configuration already exists
 if ! grep -qF "$SOURCE_VIMRC" "$DOT_VIMRC"; then
     echo "$SOURCE_VIMRC" >> "$DOT_VIMRC"
     echo "Vim config successfully updated into $DOT_VIMRC"
@@ -29,4 +30,4 @@ for dir in "${VIM_DIRS[@]}"; do
     fi
 done
 
-echo "[Vim] Installation completed."
+echo "[VIM] Installation completed."

@@ -2,15 +2,29 @@
 
 set -e
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 SSH_CONFIG="$HOME/.ssh/config"
-INCLUDE_CONFIG="Include $DIR/config"
+SSH_MUX_DIR="$HOME/.ssh/mux"
+INCLUDE_CONFIG="Include $CUR_DIR/config"
+SSH_KEYGEN="$CUR_DIR/ssh-keygen.sh"
 
-mkdir -p "$HOME/.ssh/mux"
+# Generating SSK Keys: rsa and ed25519
+"$SSH_KEYGEN"
 
-if ! grep -q "$INCLUDE_CONFIG" "$SSH_CONFIG"; then
+# Check if the configuration already exists
+if ! grep -qF "$INCLUDE_CONFIG" "$SSH_CONFIG"; then
     echo "$INCLUDE_CONFIG" >> "$SSH_CONFIG"
-    echo "SSH configuration successfully updated."
+    echo "SSH config successfully updated into $SSH_CONFIG"
 else
-    echo "Configuration line already exists in the file. No changes made."
+    echo "SSH config already exists in $SSH_CONFIG. No changes made."
+    exit
 fi
+
+# Create necessary directories
+if [ ! -d "$SSH_MUX_DIR" ]; then
+    mkdir -p "$SSH_MUX_DIR"
+    chmod 700 "$SSH_MUX_DIR"
+    echo "Created directory (700): $SSH_MUX_DIR"
+fi
+
+echo "[SSH] Installation completed."
