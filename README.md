@@ -5,10 +5,13 @@ My dotfiles, such as bash alias, git, vim, and ssh setting.
 ### Install Config
 
 ```bash
+# Install
 cd ~
 git clone https://github.com/rangerz/dotfiles.git .dotfiles
 ~/.dotfiles/install.sh
-exec $SHELL
+
+# Uninstall
+~/.dotfiles/uninstall.sh
 ```
 
 ### Features
