@@ -29,9 +29,7 @@ casks=(
     google-chrome
     microsoft-edge
     firefox
-    appcleaner
     caffeine
-    rectangle
     the-unarchiver
     microsoft-teams
     diffmerge
@@ -41,12 +39,10 @@ casks=(
     azure-data-studio
     iterm2
     mark-text
-    docker
-    postman
+    orbstack
     notion
-    vlc
 )
 
-brew install --cask "${formulae[@]}"
+echo brew install --cask "${casks[@]}"
 
 brew cleanup
