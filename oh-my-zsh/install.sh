@@ -4,11 +4,15 @@ set -e
 
 if [ -d "$HOME/.oh-my-zsh" ]; then
     echo "oh-my-zsh is installed"
+    exit
 else
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
-# Edit in ~/.zshrc
+echo "Please manually add oh-my-zsh setting into ~/.zshrc"
+exit
+
+# Edit in ~/.zshrc for setting
 # plugins
 plugins=(
   aws

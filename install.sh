@@ -9,8 +9,7 @@ for dir in "$CUR_DIR"/*/; do
     script="${dir}install.sh"
     if [ -f "$script" ]; then
         echo "Executing: $script"
-        #(cd "$dir" && bash "install.sh")
-        echo $script
+        (cd "$dir" && bash "install.sh")
     fi
 done
 

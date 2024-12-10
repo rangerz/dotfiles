@@ -18,9 +18,9 @@ git clone https://github.com/rangerz/dotfiles.git .dotfiles
 
 - shell alias
 - git config
-  - common alias
-  - diffmerge alias (Mac Only), required: `brew install --cask diffmerge`
-  - delta alias (Mac Only), required: `brew install git-delta`
+  - git alias
+  - diffmerge alias (Mac Only)
+  - delta alias (Mac Only)
   - global gitignore
 - vim config
 - macos config
