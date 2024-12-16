@@ -1,12 +1,13 @@
-mas
 node
-pnpm
+mas
 php
 composer
 python
 wget
 colordiff
+git
 git-delta
 git-extras
 openfortivpn
 awscli
+topgrade

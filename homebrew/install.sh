@@ -19,18 +19,24 @@ read_file_to_array() {
     eval "$array_name=()"
 
     while IFS= read -r line; do
-        eval "$array_name+=('$line')"
+        line=$(echo "$line" | sed 's/#.*//; s/^[[:space:]]*//; s/[[:space:]]*$//')
+        if [[ -n "$line" ]]; then
+            eval "$array_name+=('$line')"
+        fi
     done < "$file"
 }
 
 formulae=()
 casks=()
+mas_apps=()
 
 read_file_to_array "$CUR_DIR/formulae" formulae
 read_file_to_array "$CUR_DIR/casks" casks
+read_file_to_array "$CUR_DIR/mas_apps" mas_apps
 
-# Install packages and casks
-brew install "${formulae[@]}"
-brew install --cask "${casks[@]}"
+# Install homebrew packages, casks, and mac apps from App Store
+[ ${#formulae[@]} -ne 0 ] && brew install "${formulae[@]}"
+[ ${#casks[@]} -ne 0 ] && brew install --cask "${casks[@]}"
+[ ${#mas_apps[@]} -ne 0 ] && mas install "${mas_apps[@]}"
 
 brew cleanup

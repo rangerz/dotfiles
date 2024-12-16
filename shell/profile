@@ -29,8 +29,6 @@ macosx_only () {
     trash () { command mv "$@" ~/.Trash; }
     alias fr='open -a Finder '
     alias diff='colordiff'
-    alias down='sudo shutdown -r now'
-    alias update='omz update; mas upgrade; brewery'
 }
 
 linux_only () {
@@ -38,6 +36,7 @@ linux_only () {
     alias ll='ls -FGlhp --color'
     alias la='ls -FGlAhp --color'
     alias which='type -a'
+    # may use topgrade to upgrade apt, dnf, and yum
     alias aptup='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt clean -y && sudo apt autoclean -y'
     alias dnfup='sudo dnf update -y && sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
     alias yumup='sudo yum update -y && sudo yum upgrade -y && sudo yum clean all'
