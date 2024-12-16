@@ -1,45 +1,226 @@
-[core]
-    editor = vim
-    excludesfile = /Users/ranger/.dotfiles/git/gitignore
-[color]
-    ui = auto
-    diff = auto
-    status = auto
-    branch = auto
-    log = auto
 [alias]
-    st = status
+
+    # View abbreviated SHA, description, and history graph.
+    l = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+    # View the log with file-level changes (stat).
+    ls = log --stat
+
+    # View abbreviated SHA, description, relative time, author, and history graph.
+    ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # View the current working tree status using the short format.
+    st = status -s
+
+    # Show the diff between the latest commit and the current state.
+    d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+    # `git di $number` shows the diff between the state `$number` revisions ago and the current state.
+    di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+
+    # Pull in remote changes for the current repository and all its submodules.
+    p = pull --recurse-submodules
+
+    # Clone a repository including all submodules.
+    c = clone --recursive
+
+    # Commit all changes.
+    ca = !git add ':(exclude,attr:builtin_objectmode=160000)' && git commit -av
+
+    # Switch to a branch, creating it if necessary.
+    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+
+    # Show verbose output about tags, branches or remotes
+    tags = tag -l
+    branches = branch --all
+    remotes = remote --verbose
+
+    # List aliases.
+    aliases = config --get-regexp alias
+
+    # Credit an author on the latest commit.
+    credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
+
+    # Amend the currently staged files to the latest commit.
+    amend = commit --amend --reuse-message=HEAD
+
+    # Interactive rebase with the given number of latest commits.
+    reb = "!r() { git rebase -i HEAD~$1; }; r"
+
+    # Remove the old tag with this name and tag the latest commit with it.
+    retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
+
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+
+    # Find tags containing commit
+    ft = "!f() { git describe --always --contains $1; }; f"
+
+    # Find commits by source code
+    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+
+    # Find commits by commit message
+    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+    # Remove branches that have already been merged with main.
+    # a.k.a. ‘delete merged’
+    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+    # List contributors with number of commits.
+    contributors = shortlog --summary --numbered
+
+    # Show the user email for the current repository.
+    whoami = config user.email
+
+    # Common git alias
     ci = commit
     co = checkout
     c-p = cherry-pick
     br = branch
     df = diff
     dfc = diff --cached
-    ll = log --stat
-    la = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Count commits
     count = !git shortlog -sn
-[commit]
-    template = /Users/ranger/.dotfiles/git/git_commit_template
-[log]
-    date = iso
-[gc]
-    auto = 0
-[help]
-    #autocorrect = 1
-[init]
-    defaultBranch = main
+
 [apply]
-    whitespace = nowarn
-[pull]
-    rebase = true
-[merge]
-    ff = only
-[rebase]
-    autoStash = true
-[push]
-    autoSetupRemote = true
-    default = simple
+
+    # Detect whitespace errors when applying a patch.
+    whitespace = fix
+
+[branch]
+
+    # Show most recently changed branches first.
+    sort = -committerdate
+
+[core]
+
+    editor = vim
+
+    # Use custom `gitignore` and `gitattributes`.
+    excludesfile = ~/.dotfiles/git/gitignore
+    attributesfile = ~/.dotfiles/git/attributesfile
+
+    # Treat spaces before tabs and all kinds of trailing whitespace as an error.
+    # [default] trailing-space: looks for spaces at the end of a line
+    # [default] space-before-tab: looks for spaces before tabs at the beginning of a line
+    whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+
+    # Make `git rebase` safer on macOS.
+    # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+    trustctime = false
+
+    # Prevent showing files whose names contain non-ASCII symbols as unversioned.
+    # http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
+    precomposeunicode = false
+
+    # Speed up commands involving untracked files such as `git status`.
+    # https://git-scm.com/docs/git-update-index#_untracked_cache
+    untrackedCache = true
+
+[color]
+
+    # Use colors in Git commands that are capable of colored output when
+    # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+    ui = auto
+
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+    log = auto
+
+[color "branch"]
+
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+
+    meta = yellow bold
+    frag = magenta bold # line info
+    old = red # deletions
+    new = green # additions
+
+[color "status"]
+
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[commit]
+
+    template = ~/.dotfiles/git/git_commit_template
+
+    # https://help.github.com/articles/signing-commits-using-gpg/
+    #gpgsign = true	
+
+[diff]
+
+    # Detect copies as well as renames.
+    renames = copies
+
+[diff "bin"]
+
+    # Use `hexdump` to diff binary files.
+    textconv = hexdump -v -C
+
+[gc]
+
+    # Disable automatic garbage collection for speed up. Manual execution of `git gc` is needed to save space.
+    auto = 0
+
+[help]
+
+    # Automatically correct and execute mistyped commands.
+    #autocorrect = 1
+
 [include]
-    path = /Users/ranger/.dotfiles/git/gitconfig_diffmerge_mac
-    path = /Users/ranger/.dotfiles/git/gitconfig_delta_mac
+
+    # Extra git config files
+    path = ~/.dotfiles/git/gitconfig_diffmerge_mac
+    path = ~/.dotfiles/git/gitconfig_delta_mac
+
+[init]
+
+    # No master (slave) anymore
+    defaultBranch = main
+
+
+[log]
+
+    # git log date format: 2024-12-04 20:04:29 -0600.
+    date = iso
+
+[merge]
+
+    # Include summaries of merged commits in newly created merge commit messages
+    log = true
+
+    # Enforces Fast-Forward merges to keep cleaner git history.
+    ff = only
+
+[pull]
+
+    # Keep cleaner git history
+    rebase = true
+
+[rebase]
+
+    # Simplify the pull with rebase operation.
+    autoStash = true
+
+[push]
+
+    # Simplify the push operation.
+    autoSetupRemote = true
+
+    # https://git-scm.com/docs/git-config#git-config-pushdefault
+    default = simple
+
+    # Make `git push` push relevant annotated tags when pushing branches out.
+    followTags = true

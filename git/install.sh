@@ -15,8 +15,9 @@ if git config --get-all include.path | grep -q "$GIT_CONFIG"; then
     exit
 fi
 
-# Update git_commit_template and gitignore path
+# Update git_commit_template, gitignore, and gitattributes path
 git config --file "$GIT_CONFIG" core.excludesfile "$CUR_DIR/gitignore"
+git config --file "$GIT_CONFIG" core.attributesfile "$CUR_DIR/attributesfile"
 git config --file "$GIT_CONFIG" commit.template "$CUR_DIR/git_commit_template"
 
 # MacOSX only for detla and diffmerge
