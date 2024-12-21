@@ -154,7 +154,7 @@
     template = ~/.dotfiles/git/git_commit_template
 
     # https://help.github.com/articles/signing-commits-using-gpg/
-    #gpgsign = true
+    gpgsign = true
 
 [diff]
 
