@@ -20,17 +20,12 @@ git config --file "$GIT_CONFIG" core.excludesfile "$CUR_DIR/gitignore"
 git config --file "$GIT_CONFIG" core.attributesfile "$CUR_DIR/attributesfile"
 git config --file "$GIT_CONFIG" commit.template "$CUR_DIR/git_commit_template"
 
-# MacOSX only for diffmerge and detla
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    git config --file "$GIT_CONFIG" --unset-all include.path
+# Add config for diffmerge and detla
+git config --file "$GIT_CONFIG" --unset-all include.path
+git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_diffmerge"
+git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_delta"
 
-    # DiffMerge: https://sourcegear.com/diffmerge/webhelp/sec__git.html
-    git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_diffmerge_mac"
-
-    # Delta: https://github.com/dandavison/delta
-    git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_delta_mac"
-fi
-
+# Add config to global gitconfig
 git config --global --add include.path "$GIT_CONFIG"
 
 echo "[Git] Installation completed."

@@ -1,4 +1,5 @@
 # Required: `brew install --cask diffmerge`
+# https://sourcegear.com/diffmerge/webhelp/sec__git.html
 
 [alias]
 
