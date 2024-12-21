@@ -10,112 +10,88 @@ export BLOCKSIZE=1k
 # git commit for gpg
 export GPG_TTY=$(tty)
 
-unix_like () {
-    alias sudo='sudo '
-}
-
-macosx_only () {
-    alias ls='ls -GFh'
-    alias ll='ls -FGlhp'
-    alias la='ls -lAh'
-    alias which='type'
-    alias edit='subl'
-    alias dm='diffmerge'
-    alias flushDNS='dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
-    alias redocker="test -z $(docker ps -q 2>/dev/null) && osascript -e 'quit app \"Docker\"' && open --background -a Docker"
-    alias brewery='brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor'
-    alias brewdeps='brew deps --tree --installed'
-    brewrm () { brew rm $1 && brew rm $(join <(brew leaves) <(brew deps $1)); }
-    trash () { command mv "$@" ~/.Trash; }
-    alias fr='open -a Finder '
-    alias diff='colordiff'
-}
-
-linux_only () {
-    alias ls='ls -GFh --color'
-    alias ll='ls -FGlhp --color'
-    alias la='ls -FGlAhp --color'
-    alias which='type -a'
-    # may use topgrade to upgrade apt, dnf, and yum
-    alias aptup='sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt clean -y && sudo apt autoclean -y'
-    alias dnfup='sudo dnf update -y && sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
-    alias yumup='sudo yum update -y && sudo yum upgrade -y && sudo yum clean all'
-    alias free='free -h'
-    alias psmem='ps auxf | sort -nr -k 4'
-    alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-    alias pscpu='ps auxf | sort -nr -k 3'
-    alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
-    alias cpuinfo='lscpu'
-    alias down='sudo shutdown -h now'
-}
-
-msys_only () {
-    alias sudo=''
-}
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    macosx_only
-elif [[ "$OSTYPE" == "linux"* ]]; then
-    linux_only
-elif [[ "$OSTPYE" == "msys"* ]]; then
-    msys_only
-else
-    echo "Unknown"
-fi
-
 # -----------------------------
 # MAKE TERMINAL BETTER
 # -----------------------------
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias mkdir='mkdir -pv'
-alias less='less -FSRXc'
-alias grep='grep --color'
-alias egrep='egrep --color'
-alias fgrep='fgrep --color'
-alias cd..='cd ../'
-alias ..='cd ../'
-alias ...='cd ../../'
-alias ~="cd ~"
-alias c='clear'
-alias q='exit'
-alias path='echo -e ${PATH//:/\\n}'
-alias show_options='shopt'
-alias fix_stty='stty sane'
-alias cic='set completion-ignore-case On'
-alias sludo='sudo '
-alias vi='vim'
-alias vf='vimdiff'
-alias wget='wget -c'
-alias untar='tar -zxvf '
-alias df='df -H'
-alias du='du -ch'
-alias resh="exec $SHELL"
-alias f='find . -iname'
-alias editHosts='sudo vim /etc/hosts'
-alias myip='curl ip.gs' # curl ipinfo.io/ip
-alias netCons='lsof -i'
-alias openPorts='sudo lsof -i | grep LISTEN'
-alias lsock='sudo lsof -i -P'
-alias lsockU='sudo lsof -nP | grep UDP'
-alias lsockT='sudo lsof -nP | grep TCP'
-alias sha256='shasum -a 256 '
-alias sha1='shasum '
-alias ping='ping -c 5'
-alias h='history'
-alias j='jobs -l'
-alias hg='history | grep '
-alias g=git
+
+# Easier navigation .., ..., ...., ~, and -
+alias ..="cd .."
+alias cd..="cd ../"
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~" # `cd` is probably faster to type though
+alias -- -="cd -"
+
+# Folder Shortcuts
+alias dl="cd ~/Downloads"
+alias ws="cd ~/Workspaces"
+alias dt="cd ~/Desktop"
+alias p="cd ~/projects"
+
+# Binary Shortcuts
+alias c="clear"
+alias q="exit"
+alias vi="vim"
+alias h="history"
+alias g="git"
+alias vf="vimdiff"
+alias dm="diffmerge"
+alias which="type"
+alias edit="subl"
+
+# Friendly Binary Arguments
+alias ls="ls -GFh"
+alias ll="ls -FGlhp"
+alias la="ls -lAh"
+alias df="df -H"
+alias du="du -ch"
+alias cp="cp -iv"
+alias mv="mv -iv"
+alias mkdir="mkdir -pv"
+alias less="less -FSRXc"
+alias grep="grep --color"
+alias egrep="egrep --color"
+alias fgrep="fgrep --color"
+alias wget="wget -c"
+alias curl="curl -O"
+alias untar="tar -zxvf"
+alias ping="ping -c 5"
+alias ps="ps aux"
+
+# Nice tools
+alias sudo="sudo "
+alias update="topgrade"
+alias path="echo -e ${PATH//:/\\n}"
+alias f="find . -iname "
+alias reload="exec ${SHELL} -l"
+alias editHosts="sudo vim /etc/hosts"
+alias flush="dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+alias openPorts="sudo lsof -i | grep LISTEN"
+alias lsock="sudo lsof -i -P"
+alias lsockU="sudo lsof -nP | grep UDP"
+alias lsockT="sudo lsof -nP | grep TCP"
+alias sha256="shasum -a 256 "
+alias sha1="shasum "
+alias hg="history | grep "
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ip2="curl ip.gs" # `curl ipinfo.io/ip`
+alias ip3="curl ifconfig.me"
+alias localip="ipconfig getifaddr en0"
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+alias redocker="test -z $(docker ps -q 2>/dev/null) && osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+alias brewery="brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor"
+alias brewdeps="brew deps --tree --installed"
+brewrm () { brew rm $1 && brew rm $(join <(brew leaves) <(brew deps $1)); }
+alias fr="open -a Finder "
 
 # -----------------------------
 # Functions
 # -----------------------------
 cd () { builtin cd "$@"; ls -al; }
 mcd () { mkdir -p "$1" && cd "$1"; }
-mans () {
-  man $1 | grep -iC2 --color=always $1 | less
-}
 zipf () { zip -r "$1".zip "$1" ; }
+trash () { command mv "$@" ~/.Trash; }
 ex () {
   if [ -f $1 ] ; then
     case $1 in
