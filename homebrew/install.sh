@@ -4,8 +4,6 @@ set -e
 
 CUR_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-[[ "$(uname)" == "Darwin" ]] || { echo "Support MacOS only."; exit 0; }
-
 if command -v brew &> /dev/null; then
     echo "Homebrew is already installed"
 else
@@ -28,15 +26,15 @@ read_file_to_array() {
 
 formulae=()
 casks=()
-mas_apps=()
 
+# Other option is using `brew bundle` with Brewfile
 read_file_to_array "$CUR_DIR/formulae" formulae
 read_file_to_array "$CUR_DIR/casks" casks
-read_file_to_array "$CUR_DIR/mas_apps" mas_apps
 
 # Install homebrew packages, casks, and mac apps from App Store
 [ ${#formulae[@]} -ne 0 ] && brew install "${formulae[@]}"
 [ ${#casks[@]} -ne 0 ] && brew install --cask "${casks[@]}"
-[ ${#mas_apps[@]} -ne 0 ] && mas install "${mas_apps[@]}"
 
 brew cleanup
+
+echo "[Brew] Installation completed."

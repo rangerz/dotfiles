@@ -9,7 +9,7 @@ else
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
-echo "Please manually add oh-my-zsh setting into ~/.zshrc"
+echo "[OMZ] Please manually add oh-my-zsh setting into ~/.zshrc"
 exit
 
 # Edit in ~/.zshrc for setting

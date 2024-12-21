@@ -4,7 +4,7 @@ php
 composer
 python
 wget
-colordiff
+mas
 git
 git-delta
 git-extras

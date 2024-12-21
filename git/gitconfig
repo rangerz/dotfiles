@@ -9,8 +9,8 @@
     # View abbreviated SHA, description, relative time, author, and history graph.
     ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
-    # View the current working tree status using the short format.
-    st = status -s
+    # View the current working tree status and tracking info using the short format.
+    st = status --short --branch
 
     # Show the diff between the latest commit and the current state.
     d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
@@ -25,16 +25,16 @@
     c = clone --recursive
 
     # Commit all changes.
-    ca = !git add ':(exclude,attr:builtin_objectmode=160000)' && git commit -av
+    ca = !git add ':(exclude,attr:builtin_objectmode=160000)' && git commit --all --verbose
 
     # Switch to a branch, creating it if necessary.
     go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
     # Find branches containing commit
-    fb = "!f() { git branch -a --contains $1; }; f"
+    fb = "!f() { git branch --all --contains $1; }; f"
 
     # Show verbose output about tags, branches or remotes
-    tags = tag -l
+    tags = tag --list
     branches = branch --all
     remotes = remote --verbose
 
@@ -48,13 +48,13 @@
     amend = commit --amend --reuse-message=HEAD
 
     # Interactive rebase with the given number of latest commits.
-    reb = "!r() { git rebase -i HEAD~$1; }; r"
+    reb = "!r() { git rebase --interactive HEAD~$1; }; r"
 
     # Remove the old tag with this name and tag the latest commit with it.
-    retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
+    retag = "!r() { git tag --delete $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
 
     # Find branches containing commit
-    fb = "!f() { git branch -a --contains $1; }; f"
+    fb = "!f() { git branch --all --contains $1; }; f"
 
     # Find tags containing commit
     ft = "!f() { git describe --always --contains $1; }; f"
@@ -67,7 +67,7 @@
 
     # Remove branches that have already been merged with main.
     # a.k.a. ‘delete merged’
-    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch --delete"
 
     # List contributors with number of commits.
     contributors = shortlog --summary --numbered
@@ -127,9 +127,6 @@
     # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
     ui = auto
 
-    ui = auto
-    diff = auto
-    status = auto
     branch = auto
     log = auto
 
@@ -157,7 +154,7 @@
     template = ~/.dotfiles/git/git_commit_template
 
     # https://help.github.com/articles/signing-commits-using-gpg/
-    #gpgsign = true	
+    #gpgsign = true
 
 [diff]
 
@@ -224,3 +221,25 @@
 
     # Make `git push` push relevant annotated tags when pushing branches out.
     followTags = true
+
+# URL shorthands
+
+[url "git@github.com:"]
+
+    insteadOf = "gh:"
+    pushInsteadOf = "github:"
+    pushInsteadOf = "git://github.com/"
+
+[url "git://github.com/"]
+
+    insteadOf = "github:"
+
+[url "git@gist.github.com:"]
+
+    insteadOf = "gst:"
+    pushInsteadOf = "gist:"
+    pushInsteadOf = "git://gist.github.com/"
+
+[url "git://gist.github.com/"]
+
+    insteadOf = "gist:"

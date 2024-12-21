@@ -1,14 +1,26 @@
-# Required: brew install --cask diffmerge
+# Required: `brew install --cask diffmerge`
+
 [alias]
+
     dft = difftool
+
 [diff]
+
     tool = diffmerge
+
 [difftool "diffmerge"]
+
     cmd = /opt/homebrew/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
+
 [merge]
+
     tool = diffmerge
+
 [mergetool "diffmerge"]
+
     trustExitCode = true
     cmd = /opt/homebrew/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+
 [difftool]
+
     prompt = false
