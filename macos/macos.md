@@ -53,6 +53,17 @@
     - For double quotes → "abc"
     - For single quotes → 'abc'
   - Keyboard → Mission Control → Disable all
+- Storage
+  - Remove Garage Band & Sound Library
+  - Remove Garage Band App
+- Sharing
+  - Change computer name command:
+    - `sudo scutil --set ComputerName "newname"`
+    - `sudo scutil --set LocalHostName "newname"`
+    - `sudo scutil --set HostName "newname"`
+
+### Build-in Apps
+
 - Finder
   - Finder → Setting
     - General
@@ -80,11 +91,3 @@
     - Show Item Info
     - Show Library Folder
   - ScreenShots → add to sidebar
-- Storage
-  - Remove Garage Band & Sound Library
-  - Remove Garage Band App
-- Sharing
-  - Change computer name command:
-    - `sudo scutil --set ComputerName "newname"`
-    - `sudo scutil --set LocalHostName "newname"`
-    - `sudo scutil --set HostName "newname"`

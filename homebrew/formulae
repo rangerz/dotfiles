@@ -8,6 +8,7 @@ mas
 git
 git-delta
 git-extras
+gpg
 openfortivpn
 awscli
 topgrade
