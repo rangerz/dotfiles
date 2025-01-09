@@ -4,8 +4,9 @@ set -e
 
 CUR_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-if ! type mas >/dev/null 2>&1; then
-    echo "mas is not installed."
+if ! type npm >/dev/null 2>&1; then
+    echo "npm is not installed."
+    echo "Please install npm first. Try 'brew install node'"
     exit
 fi
 
@@ -23,11 +24,11 @@ read_file_to_array() {
     done < "$file"
 }
 
-mas_apps=()
+packages=()
 
-read_file_to_array "$CUR_DIR/mas_apps" mas_apps
+read_file_to_array "$CUR_DIR/packages" packages
 
-# Install mac apps from App Store
-[ ${#mas_apps[@]} -ne 0 ] && mas install "${mas_apps[@]}"
+# Install packages from npm
+[ ${#packages[@]} -ne 0 ] && npm -g install "${packages[@]}"
 
-echo "[MAS] Installation completed."
+echo "[NPM] Installation completed."

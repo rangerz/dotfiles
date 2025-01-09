@@ -2,4 +2,4 @@
 
 set -e
 
-echo "Not support to uninstall Apple Store Apps."
+echo "Not support to uninstall NPM."
