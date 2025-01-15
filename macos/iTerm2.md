@@ -1,5 +1,6 @@
-# iTerm 2 Preferences
+# iTerm 2
 
+### iTerm 2 Settings
 - iTerm2
   - Make iTerm2 Default Term
   - Install Shell Integration
@@ -28,13 +29,14 @@
     - Window
       - Transparency: 30
     - Terminal
-      - Scrollback lines: 100000
+      - Scrollbar Buffer
+        - Select "Unlimited scrollbar"
       - Terminal Emulation
         - Character encoding: Unicode (UTF-8)
         - Report terminal type: xterm-256color
       - Notifications
         - Select "Silence bell"
 
-- iTerm2 CheatSheet and Tips
+### iTerm2 CheatSheet and Tips
   - https://gist.github.com/squarism/ae3613daf5c01a98ba3a
   - https://www.onejar99.com/iterm2-mac-terminal-usage/
