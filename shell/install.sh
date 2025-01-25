@@ -7,16 +7,13 @@ SHELL_PROFILE="$CUR_DIR/profile"
 SOURCE_PROFILE="source $SHELL_PROFILE"
 SHELL_RC="$HOME/.zshrc"
 
-# Check if the configuration already exists
+# Setup shell profile
 if ! grep -qF "$SOURCE_PROFILE" "$SHELL_RC"; then
     echo "$SOURCE_PROFILE" >> "$SHELL_RC"
-    echo "shell config successfully updated into $SHELL_RC"
+    echo "Shell config successfully updated into $SHELL_RC"
+    source $SHELL_RC
 else
-    echo "shell config already exists in $SHELL_RC. No changes made."
-    exit
+    echo "Shell config already exists in $SHELL_RC. No changes made."
 fi
 
 echo "[Shell] Installation completed."
-
-echo "Reload $SHELL"
-exec $SHELL

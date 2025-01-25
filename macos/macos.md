@@ -5,15 +5,19 @@
 - Appearance
   - Dark Mode
 - Desktop & Dock
-  - Remove most apps from Dock
-  - Smaller Size and No Magnification
-  - Position on screen → Left
-  - Double-click a windows’s title icon → Zoom
-  - Automatically hide and show the Dock → Off
-  - Show indicators for open application → On
-  - Show suggested and recent apps in Dock → Off
-  - Default web browser → Google Chrome.app
-  - Hot Corners
+  - Remove rarely used apps from Dock
+  - Dock
+    - Smaller Size and No Magnification
+    - Position on screen → Left
+    - Double-click a windows’s title icon → Zoom
+    - Automatically hide and show the Dock → Off
+    - Show indicators for open application → On
+    - Show suggested and recent apps in Dock → Off
+  - Widgets
+    - Default web browser → Google Chrome.app
+  - Mission Control
+    - Automatically rearrange Space based on mosr recent use -> Off
+  - Hot Corners (in the bottom)
     - Left Bottom: Put Display to Sleep
 - Control Center
   - Wi-Fi: Show in Menu Bar

@@ -4,6 +4,7 @@ set -e
 
 CUR_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
+# 1. Install Homebrew
 if command -v brew &> /dev/null; then
     echo "Homebrew is already installed"
 else
@@ -24,15 +25,16 @@ read_file_to_array() {
     done < "$file"
 }
 
+# TODO: Use `brew bundle` to install formulae and casks
+
+# 2. Install Homebrew packages
 formulae=()
-casks=()
-
-# Other option is using `brew bundle` with Brewfile
 read_file_to_array "$CUR_DIR/formulae" formulae
-read_file_to_array "$CUR_DIR/casks" casks
-
-# Install homebrew packages, casks, and mac apps from App Store
 [ ${#formulae[@]} -ne 0 ] && brew install "${formulae[@]}"
+
+# 3. Install Homebrew casks
+casks=()
+read_file_to_array "$CUR_DIR/casks" casks
 [ ${#casks[@]} -ne 0 ] && brew install --cask "${casks[@]}"
 
 brew cleanup

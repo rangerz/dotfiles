@@ -4,10 +4,8 @@ set -e
 
 CUR_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-if ! type mas >/dev/null 2>&1; then
-    echo "mas is not installed."
-    exit
-fi
+# 1. Install mas
+brew install mas
 
 read_file_to_array() {
     local file="$1"
@@ -23,11 +21,9 @@ read_file_to_array() {
     done < "$file"
 }
 
+# 2. Install Mac App Store apps
 mas_apps=()
-
 read_file_to_array "$CUR_DIR/mas_apps" mas_apps
-
-# Install mac apps from App Store
 [ ${#mas_apps[@]} -ne 0 ] && mas install "${mas_apps[@]}"
 
 echo "[MAS] Installation completed."

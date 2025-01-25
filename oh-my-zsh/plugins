@@ -1,0 +1,16 @@
+# TODO: Edit in ~/.zshrc for setting
+# buildin plugins
+plugins=(
+  aws
+  brew
+  colored-man-pages
+  colorize
+  docker
+  docker-compose
+  extract
+  pip
+  python
+  macos
+  z
+)
+

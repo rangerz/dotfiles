@@ -59,7 +59,7 @@ alias ps="ps aux"
 
 # Nice tools
 alias sudo="sudo "
-alias update="topgrade"
+alias update="topgrade && brew cleanup && brew doctor"
 alias path="echo -e ${PATH//:/\\n}"
 alias f="find . -iname "
 alias resh="exec ${SHELL} -l"
