@@ -75,3 +75,6 @@ set pastetoggle=<F12> "(pt) F12 switch paste mode
 
 "Automatically remove trailing spaces when saving a file.
 autocmd BufWritePre * :%s/\s\+$//e
+
+"Avoiding redrawtime exceeded syntax highlighting disabled issue
+set re=0
