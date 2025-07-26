@@ -26,7 +26,8 @@ else
 fi
 
 # 4. Install latest LTS node version
-$SOURCE_PROFILE 
+$SOURCE_PROFILE
 nvm install node --lts --default
+npm install --global yarn
 
 echo "[NVM] Installation completed."

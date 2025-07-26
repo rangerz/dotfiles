@@ -13,6 +13,8 @@
     - Automatically hide and show the Dock → Off
     - Show indicators for open application → On
     - Show suggested and recent apps in Dock → Off
+  - Desktop & Stage Manager
+    - Click wallpaper to reveal desktop -> Only in Stage Manager
   - Widgets
     - Default web browser → Google Chrome.app
   - Mission Control
@@ -35,7 +37,7 @@
 - Trackpad
   - Pointer & Click
     - Tap to click → On
-    - Tracking speed → 6
+    - Tracking speed → 7
     - Look up & data detectors → Off
   - Scroll & Zoom
     - Natural scrolling → Off
@@ -71,7 +73,7 @@
 - Finder
   - Finder → Setting
     - General
-      - New Finder windows show: Home Folder
+      - New Finder windows show: ~/Downloads
       - Open folders in tabs instead of new windows → On
     - Tags
       - Hide all

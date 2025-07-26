@@ -33,6 +33,7 @@ git clone https://github.com/rangerz/dotfiles.git .dotfiles
 
 - https://github.com/mathiasbynens/dotfiles
 - https://www.robinwieruch.de/mac-setup-web-development/
+- https://github.com/juftin/dotfiles/
 
 ## License
 

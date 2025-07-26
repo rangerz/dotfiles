@@ -8,6 +8,7 @@ microsoft-excel
 microsoft-powerpoint
 windows-app # Previously Remote Desktop
 phpstorm
+postman
 azure-data-studio
 sequel-ace
 diffmerge
@@ -17,3 +18,4 @@ orbstack
 notion
 chatgpt
 sublime-text
+obsidian
