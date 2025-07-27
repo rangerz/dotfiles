@@ -1,13 +1,17 @@
-# TODO: Edit in ~/.zshrc for setting
-# buildin plugins
+# Add them into ~/.zshrc for oh-my-zsh buildin plugins
 plugins=(
   aws
   brew
   colored-man-pages
   colorize
+  common-aliases
   docker
   docker-compose
   extract
+  git
+  node
+  npm
+  nvm
   pip
   python
   macos
