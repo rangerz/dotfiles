@@ -1,8 +1,11 @@
 # Setup GPG fot Git commit on MacOS
 
 ```bash
-# Install gpg
+# Install gpg tool
+# MacOS with brew
 brew install gpg
+# Ubuntu
+sudo apt-get install -y gpa seahorse
 
 # Put in ~/.zshrc
 export GPG_TTY=$(tty)
@@ -43,4 +46,6 @@ git commit -S -m "git commit"
 
 # Show GPG for git log
 git log --show-signature
+
+# Ref: https://gist.github.com/ankurk91/c4f0e23d76ef868b139f3c28bde057fc
 ```

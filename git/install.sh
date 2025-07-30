@@ -8,8 +8,6 @@ SHELL_PROFILE="$CUR_DIR/gitprofile"
 SOURCE_PROFILE="source $SHELL_PROFILE"
 SHELL_RC="$HOME/.zshrc"
 
-
-
 # 1. Install git
 if command -v brew &>/dev/null; then
     brew install git
