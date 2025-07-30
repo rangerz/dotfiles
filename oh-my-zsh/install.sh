@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 set -e
 
@@ -8,7 +8,7 @@ SOURCE_ZSH_PLUGINS="source $ZSH_PLUGINS"
 SHELL_RC="$HOME/.zshrc"
 OMZ_PLUGINS_TXT="$CUR_DIR/omz_plugins.txt"
 
-[ ! -n "$ZSH_VERSION" ] || { echo "You are not using Zsh"; exit 1; }
+#[ ! -n "$ZSH_VERSION" ] || { echo "You are not using Zsh"; exit 1; }
 
 # 1. Install oh-my-zsh
 if [ -d "$HOME/.oh-my-zsh" ]; then
@@ -25,9 +25,12 @@ if command -v brew &>/dev/null; then
         zsh-completions
 else
     ZSH_PLUGIN_PREFIX="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
-    git clone https://github.com/zsh-users/zsh-completions.git "${ZSH_PLUGIN_PREFIX}/zsh-completions"
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_PREFIX}/zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_PREFIX}/zsh-syntax-highlighting"
+    [ -d "${ZSH_PLUGIN_PREFIX}/zsh-completions" ] || \
+        git clone https://github.com/zsh-users/zsh-completions.git "${ZSH_PLUGIN_PREFIX}/zsh-completions"
+    [ -d "${ZSH_PLUGIN_PREFIX}/zsh-autosuggestions" ] || \
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_PREFIX}/zsh-autosuggestions"
+    [ -d "${ZSH_PLUGIN_PREFIX}/zsh-syntax-highlighting" ] || \
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_PREFIX}/zsh-syntax-highlighting"
 fi
 
 # 3. Setup shell profile for zsh custom plugins

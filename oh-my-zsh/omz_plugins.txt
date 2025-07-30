@@ -1,7 +1,6 @@
 # Add them into ~/.zshrc for oh-my-zsh buildin plugins
 plugins=(
   aws
-  brew
   colored-man-pages
   colorize
   common-aliases
@@ -14,7 +13,11 @@ plugins=(
   nvm
   pip
   python
-  macos
   z
 )
 
+# MacOSX Only
+plugins=(
+  brew
+  macos
+)

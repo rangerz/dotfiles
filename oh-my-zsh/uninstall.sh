@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 set -e
 
@@ -7,7 +7,7 @@ ZSH_PLUGINS="$CUR_DIR/plugins.zsh"
 SOURCE_ZSH_PLUGINS="source $ZSH_PLUGINS"
 SHELL_RC="$HOME/.zshrc"
 
-[ ! -n "$ZSH_VERSION" ] || { echo "You are not using Zsh"; exit 1; }
+#[ ! -n "$ZSH_VERSION" ] || { echo "You are not using Zsh"; exit 1; }
 
 # 1. Remove zsh custom plugins
 if command -v brew &>/dev/null; then
