@@ -23,7 +23,11 @@ TrailingSpaces
 	"update_check": true,
 	"font_face": "Monaco Nerd Font Mono",
 	"font_size": 12,
-	"ignored_packages": ["Vintage"]
+	"ignored_packages": ["Vintage"],
+	"tab_size": 4,
+	"translate_tabs_to_spaces": true,
+    "detect_indentation": false,
+    "auto_indent": true
 }
 ```
 

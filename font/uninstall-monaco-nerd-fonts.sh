@@ -9,6 +9,8 @@ FONT_FILES=(
     "MonacoNerdFontMono-Regular.ttf"
 )
 
+[[ "$(uname)" == "Darwin" ]] || { echo "[Font] Not macOS. Skipping font uninstall."; exit 0; }
+
 # Delete each font file if it exists
 for FONT_FILE in "${FONT_FILES[@]}"; do
     FONT_PATH="${FONT_DIR}/${FONT_FILE}"

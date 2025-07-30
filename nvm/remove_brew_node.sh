@@ -1,6 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 set -e
+
+[[ "$(uname)" == "Darwin" ]] || { echo "[NVM] Not macOS. Skipping node uninstall."; exit 0; }
 
 # 1. Remove npm (node)
 brew remove --force node

@@ -1,6 +1,3 @@
-Host ssh.us-3.magento.cloud
-    ControlPath ~/.ssh/mux/%C
-
 Host *
     ControlMaster auto
     ControlPath ~/.ssh/mux/%r@%h:%p

@@ -12,6 +12,8 @@ FONT_URLS=(
     "https://raw.githubusercontent.com/Karmenzind/monaco-nerd-fonts/refs/heads/master/fonts/MonacoNerdFontMono-Regular.ttf"
 )
 
+[[ "$(uname)" == "Darwin" ]] || { echo "[Font] Not macOS. Skipping font install."; exit 0; }
+
 # Create the font directory if it doesn't exist
 mkdir -p "${FONT_DIR}"
 

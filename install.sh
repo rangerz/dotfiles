@@ -6,7 +6,7 @@ CUR_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # Define a list of directories with priority scripts
 PRIORITY_DIRS=(
-    "homebrew"
+    "shell"
 )
 
 # Function to execute an install script in a directory
