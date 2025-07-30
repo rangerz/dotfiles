@@ -12,26 +12,11 @@
     # View the current working tree status and tracking info using the short format.
     st = status --short --branch
 
-    # Show the diff between the latest commit and the current state.
-    d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
-
-    # `git di $number` shows the diff between the state `$number` revisions ago and the current state.
-    di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
-
     # Pull in remote changes for the current repository and all its submodules.
     p = pull --recurse-submodules
 
     # Clone a repository including all submodules.
     c = clone --recursive
-
-    # Commit all changes.
-    ca = !git add ':(exclude,attr:builtin_objectmode=160000)' && git commit --all --verbose
-
-    # Switch to a branch, creating it if necessary.
-    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
-
-    # Find branches containing commit
-    fb = "!f() { git branch --all --contains $1; }; f"
 
     # Show verbose output about tags, branches or remotes
     tags = tag --list
@@ -41,42 +26,8 @@
     # List aliases.
     aliases = config --get-regexp alias
 
-    # Credit an author on the latest commit.
-    credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
-
     # Amend the currently staged files to the latest commit.
     amend = commit --amend --reuse-message=HEAD
-
-    # Interactive rebase with the given number of latest commits.
-    reb = "!r() { git rebase --interactive HEAD~$1; }; r"
-
-    # Remove the old tag with this name and tag the latest commit with it.
-    retag = "!r() { git tag --delete $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
-
-    # Find branches containing commit
-    fb = "!f() { git branch --all --contains $1; }; f"
-
-    # Find tags containing commit
-    ft = "!f() { git describe --always --contains $1; }; f"
-
-    # Find commits by source code
-    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
-
-    # Find commits by commit message
-    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
-
-    # Remove branches that have already been merged with main.
-    # a.k.a. ‘delete merged’
-    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch --delete"
-
-    # List contributors with number of commits.
-    contributors = shortlog --summary --numbered
-
-    # Show the user email for the current repository.
-    whoami = config user.email
-
-    unstage = reset HEAD --
-    undo = reset --soft HEAD~1
 
     # Common git alias
     ci = commit
@@ -86,10 +37,8 @@
     df = diff
     dfc = diff --cached
     sw = switch
-
-    # Count commits
-    count = !git shortlog -sn
-
+    unstage = reset HEAD --
+    undo = reset --soft HEAD~1
 [apply]
 
     # Detect whitespace errors when applying a patch.
@@ -105,8 +54,8 @@
     editor = vim
 
     # Use custom `gitignore` and `gitattributes`.
-    excludesfile = /Users/ranger/.dotfiles/git/gitignore
-    attributesfile = /Users/ranger/.dotfiles/git/attributesfile
+	excludesfile = /Users/ranger/.dotfiles/git/gitignore
+	attributesfile = /Users/ranger/.dotfiles/git/attributesfile
 
     # Treat spaces before tabs and all kinds of trailing whitespace as an error.
     # [default] trailing-space: looks for spaces at the end of a line
@@ -155,7 +104,7 @@
 
 [commit]
 
-    template = /Users/ranger/.dotfiles/git/git_commit_template
+	template = /Users/ranger/.dotfiles/git/git_commit_template
 
     # https://help.github.com/articles/signing-commits-using-gpg/
     gpgsign = true
@@ -186,14 +135,13 @@
 
 [include]
     # Extra git config files
-    path = /Users/ranger/.dotfiles/git/gitconfig_diffmerge
-    path = /Users/ranger/.dotfiles/git/gitconfig_delta
+	path = /Users/ranger/.dotfiles/git/gitconfig_vscode
+	path = /Users/ranger/.dotfiles/git/gitconfig_delta
 
 [init]
 
     # No master (slave) anymore
     defaultBranch = main
-
 
 [log]
 
@@ -228,25 +176,3 @@
 
     # Make `git push` push relevant annotated tags when pushing branches out.
     followTags = true
-
-# URL shorthands
-
-[url "git@github.com:"]
-
-    insteadOf = "gh:"
-    pushInsteadOf = "github:"
-    pushInsteadOf = "git://github.com/"
-
-[url "git://github.com/"]
-
-    insteadOf = "github:"
-
-[url "git@gist.github.com:"]
-
-    insteadOf = "gst:"
-    pushInsteadOf = "gist:"
-    pushInsteadOf = "git://gist.github.com/"
-
-[url "git://gist.github.com/"]
-
-    insteadOf = "gist:"
