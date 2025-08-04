@@ -17,17 +17,6 @@ fi
 if git config --get-all include.path | grep -q "$GIT_CONFIG"; then
     echo "Git config already exists in ~/.gitconfig. No changes made."
 else
-    # Update commit_template, gitignore, and gitattributes path
-    git config --file "$GIT_CONFIG" core.excludesfile "$CUR_DIR/gitignore"
-    git config --file "$GIT_CONFIG" core.attributesfile "$CUR_DIR/attributesfile"
-    git config --file "$GIT_CONFIG" commit.template "$CUR_DIR/git_commit_template"
-
-    # Add config for vscode and detla
-    git config --file "$GIT_CONFIG" --unset-all include.path
-    git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_vscode"
-    git config --file "$GIT_CONFIG" --add include.path "$CUR_DIR/gitconfig_delta"
-
-    # Add config to global gitconfig
     git config --global --add include.path "$GIT_CONFIG"
 fi
 

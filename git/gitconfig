@@ -54,8 +54,8 @@
     editor = vim
 
     # Use custom `gitignore` and `gitattributes`.
-	excludesfile = /Users/ranger/.dotfiles/git/gitignore
-	attributesfile = /Users/ranger/.dotfiles/git/attributesfile
+	excludesfile = ~/.dotfiles/git/gitignore
+	attributesfile = ~/.dotfiles/git/attributesfile
 
     # Treat spaces before tabs and all kinds of trailing whitespace as an error.
     # [default] trailing-space: looks for spaces at the end of a line
@@ -104,7 +104,7 @@
 
 [commit]
 
-	template = /Users/ranger/.dotfiles/git/git_commit_template
+	template = ~/.dotfiles/git/git_commit_template
 
     # https://help.github.com/articles/signing-commits-using-gpg/
     gpgsign = true
@@ -135,8 +135,8 @@
 
 [include]
     # Extra git config files
-	path = /Users/ranger/.dotfiles/git/gitconfig_vscode
-	path = /Users/ranger/.dotfiles/git/gitconfig_delta
+  	path = ~/.dotfiles/git/gitconfig_vscode
+	path = ~/.dotfiles/git/gitconfig_delta
 
 [init]
 
