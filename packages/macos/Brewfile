@@ -12,7 +12,7 @@ brew "mas"
 brew "openfortivpn"
 brew "topgrade"
 brew "wget"
-brew "tldr"
+brew "tlrc"
 
 cask "appcleaner"
 cask "azure-data-studio"
