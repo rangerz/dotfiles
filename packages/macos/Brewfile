@@ -1,7 +1,5 @@
 # brew bundle dump
 
-tap "th-ch/youtube-music"
-
 brew "python"
 brew "awscli"
 brew "azure-cli"
@@ -12,7 +10,10 @@ brew "mas"
 brew "openfortivpn"
 brew "topgrade"
 brew "wget"
-brew "tlrc"
+brew "tlrc" # Rust's "tldr"
+brew "lsd" # alternative "ls"
+brew "ripgrep" # alternative "grep" (rg)
+brew "bat" # alternative "cat"
 
 cask "appcleaner"
 cask "azure-data-studio"
@@ -34,7 +35,10 @@ cask "sequel-ace"
 cask "sublime-text"
 cask "visual-studio-code"
 cask "windows-app"
-cask "youtube-music"
 cask "zoom"
+
+# Music
+tap "th-ch/youtube-music"
+cask "youtube-music"
 
 mas "hide.me", id: 953040671

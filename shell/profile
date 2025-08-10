@@ -40,22 +40,39 @@ alias which="type"
 alias edit="subl"
 
 # Friendly Binary Arguments
-alias ls="ls -GFh"
-alias ll="ls -FGlhp"
-alias la="ls -lAh"
-alias df="df -H"
-alias du="du -ch"
-alias cp="cp -iv"
-alias mv="mv -iv"
-alias mkdir="mkdir -pv"
-alias less="less -FSRXc"
-alias grep="grep --color"
-alias egrep="egrep --color"
-alias fgrep="fgrep --color"
-alias wget="wget -c"
-alias untar="tar -zxvf"
-alias ping="ping -c 5"
-alias ps="ps aux"
+if [[ $- == *i* ]]; then
+  # Only enable these aliases in interactive shells
+  if command -v lsd >/dev/null 2>&1; then
+    alias ls="lsd -Fh --group-dirs=first --icon=always"
+    alias ll="lsd -Flh --group-dirs=first --icon=always"
+    alias la="lsd -FlhA --group-dirs=first --icon=always"
+  else
+    alias ls="ls -GFh"
+    alias ll="ls -FGlhp"
+    alias la="ls -lAh"
+  fi
+
+  alias rg="rg --color=always --smart-case"
+  alias grep="grep --color=auto --binary-files=without-match"
+  alias egrep="egrep --color=auto --binary-files=without-match"
+  alias fgrep="fgrep --color=auto --binary-files=without-match"
+
+  if command -v bat >/dev/null 2>&1; then
+    alias cat="bat --style=plain --paging=never --color=always"
+  fi
+
+
+  alias df="df -H"
+  alias du="du -ch"
+  alias cp="cp -iv"
+  alias mv="mv -iv"
+  alias mkdir="mkdir -pv"
+  alias less="less -FSRXc"
+  alias wget="wget -c"
+  alias untar="tar -zxvf"
+  alias ping="ping -c 5"
+  alias ps="ps aux"
+fi
 
 # Nice tools
 alias sudo="sudo "
