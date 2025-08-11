@@ -24,8 +24,9 @@
       - Theme: Dark Background
     - Text
       - Font
-        - "Monaco Nerd Font Mono"
-        - Size: 18 (px)
+        - "JetBrainsMono Nerd Font Mono"
+        - Size: 14 (px)
+        - Use ligatures -> On
     - Window
       - Transparency: 30
     - Terminal

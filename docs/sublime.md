@@ -18,10 +18,12 @@ TrailingSpaces
 ```
 
 ### Settings
+- Settings -> Settings
 ```json
 {
 	"update_check": true,
-	"font_face": "Monaco Nerd Font Mono",
+	"font_face": "JetBrainsMono Nerd Font Mono",
+	"font_options": ["subpixel_antialias", "ligatures"],
 	"font_size": 12,
 	"ignored_packages": ["Vintage"],
 	"tab_size": 4,
