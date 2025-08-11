@@ -1,20 +1,27 @@
 # brew bundle dump
 
-brew "python"
-brew "awscli"
-brew "azure-cli"
-brew "gh"
-brew "gnupg"
 brew "jq"
-brew "mas"
-brew "openfortivpn"
-brew "topgrade"
-brew "wget"
 brew "tlrc" # Rust's "tldr"
 brew "lsd" # alternative "ls"
 brew "ripgrep" # alternative "grep" (rg)
 brew "bat" # alternative "cat"
 
+# dev toolchain
+brew "mise"
+brew "uv"
+
+# Cloud CLIs
+brew "gh"
+brew "awscli"
+brew "azure-cli"
+
+# ─ Networking / Dev helpers
+brew "wget"
+brew "gnupg"
+brew "openfortivpn"
+brew "topgrade"
+
+# ─ GUI Apps
 cask "appcleaner"
 cask "azure-data-studio"
 cask "caffeine"
@@ -37,8 +44,10 @@ cask "visual-studio-code"
 cask "windows-app"
 cask "zoom"
 
-# Music
+# ─ Music
 tap "th-ch/youtube-music"
 cask "youtube-music"
 
+# ─ Mac App Store
+brew "mas"
 mas "hide.me", id: 953040671

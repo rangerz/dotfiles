@@ -61,7 +61,6 @@ if [[ $- == *i* ]]; then
     alias cat="bat --style=plain --paging=never --color=always"
   fi
 
-
   alias df="df -H"
   alias du="du -ch"
   alias cp="cp -iv"
