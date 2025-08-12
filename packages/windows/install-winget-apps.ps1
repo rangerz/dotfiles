@@ -18,6 +18,7 @@ winget install -e --id Zoom.Zoom
 winget install -e --id Notion.Notion
 winget install -e --id AutoIt.AutoIt
 winget install -e --id Sysinternals.Autologon
+winget install -e --id Deskflow.Deskflow
 
 # OpenAI ChatGPT
 winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements –silent

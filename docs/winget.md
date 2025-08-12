@@ -14,7 +14,7 @@ winget install -e --id Google.Chrome
 # Install a package
 winget remove --purge -e --id Google.Chrome
 
-# Search for a packagearch
+# Search for a package
 winget search vscode
 
 # Show

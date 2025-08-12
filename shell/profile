@@ -79,7 +79,7 @@ fi
 # Nice tools
 alias sudo="sudo "
 alias update="topgrade && brew cleanup && brew doctor"
-alias path="echo -e ${PATH//:/\\n}"
+alias path='echo "$PATH" | tr ":" "\n"'
 alias resh="exec ${SHELL} -l"
 alias editHosts="sudo vim /etc/hosts"
 alias flush="dscacheutil -flushcache; sudo killall -HUP mDNSResponder"

@@ -44,6 +44,10 @@ cask "visual-studio-code"
 cask "windows-app"
 cask "zoom"
 
+# ─ KVM Software
+tap "deskflow/homebrew-tap"
+cask "deskflow"
+
 # ─ Music
 tap "th-ch/youtube-music"
 cask "youtube-music"

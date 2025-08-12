@@ -157,7 +157,3 @@ winget upgrade --all --accept-package-agreements --accept-source-agreements
         - DSpellCheck
         - HEX-Editor
         - XBracket Lite
-
-
-## AutoLogon
-- https://learn.microsoft.com/en-us/sysinternals/downloads/autologon
