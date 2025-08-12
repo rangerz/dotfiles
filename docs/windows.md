@@ -1,12 +1,12 @@
 # Windows
 
-## Settings (Win + i)
+## Windows Settings (Win + i)
 - System
   - Display
     - Extend desktop (Win + p)
   - Time & Language
-    - Add a language ()
-    - Add a keyboard ()
+    - Add a language (Chinese, Traditional, Taiwan)
+    - Add a keyboard (Bopomofo)
   - Apps
     - Default apps -> Google Chrome
   - Bluetooth & devices
@@ -31,13 +31,8 @@
           - Hidden icon menu -> On
         - Taskbar behaviors
           - Taskbar alignment -> Left
-  - Accessibility
-    - Visual effects
-      - Animation effects -> Off
   - Windows Update
 
-
-## Other settings
 ```powershell
 # Enable Windows Hello (PIN)
 Set-ItemProperty HKLM:\SOFTWARE\Policies\Microsoft\Windows\System -Name AllowDomainPINLogon -Value 1 -Type DWord
@@ -48,6 +43,7 @@ Set-TimeZone -Id "Central Standard Time"
 # PC Name (Reboot)
 Rename-Computer -NewName "RANGER-LAPTOP" -Restart
 ```
+
 
 ## File Explorer Options / Folder Options
 - General
@@ -97,7 +93,7 @@ sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo ap
         "feature": { "liga": true }
       },
       "antialiasingMode": "cleartype",
-      "padding": "8, 8, 8, 8"
+      "padding": "8, 8, 8, 8",
       "bellStyle": "none",
       "cursorShape": "underscore",
       "colorScheme": "One Half Dark",
@@ -111,25 +107,10 @@ sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo ap
 
 ## Winget (Windows Package Manager)
 ```powershell
+# Install and check ./package/windows/winget-apps.ps1
+
 # Install
-winget install -e --id Fortinet.FortiClientVPN
-winget install -e --id Microsoft.WindowsApp
-winget install -e --id Microsoft.VisualStudioCode
-winget install -e --id Notepad++.Notepad++
-winget install -e --id Postman.Postman
-winget install -e --id Microsoft.AzureDataStudio
-winget install -e --id Mozilla.Firefox
-winget install -e --id 7zip.7zip
-
-# Optional Apps
-winget install -e --id DevToys-app.DevToys
-winget install -e --id Docker.DockerDesktop
-winget install -e --id Zoom.Zoom
-winget install -e --id Notion.Notion
-winget install -e --id AutoIt.AutoIt
-
-# OpenAI ChatGPT
-winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements –silent
+winget install -e --id Google.Chrome
 
 # Remove
 winget remove --purge -e --id DevToys-app.DevToys
@@ -180,4 +161,3 @@ winget upgrade --all --accept-package-agreements --accept-source-agreements
 
 ## AutoLogon
 - https://learn.microsoft.com/en-us/sysinternals/downloads/autologon
-
