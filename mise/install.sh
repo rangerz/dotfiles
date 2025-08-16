@@ -31,7 +31,7 @@ else
 fi
 
 # 3. Setup node and python
-mise use -g node@lts python@3
+mise use -g node@lts python@3 rust
 
 # 4. Install global node package
 #npm install -g @shopify/cli@latest

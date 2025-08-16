@@ -4,8 +4,9 @@ export EDITOR=/usr/bin/vim
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# default blocksize for ls, df, du
-export BLOCKSIZE=1k
+# default block size for ls, df, du
+export BLOCKSIZE=1k # macOS
+export BLOCK_SIZE=1K # GNU coreutils
 
 # no analytics for homebrew
 export HOMEBREW_NO_ANALYTICS=1
@@ -27,7 +28,7 @@ alias -- -="cd -"
 alias dl="cd ~/Downloads"
 alias ws="cd ~/Workspaces"
 alias dt="cd ~/Desktop"
-alias p="cd ~/projects"
+alias .f="cd ~/.dotfiles"
 
 # Binary Shortcuts
 alias c="clear"
@@ -35,17 +36,15 @@ alias q="exit"
 alias vi="vim"
 alias h="history"
 alias vf="vimdiff"
-alias dm="diffmerge"
 alias which="type"
-alias edit="subl"
 
 # Friendly Binary Arguments
 if [[ $- == *i* ]]; then
   # Only enable these aliases in interactive shells
   if command -v lsd >/dev/null 2>&1; then
-    alias ls="lsd -Fh --group-dirs=first --icon=always"
-    alias ll="lsd -Flh --group-dirs=first --icon=always"
-    alias la="lsd -FlhA --group-dirs=first --icon=always"
+    alias ls="lsd -Fh --group-dirs=first --icon=always --date '+%Y-%m-%d %H:%M:%S'"
+    alias ll="ls -l"
+    alias la="ls -lA"
   else
     alias ls="ls -GFh"
     alias ll="ls -FGlhp"
@@ -76,11 +75,13 @@ if [[ $- == *i* ]]; then
   alias ps="ps aux"
 fi
 
-# Nice tools
+# keep sudo alias for alias expansion
 alias sudo="sudo "
-alias update="topgrade && brew cleanup && brew doctor"
 alias path='echo "$PATH" | tr ":" "\n"'
 alias resh="exec ${SHELL} -l"
+
+# Nice tools
+alias update="topgrade && brew cleanup && brew doctor"
 alias editHosts="sudo vim /etc/hosts"
 alias flush="dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias openPorts="sudo lsof -i | grep LISTEN"
@@ -97,8 +98,7 @@ alias localip="ipconfig getifaddr en0"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 alias brewery="brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor"
 alias brewdeps="brew deps --tree --installed"
-brewrm () { brew rm $1 && brew rm $(join <(brew leaves) <(brew deps $1)); }
-alias fr="open -a Finder "
+alias aptup="sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y && sudo apt clean"
 
 # -----------------------------
 # Functions
@@ -106,27 +106,11 @@ alias fr="open -a Finder "
 cd () { builtin cd "$@"; ls -al; }
 mcd () { mkdir -p "$1" && cd "$1"; }
 zipf () { zip -r "$1".zip "$1" ; }
-trash () { command mv "$@" ~/.Trash; }
-ex () {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)  tar xvjf $1       ;;
-      *.tar.gz)   tar xvzf $1       ;;
-      *.tar.xz)   tar xvJf $1       ;;
-      *.tar.lzma) tar --lzma xvf $1 ;;
-      *.bz2)      bunzip2 $1        ;;
-      *.rar)      unrar e $1        ;;
-      *.gz)       gunzip $1         ;;
-      *.tar)      tar xvf $1        ;;
-      *.tbz2)     tar xvjf $1       ;;
-      *.tgz)      tar xvzf $1       ;;
-      *.zip)      unzip $1          ;;
-      *.Z)        uncompress $1     ;;
-      *.7z)       7z x $1           ;;
-      *.dmg)      hdiutul mount $1  ;; # mount OS X disk images
-      *)          echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
+
+edit() {
+  # 先用 subl，沒有就用 code，最後用 $EDITOR // prefer subl, then code, then $EDITOR
+  if command -v subl >/dev/null 2>&1; then subl "$@"
+  elif command -v code >/dev/null 2>&1; then code -w "$@"
+  else "$EDITOR" "$@"
   fi
 }
