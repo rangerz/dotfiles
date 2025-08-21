@@ -1,0 +1,17 @@
+# configs 通用設定 Common configs
+[include]
+path = ~/.dotfiles/git/configs/base.ini
+path = ~/.dotfiles/git/configs/alias.ini
+path = ~/.dotfiles/git/configs/color.ini
+path = ~/.dotfiles/git/configs/workflow.ini
+path = ~/.dotfiles/git/configs/performance.ini
+path = ~/.dotfiles/git/configs/sign.ini
+path = ~/.dotfiles/git/configs/delta.ini
+path = ~/.dotfiles/git/configs/vscode.ini
+
+# 身分與金鑰 Identities and keys
+[includeIf "gitdir:~/Workspaces/"]
+path = ~/.dotfiles/git/configs/work.ini
+
+[includeIf "gitdir:~/"]
+path = ~/.dotfiles/git/configs/personal.ini

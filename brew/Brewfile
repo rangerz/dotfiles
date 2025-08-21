@@ -1,0 +1,62 @@
+# Brewfile (cross-platform)
+
+# Core CLIs for both
+brew "jq"
+brew "shfmt"
+brew "tlrc"   # Rust tldr
+brew "lsd"
+brew "ripgrep"
+brew "bat"
+brew "fzf"
+brew "mise"
+brew "uv"
+brew "gh"
+brew "awscli"
+brew "azure-cli"
+brew "wget"
+brew "gnupg"
+brew "openfortivpn"
+brew "topgrade"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+brew "zsh-completions"
+
+if OS.mac?
+  # macOS-only GUI & ecosystem
+  cask "appcleaner"
+  cask "azure-data-studio"
+  cask "caffeine"
+  cask "chatgpt"
+  cask "firefox"
+  cask "font-jetbrains-mono-nerd-font"
+  cask "google-chrome"
+  cask "iterm2"
+  cask "microsoft-edge"
+  cask "microsoft-excel"
+  cask "microsoft-outlook"
+  cask "microsoft-powerpoint"
+  cask "microsoft-teams"
+  cask "notion"
+  cask "obsidian"
+  cask "orbstack"
+  cask "pearcleaner"
+  cask "postman"
+  cask "sequel-ace"
+  cask "sublime-text"
+  cask "visual-studio-code"
+  cask "windows-app"
+  cask "zoom"
+
+  tap "deskflow/homebrew-tap"
+  cask "deskflow"
+
+  tap "th-ch/youtube-music"
+  cask "youtube-music"
+
+  brew "mas"
+  mas "hide.me", id: 953040671
+end
+
+if OS.linux?
+  # Keep here
+end
