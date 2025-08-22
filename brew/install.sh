@@ -137,7 +137,7 @@ main() {
     fi
 
     echo "Activating Homebrew for current session..."
-    source "$HOME/.dotfiles/brew/eval_brew.sh"
+    . "$HOME/.dotfiles/brew/eval_brew.sh"
 
     echo "Persisting Homebrew environment..."
     persist_brew_shellenv
