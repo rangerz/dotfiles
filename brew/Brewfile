@@ -13,8 +13,6 @@ brew "uv"
 brew "gh"
 brew "awscli"
 brew "azure-cli"
-brew "wget"
-brew "gnupg"
 brew "openfortivpn"
 brew "topgrade"
 brew "zsh-autosuggestions"
@@ -22,7 +20,8 @@ brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 
 if OS.mac?
-  # macOS-only GUI & ecosystem
+  brew "wget"
+
   cask "appcleaner"
   cask "azure-data-studio"
   cask "caffeine"
