@@ -1,7 +1,6 @@
 # Shell flags
 _is_zsh=$([[ -n "${ZSH_VERSION:-}" ]] && echo 1 || echo 0)
 _is_bash=$([[ -n "${BASH_VERSION:-}" ]] && echo 1 || echo 0)
-_is_fish=$([[ -n "${FISH_VERSION:-}" ]] && echo 1 || echo 0)
 _is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
 
 # Basics

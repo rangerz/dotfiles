@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+DOTFILES="$HOME/.dotfiles"
+SOURCE_VIMRC="source $DOTFILES/vim/vimrc"
 VIMRC_FILE="$HOME/.vimrc"
-SOURCE_VIMRC="source $CUR_DIR/vimrc"
 VIM_DIRS=("$HOME/.vim/.backup" "$HOME/.vim/.swp" "$HOME/.vim/.undo")
 
 if grep -q "$SOURCE_VIMRC" "$VIMRC_FILE"; then

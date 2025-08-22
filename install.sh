@@ -33,16 +33,17 @@ main() {
 
     # Install Homebrew and packages
     "$DOTFILES/brew/install.sh"
-    . "$DOTFILES/brew/eval_brew.sh"
 
     # Set configs for shell + git + ssh + vim + mise
     "$DOTFILES/shell/install.sh"
     "$DOTFILES/git/install.sh"
     "$DOTFILES/ssh/install.sh"
     "$DOTFILES/vim/install.sh"
-    "$DOTFILES/mise/install.sh"
+    #"$DOTFILES/mise/install.sh"
 
     echo "Done. Dotfiles installed in $DOTFILES"
+
+    exec zsh -l
 }
 
 main "$@"
