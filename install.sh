@@ -33,6 +33,7 @@ main() {
 
     # Install Homebrew and packages
     "$DOTFILES/brew/install.sh"
+    source "$DOTFILES/brew/eval_brew.sh"
 
     # Set configs for shell + git + ssh + vim + mise
     "$DOTFILES/shell/install.sh"

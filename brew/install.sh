@@ -39,19 +39,6 @@ install_homebrew() {
         "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
-# Activate brew for current session
-eval_brew_shellenv_now() {
-    for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
-        if [[ -x "$prefix/bin/brew" ]]; then
-            eval "$("$prefix/bin/brew" shellenv)"
-            return
-        fi
-    done
-    if command -v brew >/dev/null 2>&1; then
-        eval "$(brew shellenv)"
-    fi
-}
-
 # Add a line to a rc file only if it's missing
 add_line_if_missing() {
     # $1: file path, $2: line
@@ -150,7 +137,7 @@ main() {
     fi
 
     echo "Activating Homebrew for current session..."
-    eval_brew_shellenv_now
+    source "$HOME/.dotfiles/brew/eval_brew.sh"
 
     echo "Persisting Homebrew environment..."
     persist_brew_shellenv
