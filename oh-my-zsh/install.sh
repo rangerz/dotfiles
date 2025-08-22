@@ -11,7 +11,7 @@ install_oh_my_zsh() {
         exit 0
     fi
 
-    RUNZSH=yes CHSH=no KEEP_ZSHRC=no OVERWRITE_CONFIRMATION=no \
+    RUNZSH=no CHSH=no KEEP_ZSHRC=no OVERWRITE_CONFIRMATION=no \
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
