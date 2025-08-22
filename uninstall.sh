@@ -27,9 +27,19 @@ main() {
 
     echo "Uninstalling dotfiles from $DOTFILES"
 
+    "$DOTFILES/shell/uninstall.sh"
+    "$DOTFILES/git/uninstall.sh"
+    "$DOTFILES/ssh/uninstall.sh"
+    "$DOTFILES/vim/uninstall.sh"
+    "$DOTFILES/mise/uninstall.sh"
+
+    "$DOTFILES/brew/uninstall.sh"
+
     remove_dotfiles
 
     echo "Done. Dotfiles removed from $DOTFILES"
 }
 
-main "$@"
+#main "$@"
+
+echo "Not supported yet"

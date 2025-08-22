@@ -26,6 +26,21 @@ main() {
 
     download_dotfiles
 
+    # todo: support other shells
+    # Install zsh and oh-my-zsh
+    "$DOTFILES/zsh/install.sh"
+    "$DOTFILES/oh-my-zsh/install.sh"
+
+    # Install Homebrew and packages
+    "$DOTFILES/brew/install.sh"
+
+    # Set configs for shell + git + ssh + vim + mise
+    "$DOTFILES/shell/install.sh"
+    "$DOTFILES/git/install.sh"
+    "$DOTFILES/ssh/install.sh"
+    "$DOTFILES/vim/install.sh"
+    "$DOTFILES/mise/install.sh"
+
     echo "Done. Dotfiles installed in $DOTFILES"
 }
 
