@@ -19,6 +19,7 @@ brew "topgrade"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zsh-completions"
+brew "git-delta"
 
 if OS.mac?
   brew "wget"
