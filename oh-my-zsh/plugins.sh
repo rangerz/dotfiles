@@ -7,7 +7,6 @@ plugins=(
     sudo   # sudo with !!
 
     # --- Shell usability level ---
-    common-aliases           # Common useful aliases
     history-substring-search # Search history with arrows
     z                        # Jump to frequent dirs
     fzf                      # Fuzzy finder (files, dirs, history, git, etc.)
@@ -17,4 +16,5 @@ plugins=(
     extract # Extract any archive with x
     npm     # NPM completions
     pip     # Pip completions
+    mise    # Mise completions
 )

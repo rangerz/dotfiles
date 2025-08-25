@@ -136,8 +136,31 @@ export GPG_TTY=$(tty) # Ensure GPG pinentry works
 
 # MISE
 if command -v mise &>/dev/null; then
-    ((_is_zsh)) && eval "$(mise activate zsh)"
+    # Already handled by mise direnv plugin
+    #((_is_zsh)) && eval "$(mise activate zsh)"
+
     ((_is_bash)) && eval "$(mise activate bash)"
+fi
+
+# DIRENV
+if command -v direnv &>/dev/null; then
+    if ! typeset -f venv_prompt >/dev/null; then
+        venv_prompt() {
+            if [[ -n "$VIRTUAL_ENV" ]]; then
+                printf '(%s) ' "${VIRTUAL_ENV:t}" # 只取資料夾名 basename
+            fi
+        }
+    fi
+
+    case $PROMPT in
+    *venv_prompt*) ;;
+    *) PROMPT='$(venv_prompt)'"$PROMPT" ;;
+    esac
+
+    # Already handled by oh-my-zsh direnv plugin
+    #((_is_zsh)) && eval "$(direnv hook zsh)"
+
+    ((_is_bash)) && eval "$(direnv hook bash)"
 fi
 
 # PIP
