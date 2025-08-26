@@ -1,0 +1,19 @@
+# Add into ~/.config/topgrade.toml in [include] section
+[misc]
+pre_sudo = true
+assume_yes = true
+no_retry = true
+disable = ["containers", "pip3"]
+no_self_update = true
+
+[brew]
+greedy_cask = true
+greedy_latest = true
+autoremove = true
+
+[git]
+max_concurrency = 4
+repos = [
+  "~/.dotfiles"
+]
+pull_predefined = false

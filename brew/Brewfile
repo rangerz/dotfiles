@@ -25,7 +25,6 @@ if OS.mac?
   brew "wget"
 
   cask "appcleaner"
-  cask "azure-data-studio"
   cask "caffeine"
   cask "chatgpt"
   cask "firefox"

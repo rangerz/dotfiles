@@ -13,8 +13,9 @@ export LANG=en_US.UTF-8
 export BLOCKSIZE=1k  # macOS BSD ls
 export BLOCK_SIZE=1K # GNU coreutils
 
-# Homebrew analytics off
+# Homebrew analytics off and env hints off
 export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 # Homebrew shellenv (macOS and LinuxBrew)
 if command -v brew >/dev/null 2>&1; then
@@ -45,6 +46,7 @@ if [[ $- == *i* ]]; then
     alias vf="vimdiff"
     alias which="type"
     alias help="tldr"
+    alias f="fzf"
 
     # ls family
     if command -v lsd >/dev/null 2>&1; then
@@ -69,6 +71,7 @@ if [[ $- == *i* ]]; then
 
     alias df="df -H"
     alias du="du -ch"
+    alias rm="rm -iv"
     alias cp="cp -iv"
     alias mv="mv -iv"
     alias mkdir="mkdir -pv"
@@ -108,7 +111,7 @@ alias ips="ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\(\\([0-9]
 alias brewery="brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor"
 alias brewdeps="brew deps --tree --installed"
 alias aptup="sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y && sudo apt clean"
-alias update="topgrade && brew cleanup && brew doctor"
+alias update="brew upgrade topgrade && topgrade && brew cleanup && brew doctor"
 
 # Functions
 if [[ $- == *i* ]]; then
@@ -131,8 +134,14 @@ edit() {
 }
 
 # Git
-alias g="git"
 export GPG_TTY=$(tty) # Ensure GPG pinentry works
+alias g="git"
+alias glf="git log --oneline | fzf \
+  --preview \"echo {} | awk '{print \\\$1}' | xargs -I % git show --color=always % \" \
+  --preview-window=right:70%:wrap"
+alias gsf="git status -s | fzf \
+  --preview \"echo {} | awk '{print \\\$2}' | xargs -I % git diff --color=always % \" \
+  --preview-window=right:70%:wrap"
 
 # MISE
 if command -v mise &>/dev/null; then

@@ -2,9 +2,13 @@
 
 ## Windows Settings (Win + i)
 
-- System
-  - Display
-    - Extend desktop (Win + p)
+- Windows Settinss
+  - System
+    - Display
+      - Extend desktop (Win + p)
+    - For develoers
+      - Enable sudo -> On
+        - Configure how sudo runs applications -> inline
   - Time & Language
     - Add a language (Chinese, Traditional, Taiwan)
     - Add a keyboard (Bopomofo)

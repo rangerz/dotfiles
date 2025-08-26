@@ -8,6 +8,4 @@ fi
 
 mise use -g node@lts python@3 rust
 
-npm install -g @shopify/cli@latest
-
 echo "[mise] Installation completed."

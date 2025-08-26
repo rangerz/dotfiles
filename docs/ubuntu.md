@@ -15,6 +15,7 @@ sudo update-locale LANG=en_US.UTF-8
 # Enable passwordless sudo
 sudo visudo
 # Add this line at the end:
-# ranger ALL=(ALL:ALL) NOPASSWD:ALL
-# Save and test: sudo whoami  # should output root
+# %sudo ALL=(ALL:ALL) NOPASSWD:ALL
+# to overwrite
+# %sudo ALL=(ALL:ALL)
 ```
