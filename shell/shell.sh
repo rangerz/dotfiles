@@ -153,7 +153,7 @@ if command -v direnv &>/dev/null; then
     fi
 
     case $PROMPT in
-    *venv_prompt*) ;;
+    *'$(venv_prompt)'*) ;;
     *) PROMPT='$(venv_prompt)'"$PROMPT" ;;
     esac
 
