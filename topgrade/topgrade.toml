@@ -1,4 +1,4 @@
-# Add into ~/.config/topgrade.toml in [include] section
+# Move into ~/.config/topgrade.d/
 [misc]
 pre_sudo = true
 assume_yes = true

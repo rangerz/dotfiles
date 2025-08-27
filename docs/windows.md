@@ -74,36 +74,6 @@ wsl --install -d Ubuntu
 sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
 ```
 
-## Windows Terminal
-
-- Setting -> Default Profile -> Open JSON file
-
-```json
-{
-  "copyOnSelect": true,
-  "alwaysShowTabs": true,
-  "showTabsInTitlebar": true,
-  "useAcrylicInTabRow": false,
-  "profiles": {
-    "defaults": {
-      "font": {
-        "face": "JetBrainsMono Nerd Font Mono",
-        "size": 12,
-        "feature": { "liga": true }
-      },
-      "antialiasingMode": "cleartype",
-      "padding": "8, 8, 8, 8",
-      "bellStyle": "none",
-      "cursorShape": "underscore",
-      "colorScheme": "One Half Dark",
-      "useAcrylic": true,
-      "acrylicOpacity": 0.85,
-    }
-  }
-}
-```
-
-
 ## Winget (Windows Package Manager)
 
 ```powershell
