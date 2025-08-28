@@ -16,7 +16,18 @@
 Ctrl/⌘ + Shift + P -> "Preferences: Open Keyboard Shortcuts (JSON)" -> keybindings.json
 
 ```json
+// Place your key bindings in this file to override the defaults
 [
+  {
+    "key": "cmd+right",
+    "command": "workbench.action.nextEditor",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+left",
+    "command": "workbench.action.previousEditor",
+    "when": "editorTextFocus"
+  },
   {
     "key": "cmd+d",
     "command": "workbench.action.splitEditorRight",
@@ -98,6 +109,26 @@ Ctrl/⌘ + Shift + P -> "Preferences: Open Keyboard Shortcuts (JSON)" -> keybind
     "when": "terminalFocus"
   },
   {
+    "key": "cmd+right",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+left",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+down",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+up",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  {
     "key": "cmd+1",
     "command": "workbench.action.terminal.focusAtIndex1",
     "when": "terminalFocus"
@@ -133,6 +164,9 @@ Setting -> Default Profile -> Open JSON file
 ```json
 {
   "actions": [
+    { "command": "copy", "keys": "ctrl+c" },
+    { "command": "paste", "keys": "ctrl+v" },
+
     { "command": "newTab", "keys": "ctrl+t" },
     { "command": { "action": "splitPane", "split": "horizontal" }, "keys": "ctrl+d" },
     { "command": { "action": "splitPane", "split": "vertical" }, "keys": "ctrl+shift+d" },
