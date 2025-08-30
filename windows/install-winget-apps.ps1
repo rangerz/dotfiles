@@ -19,7 +19,8 @@ winget install -e --id Notion.Notion
 winget install -e --id AutoIt.AutoIt
 winget install -e --id Sysinternals.Autologon
 winget install -e --id Deskflow.Deskflow
-winget install -e --id=topgrade-rs.topgrade
+winget install -e --id topgrade-rs.topgrade
+winget install -e --id th-ch.YouTubeMusic
 
 # OpenAI ChatGPT
 winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements –silent
