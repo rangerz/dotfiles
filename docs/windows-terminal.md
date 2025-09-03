@@ -25,6 +25,7 @@ Setting -> Default Profile -> Open JSON file
         "cellHeight": 1.2,
         "feature": { "liga": true }
       },
+      "adjustIndistinguishableColors": "indexed",
       "antialiasingMode": "cleartype",
       "padding": "8, 8, 8, 8",
       "bellStyle": "none",
