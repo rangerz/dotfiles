@@ -149,9 +149,6 @@ if command -v zoxide &>/dev/null; then
     #((_is_zsh)) && eval "$(zoxide init zsh)"
 
     ((_is_bash)) && eval "$(zoxide init bash)"
-
-    alias z="zoxide"
-    alias zz="zoxide query -l | fzf --height 40% --layout=reverse --border --preview 'echo {} | xargs -I % zoxide query % | xargs -I % ls -alh %' | xargs -I % zoxide query % | xargs -I % cd %"
 fi
 
 # MISE
