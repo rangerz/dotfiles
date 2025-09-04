@@ -1,4 +1,4 @@
-# Ubuntu
+# wsl-ubuntu
 
 ## manpath: can't set the locale; make sure $LC_* and $LANG are correct
 
@@ -12,10 +12,5 @@ sudo update-locale LANG=en_US.UTF-8
 ## sudo Password
 
 ```bash
-# Enable passwordless sudo
-sudo visudo
-# Add this line at the end:
-# %sudo ALL=(ALL:ALL) NOPASSWD:ALL
-# to overwrite
-# %sudo ALL=(ALL:ALL)
+echo "ranger ALL=(ALL:ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/ranger
 ```
