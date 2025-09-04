@@ -143,9 +143,20 @@ alias gsf="git status -s | fzf \
   --preview \"echo {} | awk '{print \\\$2}' | xargs -I % git diff --color=always % \" \
   --preview-window=right:70%:wrap"
 
+# ZOXIDE
+if command -v zoxide &>/dev/null; then
+    # Already handled by .zshrc zoxide plugin
+    #((_is_zsh)) && eval "$(zoxide init zsh)"
+
+    ((_is_bash)) && eval "$(zoxide init bash)"
+
+    alias z="zoxide"
+    alias zz="zoxide query -l | fzf --height 40% --layout=reverse --border --preview 'echo {} | xargs -I % zoxide query % | xargs -I % ls -alh %' | xargs -I % zoxide query % | xargs -I % cd %"
+fi
+
 # MISE
 if command -v mise &>/dev/null; then
-    # Already handled by mise direnv plugin
+    # Already handled by .zshrc direnv plugin
     #((_is_zsh)) && eval "$(mise activate zsh)"
 
     ((_is_bash)) && eval "$(mise activate bash)"

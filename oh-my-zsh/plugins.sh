@@ -8,8 +8,8 @@ plugins=(
 
     # --- Shell usability level ---
     history-substring-search # Search history with arrows
-    z                        # Jump to frequent dirs
     fzf                      # Fuzzy finder (files, dirs, history, git, etc.)
+    zoxide                   # Smarter cd command
 
     # --- Dev / Project level ---
     git     # Git aliases + completions
