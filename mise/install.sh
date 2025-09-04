@@ -6,6 +6,10 @@ if ! command -v mise >/dev/null 2>&1; then
     exit 1
 fi
 
-mise use -g node@lts python@3 rust
+mise use -g \
+    node@lts \
+    python@3 \
+    ruff@latest \
+    rust
 
 echo "[mise] Installation completed."

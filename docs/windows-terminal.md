@@ -30,7 +30,7 @@ Setting -> Default Profile -> Open JSON file
       "padding": "8, 8, 8, 8",
       "bellStyle": "none",
       "cursorShape": "bar",
-      "colorScheme": "One Half Dark",
+      "colorScheme": "Ubuntu-ColorScheme",
       "useAcrylic": true,
       "acrylicOpacity": 0.85,
     }

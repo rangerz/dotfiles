@@ -16,3 +16,7 @@ winget install -e --id DEVCOM.JetBrainsMonoNerdFont
 - item2
 - terminal (windows)
 - notapad++
+
+## Resource
+
+- <https://www.nerdfonts.com/>

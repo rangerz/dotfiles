@@ -2,11 +2,16 @@
 
 ## Windows Settings (Win + i)
 
-- Windows Settinss
+- Windows Settings
   - System
     - Display
       - Extend desktop (Win + p)
-    - For develoers
+    - Multitasking
+      - Desktops
+        - On the taskbar, show all the open windows -> On all desktops
+        - Show all open windows when I press Alt+Tab -> On all desktops
+      - Title bar windows shake -> On
+    - For developers
       - Enable sudo -> On
         - Configure how sudo runs applications -> inline
   - Time & Language
@@ -108,22 +113,22 @@ winget upgrade --all --accept-package-agreements --accept-source-agreements
 ## Notepad++
 
 - Settings
-    - Preferences
-        - Indentation
-            - Indent size: 4
-            - Indent using: Space character(s)
-        - New Document
-            - Format (Lin ending)
-                - Unix (LF)
-    - Style Configurator
-      - Theme: Dracula
-        - Dracula.xml put into `%AppData%\Notepad++\themes`
-        - https://raw.githubusercontent.com/dracula/notepad-plus-plus/refs/heads/master/Dracula.xml
-      - Font name: JetBrainsMono NFM
-        - JetBrainsMono NFM
+  - Preferences
+    - Indentation
+      - Indent size: 4
+      - Indent using: Space character(s)
+    - New Document
+      - Format (Lin ending)
+        - Unix (LF)
+  - Style Configurator
+    - Theme: Dracula
+      - Dracula.xml put into `%AppData%\Notepad++\themes`
+      - <https://raw.githubusercontent.com/dracula/notepad-plus-plus/refs/heads/master/Dracula.xml>
+    - Font name: JetBrainsMono NFM
+      - JetBrainsMono NFM
 - Plugins
-    - Plugins Admin
-        - AutuSave
-        - DSpellCheck
-        - HEX-Editor
-        - XBracket Lite
+  - Plugins Admin
+    - AutoSave
+    - DSpellCheck
+    - HEX-Editor
+    - XBracket Lite

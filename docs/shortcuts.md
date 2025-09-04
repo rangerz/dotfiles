@@ -171,6 +171,9 @@ Setting -> Default Profile -> Open JSON file
     { "command": { "action": "splitPane", "split": "horizontal" }, "keys": "ctrl+d" },
     { "command": { "action": "splitPane", "split": "vertical" }, "keys": "ctrl+shift+d" },
     { "command": "closePane", "keys": "ctrl+w" },
+
+    { "command": "nextTab", "keys": "ctrl+right" },
+    { "command": "prevTab", "keys": "ctrl+left" },
   ]
 }
 ```
