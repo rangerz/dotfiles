@@ -14,7 +14,6 @@ winget install -e --id Microsoft.Teams
 winget install -e --id Microsoft.WindowsApp
 winget install -e --id Microsoft.Edge
 winget install -e --id Docker.DockerDesktop
-winget install -e --id Zoom.Zoom
 winget install -e --id Notion.Notion
 winget install -e --id AutoIt.AutoIt
 winget install -e --id Sysinternals.Autologon
@@ -24,3 +23,6 @@ winget install -e --id th-ch.YouTubeMusic
 
 # OpenAI ChatGPT
 winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements –silent
+
+# Uninstall
+winget uninstall -e --id Microsoft.OneDrive
