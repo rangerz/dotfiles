@@ -10,8 +10,8 @@ path = ~/.dotfiles/git/configs/delta.ini
 path = ~/.dotfiles/git/configs/vscode.ini
 
 # 身分與金鑰 Identities and keys
-[includeIf "gitdir:~/Workspaces/"]
-path = ~/.dotfiles/git/configs/work.ini
-
 [includeIf "gitdir:~/"]
 path = ~/.dotfiles/git/configs/personal.ini
+
+[includeIf "gitdir:~/Workspaces/"]
+path = ~/.dotfiles/git/configs/work.ini
