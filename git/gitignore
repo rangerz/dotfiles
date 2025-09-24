@@ -30,3 +30,6 @@ venv
 .venv
 node_modules
 .sass-cache
+
+# Git hooks
+.githooks
