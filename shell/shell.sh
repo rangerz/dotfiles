@@ -164,7 +164,7 @@ if command -v direnv &>/dev/null; then
     if ! typeset -f venv_prompt >/dev/null; then
         venv_prompt() {
             if [[ -n "$VIRTUAL_ENV" ]]; then
-                printf '(%s) ' "${VIRTUAL_ENV:t}" # 只取資料夾名 basename
+                printf '(%s) ' "${VIRTUAL_ENV:t}" # basename folder name only
             fi
         }
     fi
