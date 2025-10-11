@@ -161,6 +161,8 @@ fi
 
 # DIRENV
 if command -v direnv &>/dev/null; then
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
+
     if ! typeset -f venv_prompt >/dev/null; then
         venv_prompt() {
             if [[ -n "$VIRTUAL_ENV" ]]; then

@@ -5,6 +5,7 @@ brew "jq"
 brew "yq"
 brew "shfmt"
 brew "tlrc"   # Rust tldr
+brew "dos2unix"
 brew "lsd"
 brew "ripgrep"
 brew "bat"
@@ -21,6 +22,11 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 brew "git-delta"
+brew "codex"
+brew "gemini-cli"
+
+tap "shopify/shopify"
+brew "shopify-cli"
 
 if OS.mac?
   brew "wget"
