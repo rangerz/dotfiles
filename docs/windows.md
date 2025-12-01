@@ -41,7 +41,17 @@
           - Hidden icon menu -> On
         - Taskbar behaviors
           - Taskbar alignment -> Left
+  - Privacy & security
+    - Search history -> Off and Clear
+    - Show search 'highlights' -> Off
+    - Search my accounts
+      - Microsoft account -> Off
+      - Work or School account -> Off
   - Windows Update
+    - Check for updates
+    - Advanced options
+      - Delivery Optimization
+        - Allow downloads from other devices -> Off
 
 ```powershell
 # Enable Windows Hello (PIN)
@@ -53,6 +63,15 @@ Set-TimeZone -Id "Central Standard Time"
 # PC Name (Reboot)
 Rename-Computer -NewName "RANGER-LAPTOP" -Restart
 ```
+
+## Windows Features
+
+- Turn Windows feature on or off
+  - Internet Information Services -> Off
+  - Internet Information Services Hostable Web Core -> Off
+  - SMB 1.0/CIFS File Sharing Support
+  - Work Folders Client
+  - Print and Document Services
 
 ## File Explorer Options / Folder Options
 
