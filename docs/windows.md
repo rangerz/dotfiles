@@ -100,27 +100,7 @@ sudo apt update -y && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo ap
 
 ## Winget (Windows Package Manager)
 
-```powershell
-# Install and check ./package/windows/winget-apps.ps1
-
-# Install
-winget install -e --id Google.Chrome
-
-# Remove
-winget remove --purge -e --id DevToys-app.DevToys
-
-# Search
-winget search vscode
-
-# List
-winget list --source winget
-
-# Upgrade winget self
-winget upgrade --id Microsoft.AppInstaller -e
-
-# Upgrade
-winget upgrade --all --accept-package-agreements --accept-source-agreements
-```
+See `./docs/winget.md` and `./windows/setup-winget-apps.ps1`
 
 ## Teams
 
