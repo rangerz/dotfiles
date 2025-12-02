@@ -15,6 +15,7 @@
 #Microsoft.XboxIdentityProvider                # Xbox sign-in framework, required for some games and Xbox services
 #Microsoft.XboxSpeechToTextOverlay             # Might be required for some games, WARNING: This app cannot be reinstalled easily! (Accessibility feature)
 #Microsoft.StartExperiencesApp                 # This app powers Windows Widgets My Feed
+#Microsoft.OneDrive                            # OneDrive consumer cloud storage client
 #Microsoft.M365Companions                      # Microsoft 365 (Business) Calendar, Files and People mini-apps, these apps may be reinstalled if enabled by your Microsoft 365 admin
 #Microsoft.WindowsCamera                       # Camera app for using built-in or connected cameras
 #MicrosoftWindows.CrossDevice                  # Phone integration within File Explorer, Camera and more (Part of Phone Link features)
@@ -32,6 +33,7 @@
 #Get-AppxPackage *NotepadPlusPlus* | Remove-AppxPackage
 #Get-AppxPackage *Dolby* | Remove-AppxPackage
 #Get-AppxPackage *Engagement* | Remove-AppxPackage
+
 
 # Install Winget Packages
 winget install -e --id Google.Chrome
