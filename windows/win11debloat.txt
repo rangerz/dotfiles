@@ -1,0 +1,109 @@
+-------------------------------------------------------------------------------------------
+ Win11Debloat Script - Custom Mode (User: Rangerc)
+-------------------------------------------------------------------------------------------
+Options:
+ (n) Don't remove any apps
+ (1) Only remove the default selection of apps
+ (2) Remove the default selection of apps, as well as mail & calendar apps and gaming related apps
+ (3) Manually select which apps to remove
+Do you want to remove any apps? Apps will be removed for all users (n/1/2/3): n
+
+Disable telemetry, diagnostic data, activity history, app-launch tracking and targeted ads? (y/n): y
+
+Disable tips, tricks, suggestions and ads in start, settings, notifications, explorer, lockscreen and Edge? (y/n): y
+
+Disable & remove Bing web search, Bing AI and Cortana from Windows search? (y/n): y
+
+Options:
+ (n) Don't disable any AI features
+ (1) Disable Microsoft Copilot, Windows Recall and Click to Do
+ (2) Disable Microsoft Copilot, Windows Recall, Click to Do and AI features in Microsoft Edge, Paint and Notepad
+Do you want to disable any AI features? This applies to all users (n/1/2): 2
+
+Disable Windows Spotlight background on desktop? (y/n): y
+
+Enable dark mode for system and apps? (y/n): y
+
+Disable transparency, animations and visual effects? (y/n): y
+
+Restore the old Windows 10 style context menu? (y/n): y
+
+Turn off Enhance Pointer Precision, also known as mouse acceleration? (y/n): y
+
+Disable the Sticky Keys keyboard shortcut? (y/n): y
+
+Disable Fast Start-up? This applies to all users (y/n): y
+
+Disable network connectivity during Modern Standby? This applies to all users (y/n): y
+
+Do you want to disable any context menu options? (y/n): y
+
+   Hide the 'Include in library' option in the context menu? (y/n): y
+
+   Hide the 'Give access to' option in the context menu? (y/n): y
+
+   Hide the 'Share' option in the context menu? (y/n): y
+
+Do you want to make any changes to the start menu? (y/n): y
+
+   Options:
+    (n) Don't remove any pinned apps from the start menu
+    (1) Remove all pinned apps from the start menu for this user only (Rangerc)
+    (2) Remove all pinned apps from the start menu for all existing and new users
+   Remove all pinned apps from the start menu? (n/1/2): 2
+
+   Disable the Phone Link mobile devices integration in the start menu? (y/n): y
+
+Do you want to make any changes to the taskbar and related services? (y/n): y
+
+   Align taskbar buttons to the left side? (y/n): y
+
+   Options:
+    (n) No change
+    (1) Always
+    (2) When taskbar is full
+    (3) Never
+   Combine taskbar buttons and hide labels? (n/1/2/3): 1
+
+   Options:
+    (n) No change
+    (1) Show app icons on all taskbars
+    (2) Show app icons on main taskbar and on taskbar where the windows is open
+    (3) Show app icons only on taskbar where the window is open
+   Change how to show app icons on the taskbar when using multiple monitors? (n/1/2/3): 1
+
+   Options:
+    (n) No change
+    (1) Hide search icon from the taskbar
+    (2) Show search icon on the taskbar
+    (3) Show search icon with label on the taskbar
+    (4) Show search box on the taskbar
+   Hide or change the search icon on the taskbar? (n/1/2/3/4): 1
+
+   Hide the taskview button from the taskbar? (y/n): y
+
+   Disable the widgets service to remove widgets on the taskbar & lockscreen? (y/n): y
+
+   Enable the 'End Task' option in the taskbar right click menu? (y/n): y
+
+   Enable the 'Last Active Click' behavior in the taskbar app area? (y/n): y
+
+Do you want to make any changes to File Explorer? (y/n): y
+
+   Options:
+    (n) No change
+    (1) Open File Explorer to 'Home'
+    (2) Open File Explorer to 'This PC'
+    (3) Open File Explorer to 'Downloads'
+    (4) Open File Explorer to 'OneDrive'
+   Change the default location that File Explorer opens to? (n/1/2/3/4): 3
+
+   Show hidden files, folders and drives? (y/n): y
+
+   Show file extensions for known file types? (y/n): y
+
+   Hide the Home section from the File Explorer sidepanel? (y/n): y
+
+   Hide the Gallery section from the File Explorer sidepanel? (y/n): y
+
+   Hide duplicate removable drive entries from the File Explorer sidepanel so they only show under This PC? (y/n): y

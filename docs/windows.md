@@ -29,6 +29,8 @@
         - Scroll & zoom
           - Scrolling direction -> Down motion scrolls down
   - Personalization
+    - Colors
+      - Choose your mode -> Dark
     - Taskbar
       - Taskbar
         - Taskbar items
@@ -41,6 +43,8 @@
           - Hidden icon menu -> On
         - Taskbar behaviors
           - Taskbar alignment -> Left
+          - When using multiple displays, show my taskbar apps on -> All taskbars
+          - Combine taskbar button and hide labels -> Always
   - Privacy & security
     - Search history -> Off and Clear
     - Show search 'highlights' -> Off
