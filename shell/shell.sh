@@ -232,3 +232,16 @@ fi
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --info=inline --multi"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview 'bat --style=numbers --color=always {} | head -100'"
+
+# pbcopy for chatGPT
+if command -v pbcopy >/dev/null 2>&1; then
+    alias clip='pbcopy'
+elif command -v clip.exe >/dev/null 2>&1; then
+    alias clip='clip.exe'
+else
+    echo "clipboard command not found"
+fi
+
+alias clip-review='(printf "根據 diff staged 去 code review，指出潛在 bug、可讀性問題與改進建議：\n\n"; git diff --cached | sed -n "1,400p") | clip'
+alias clip-commit='(printf "根據 diff staged 產生一則清楚、精簡、符合 Conventional Commits 的 commit message：\n\n"; git diff --cached) | clip'
+alias clip-pr='(printf "根據 show commit，產生可直接貼到 GitHub 的 Pull Request 英文說明（Markdown 格式）：\n\n"; git show HEAD) | clip'
