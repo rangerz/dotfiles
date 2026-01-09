@@ -22,7 +22,6 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 brew "git-delta"
-brew "codex"
 brew "gemini-cli"
 
 tap "shopify/shopify"
@@ -52,6 +51,7 @@ if OS.mac?
   cask "sublime-text"
   cask "visual-studio-code"
   cask "windows-app"
+  cask "codex"
 
   tap "deskflow/homebrew-tap"
   cask "deskflow"
