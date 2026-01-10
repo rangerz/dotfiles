@@ -38,7 +38,6 @@
 - GPU Rasterization -> Default
 - Parallel Downloading -> Enabled
 - QUIC Protocol -> Default
-- 
 
 ## Extensions
 

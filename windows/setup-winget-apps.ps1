@@ -34,9 +34,9 @@
 #Get-AppxPackage *Dolby* | Remove-AppxPackage
 #Get-AppxPackage *Engagement* | Remove-AppxPackage
 
-
 # Install Winget Packages
 winget install -e --id Google.Chrome
+winget install -e --id Google.Antigravity
 winget install -e --id Mozilla.Firefox
 winget install -e --id Fortinet.FortiClientVPN
 winget install -e --id Notepad++.Notepad++
