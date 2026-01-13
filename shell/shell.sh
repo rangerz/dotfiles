@@ -1,8 +1,3 @@
-# Shell flags
-_is_zsh=$([[ -n "${ZSH_VERSION:-}" ]] && echo 1 || echo 0)
-_is_bash=$([[ -n "${BASH_VERSION:-}" ]] && echo 1 || echo 0)
-_is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
-
 # Basics
 export CLICOLOR=1
 export EDITOR=/usr/bin/vim
@@ -16,6 +11,14 @@ export BLOCK_SIZE=1K # GNU coreutils
 # Homebrew analytics off and env hints off
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
+
+# Shell flags
+_is_zsh=$([[ -n "${ZSH_VERSION:-}" ]] && echo 1 || echo 0)
+_is_bash=$([[ -n "${BASH_VERSION:-}" ]] && echo 1 || echo 0)
+_is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
+
+# Utils functions
+has() { command -v "$1" >/dev/null 2>&1; }
 
 # Homebrew shellenv (macOS and LinuxBrew)
 if command -v brew >/dev/null 2>&1; then
@@ -233,15 +236,24 @@ export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --info=inline --multi"
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview 'bat --style=numbers --color=always {} | head -100'"
 
-# pbcopy for chatGPT
-if command -v pbcopy >/dev/null 2>&1; then
-    alias clip='pbcopy'
-elif command -v clip.exe >/dev/null 2>&1; then
-    alias clip='clip.exe'
-else
-    echo "clipboard command not found"
-fi
+# clipboard for chatGPT (macOS + WSL)
+clip() {
+  if command -v pbcopy >/dev/null 2>&1; then
+    pbcopy
+    return
+  elif command -v clip.exe >/dev/null 2>&1; then
+    if command -v iconv >/dev/null 2>&1; then
+      iconv -f UTF-8 -t UTF-16LE | clip.exe
+      return
+    fi
+    clip.exe
+    return
+  fi
 
-alias clip-review='(printf "根據 diff staged 去 code review，指出潛在 bug、可讀性問題與改進建議：\n\n"; git diff --cached | sed -n "1,400p") | clip'
+  echo "clipboard command not found (need pbcopy or clip.exe)" >&2
+  return 1
+}
+
+alias clip-review='(printf "根據 diff staged 去 code review，指出潛在 bug、可讀性問題與改進建議：\n\n"; git diff --cached) | clip'
 alias clip-commit='(printf "根據 diff staged 產生一則清楚、精簡、符合 Conventional Commits 的 commit message：\n\n"; git diff --cached) | clip'
 alias clip-pr='(printf "根據 show commit，產生可直接貼到 GitHub 的 Pull Request 英文說明（Markdown 格式）：\n\n"; git show HEAD) | clip'
