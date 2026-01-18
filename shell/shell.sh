@@ -28,7 +28,7 @@ if has brew; then
     eval "$(/usr/bin/env brew shellenv)"
 fi
 
-if [[ $- == *i* ]]; then
+if (( _is_interactive )); then
     # navigation
     alias ..="cd .."
     alias cd..="cd ../"
@@ -50,7 +50,6 @@ if [[ $- == *i* ]]; then
     alias vi="vim"
     alias h="history"
     alias vf="vimdiff"
-    alias which="type"
     alias help="tldr"
     alias f="fzf"
 
@@ -121,11 +120,58 @@ alias sha256="shasum -a 256 "
 alias sha1="shasum "
 alias hg="history | grep "
 
-alias ip="curl ip.gs"
-alias ip2="dig +short myip.opendns.com @resolver1.opendns.com"
-alias ip3="curl ifconfig.me"
-alias localip="ipconfig getifaddr en0"
-alias ips="ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)\\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+myip() {
+  local results=()
+
+  try() {
+    local name="$1"
+    local cmd="$2"
+    local ip
+
+    ip=$(eval "$cmd" 2>/dev/null | tr -d '\n')
+    if [[ -n "$ip" ]]; then
+      results+=("$(printf '%-15s %s' "$name" "$ip")")
+    fi
+  }
+
+  try "ip.gs"        "curl -fsS --max-time 2 https://ip.gs"
+  try "opendns"      "dig +short myip.opendns.com @resolver1.opendns.com"
+  try "ifconfig.me"  "curl -fsS --max-time 2 https://ifconfig.me"
+  try "icanhazip"    "curl -fsS --max-time 2 https://icanhazip.com"
+
+  if ((${#results[@]} == 0)); then
+    echo "No IP source available" >&2
+    return 1
+  fi
+
+  printf "%s\n" "${results[@]}"
+}
+
+localip() {
+  if has ipconfig; then
+    # MacOS
+    ipconfig getifaddr en0
+  elif has ip; then
+    # Linux / WSL
+    ip -o -4 addr show | awk '{print $4}' | cut -d/ -f1
+  else
+    echo "No supported method to get local IP" >&2
+    return 1
+  fi
+}
+
+ips() {
+  if has ip; then
+    # Linux / WSL
+    ip -o addr show | awk '{print $4}' | cut -d/ -f1
+  elif has ifconfig; then
+    # macOS fallback
+    ifconfig | grep -oE 'inet6? ([0-9a-fA-F:.]+)' | awk '{print $2}'
+  else
+    echo "No supported network tool found" >&2
+    return 1
+  fi
+}
 
 # Homebrew and APT updates
 alias brewery="brew update && brew upgrade && brew upgrade --cask && brew autoremove && brew cleanup && brew doctor"
@@ -134,7 +180,7 @@ alias aptup="sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove 
 alias update="brew upgrade topgrade && topgrade && brew cleanup && brew doctor"
 
 # Functions
-if [[ $- == *i* ]]; then
+if (( _is_interactive )); then
     # override cd only in interactive shell
     cd() {
         builtin cd "$@"
@@ -247,9 +293,12 @@ if (($_is_zsh)); then
 fi
 
 # fzf
-export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --info=inline --multi"
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview 'bat --style=numbers --color=always {} | head -100'"
+if has bat; then
+  export FZF_PREVIEW_CMD="bat --style=numbers --color=always {} | head -100"
+else
+  export FZF_PREVIEW_CMD="sed -n '1,100p' {}"
+fi
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --info=inline --multi --preview '$FZF_PREVIEW_CMD'"
 
 # clipboard for chatGPT (macOS + WSL)
 clip() {
