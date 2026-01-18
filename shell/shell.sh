@@ -19,9 +19,12 @@ _is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
 
 # Utils functions
 has() { command -v "$1" >/dev/null 2>&1; }
+is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }   # macOS check
+is_linux() { [[ "$(uname -s)" == "Linux" ]]; }   # Linux check
+is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; } # WSL check
 
 # Homebrew shellenv (macOS and LinuxBrew)
-if command -v brew >/dev/null 2>&1; then
+if has brew; then
     eval "$(/usr/bin/env brew shellenv)"
 fi
 
@@ -52,8 +55,8 @@ if [[ $- == *i* ]]; then
     alias f="fzf"
 
     # ls family
-    if command -v lsd >/dev/null 2>&1; then
-        alias ls="lsd -Fh --group-dirs=first --icon=always --date '+%Y-%m-%d %H:%M:%S'"
+    if has lsd; then
+        alias ls="lsd -Fh --group-dirs=first --icon=auto --date '+%Y-%m-%d %H:%M:%S'"
         alias ll="ls -l"
         alias la="ls -lA"
     else
@@ -68,7 +71,7 @@ if [[ $- == *i* ]]; then
     alias egrep="egrep --color=auto --binary-files=without-match"
     alias fgrep="fgrep --color=auto --binary-files=without-match"
 
-    if command -v bat >/dev/null 2>&1; then
+    if has bat; then
         alias cat="bat --style=plain --paging=never --color=always"
     fi
 
@@ -93,7 +96,21 @@ alias path='echo "$PATH" | tr ":" "\n"'
 alias resh="exec ${SHELL} -l"
 
 alias editHosts="sudo vim /etc/hosts"
-alias flush="dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+flushdns() {
+  # flush DNS cache
+  if is_macos; then
+    dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+  elif is_linux; then
+    if has systemd-resolve; then
+      sudo systemd-resolve --flush-caches
+    elif has resolvectl; then
+      sudo resolvectl flush-caches
+    else
+      echo "no supported DNS flush command found" >&2
+      return 1
+    fi
+  fi
+}
 
 alias openPorts="sudo lsof -i | grep LISTEN"
 alias lsock="sudo lsof -i -P"
@@ -127,9 +144,9 @@ fi
 mcd() { mkdir -p "$1" && cd "$1"; }
 zipf() { zip -r "$1".zip "$1"; }
 edit() {
-    if command -v subl >/dev/null 2>&1; then
+    if has subl; then
         subl "$@"
-    elif command -v code >/dev/null 2>&1; then
+    elif has code; then
         code -w "$@"
     else
         "$EDITOR" "$@"
@@ -147,7 +164,7 @@ alias gsf="git status -s | fzf \
   --preview-window=right:70%:wrap"
 
 # ZOXIDE
-if command -v zoxide &>/dev/null; then
+if has zoxide; then
     # Already handled by .zshrc zoxide plugin
     #((_is_zsh)) && eval "$(zoxide init zsh)"
 
@@ -155,7 +172,7 @@ if command -v zoxide &>/dev/null; then
 fi
 
 # MISE
-if command -v mise &>/dev/null; then
+if has mise; then
     # Already handled by .zshrc direnv plugin
     #((_is_zsh)) && eval "$(mise activate zsh)"
 
@@ -163,7 +180,7 @@ if command -v mise &>/dev/null; then
 fi
 
 # DIRENV
-if command -v direnv &>/dev/null; then
+if has direnv; then
     export VIRTUAL_ENV_DISABLE_PROMPT=1
 
     if ! typeset -f venv_prompt >/dev/null; then
@@ -191,18 +208,16 @@ pip-if-venv() { command pip "$@"; }
 alias pip="pip-if-venv"
 
 # NPM
-if command -v npm >/dev/null 2>&1; then
+if has npm; then
     alias nr="npm run"
     alias ni="npm install"
-    alias nrd="npm run dev"
 
-    npm config set fund false
-    npm config set audit false
-    npm config set legacy-peer-deps true
+    npm config get fund >/dev/null 2>&1 || npm config set fund false
+    npm config get audit >/dev/null 2>&1 || npm config set audit false
 fi
 
 # oh-my-zsh
-if (($_is_zsh)) && command -v brew &>/dev/null; then
+if (($_is_zsh)) && has brew; then
     ZSH_CUSTOM_PLUGINS="$(brew --prefix)/share"
 
     # zsh-completions
@@ -238,11 +253,11 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview 'bat --style=numbers --colo
 
 # clipboard for chatGPT (macOS + WSL)
 clip() {
-  if command -v pbcopy >/dev/null 2>&1; then
+  if has pbcopy; then
     pbcopy
     return
-  elif command -v clip.exe >/dev/null 2>&1; then
-    if command -v iconv >/dev/null 2>&1; then
+  elif has clip.exe; then
+    if has iconv; then
       iconv -f UTF-8 -t UTF-16LE | clip.exe
       return
     fi
