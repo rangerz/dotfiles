@@ -53,9 +53,6 @@ if OS.mac?
   cask "windows-app"
   cask "codex"
 
-  tap "deskflow/homebrew-tap"
-  cask "deskflow"
-
   tap "th-ch/youtube-music"
   cask "youtube-music"
 

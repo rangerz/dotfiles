@@ -52,7 +52,6 @@ winget install -e --id Docker.DockerDesktop
 winget install -e --id Notion.Notion
 winget install -e --id AutoIt.AutoIt
 winget install -e --id Sysinternals.Autologon
-winget install -e --id Deskflow.Deskflow
 winget install -e --id topgrade-rs.topgrade
 winget install -e --id th-ch.YouTubeMusic
 winget install -e --id eVenture.HideMe
