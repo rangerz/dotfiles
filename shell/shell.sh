@@ -12,6 +12,9 @@ export BLOCK_SIZE=1K # GNU coreutils
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Disable Oh My Zsh auto update
+export DISABLE_AUTO_UPDATE=true
+
 # Shell flags
 _is_zsh=$([[ -n "${ZSH_VERSION:-}" ]] && echo 1 || echo 0)
 _is_bash=$([[ -n "${BASH_VERSION:-}" ]] && echo 1 || echo 0)
