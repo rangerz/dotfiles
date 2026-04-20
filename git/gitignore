@@ -38,7 +38,7 @@ node_module
 .vscode
 
 # AIs
-.codex/
+.codex
 .claude/
 .claude.json
 
