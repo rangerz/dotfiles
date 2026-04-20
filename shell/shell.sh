@@ -90,8 +90,10 @@ if (( _is_interactive )); then
 fi
 
 # sudo alias: keep alias expansion after sudo
-alias sudo="sudo "
-alias sudoe="sudo -E"
+if (( _is_interactive )); then
+  alias sudo="sudo "
+  alias sudoe="sudo -E"
+fi
 
 # small utils
 alias path='echo "$PATH" | tr ":" "\n"'
@@ -103,10 +105,13 @@ flushdns() {
   if is_macos; then
     dscacheutil -flushcache; sudo killall -HUP mDNSResponder
   elif is_linux; then
-    if has systemd-resolve; then
-      sudo systemd-resolve --flush-caches
-    elif has resolvectl; then
+    if has resolvectl; then
       sudo resolvectl flush-caches
+    elif has systemd-resolve; then
+      sudo systemd-resolve --flush-caches
+    elif has systemctl; then
+      # may work on systemd-resolved systems
+      sudo systemctl restart systemd-resolved || return 1
     else
       echo "no supported DNS flush command found" >&2
       return 1
@@ -230,30 +235,57 @@ fi
 
 # DIRENV
 if has direnv; then
-    export VIRTUAL_ENV_DISABLE_PROMPT=1
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-    if ! typeset -f venv_prompt >/dev/null; then
-        venv_prompt() {
-            if [[ -n "$VIRTUAL_ENV" ]]; then
-                printf '(%s) ' "${VIRTUAL_ENV:t}" # basename folder name only
-            fi
-        }
+  # venv prompt
+  if ! typeset -f venv_prompt >/dev/null 2>&1; then
+    venv_prompt() {
+      # Print "(venv) " if VIRTUAL_ENV is set
+      [ -n "${VIRTUAL_ENV:-}" ] || return 0
+
+      if (( _is_zsh )); then
+        # zsh: ${var:t} is basename
+        printf '(%s) ' "${VIRTUAL_ENV:t}"
+      else
+        # bash/posix: ${var##*/} is basename
+        printf '(%s) ' "${VIRTUAL_ENV##*/}"
+      fi
+    }
+  fi
+
+  # Only modify prompt in interactive shells
+  if (( _is_interactive )); then
+    if (( _is_zsh )); then
+      # zsh uses PROMPT
+      case "${PROMPT:-}" in
+        *'$(venv_prompt)'*) : ;;
+        *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
+      esac
+    else
+      # bash uses PS1
+      case "${PS1:-}" in
+        *'$(venv_prompt)'*) : ;;
+        *) PS1='$(venv_prompt)'"${PS1:-}" ;;
+      esac
     fi
+  fi
 
-    case $PROMPT in
-    *'$(venv_prompt)'*) ;;
-    *) PROMPT='$(venv_prompt)'"$PROMPT" ;;
-    esac
+  # Already handled by oh-my-zsh direnv plugin
+  #((_is_zsh)) && eval "$(direnv hook zsh)"
 
-    # Already handled by oh-my-zsh direnv plugin
-    #((_is_zsh)) && eval "$(direnv hook zsh)"
-
-    ((_is_bash)) && eval "$(direnv hook bash)"
+  ((_is_bash)) && eval "$(direnv hook bash)"
 fi
 
 # PIP
 export PIP_REQUIRE_VIRTUALENV=true
-pip-if-venv() { command pip "$@"; }
+pip-if-venv() {
+  # require venv for pip
+  if [ -z "${VIRTUAL_ENV:-}" ]; then
+    echo "pip blocked: activate a virtualenv first" >&2
+    return 1
+  fi
+  command pip "$@"
+}
 alias pip="pip-if-venv"
 
 # NPM
