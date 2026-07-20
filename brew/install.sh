@@ -8,7 +8,7 @@ set -euo pipefail
 install_linux_requirements() {
     if command -v apt-get >/dev/null 2>&1; then
         sudo apt-get update
-        sudo apt-get install -y build-essential procps curl file git
+        sudo apt-get install -y build-essential procps curl file git bubblewrap
     elif command -v dnf >/dev/null 2>&1; then
         sudo dnf groupinstall -y 'Development Tools'
         sudo dnf install -y procps-ng curl file git
