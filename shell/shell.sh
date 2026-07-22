@@ -100,6 +100,11 @@ alias path='echo "$PATH" | tr ":" "\n"'
 alias resh="exec ${SHELL} -l"
 
 alias editHosts="sudo vim /etc/hosts"
+
+if is_wsl && has wslview; then
+    alias open="wslview"
+fi
+
 flushdns() {
   # flush DNS cache
   if is_macos; then

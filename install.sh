@@ -26,7 +26,10 @@ main() {
 
     download_dotfiles
 
-    # todo: support other shells
+    # Install WSL-only utilities (no-op outside WSL); failure must not block core setup
+    # 安裝 WSL 專屬工具(非 WSL 時為 no-op);失敗不應中斷後續核心安裝
+    "$DOTFILES/wsl/install.sh" || echo "WSL setup skipped/failed, continuing"
+
     # Install zsh and oh-my-zsh
     "$DOTFILES/zsh/install.sh"
     "$DOTFILES/oh-my-zsh/install.sh"
