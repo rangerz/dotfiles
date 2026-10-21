@@ -24,8 +24,8 @@ brew "zsh-completions"
 brew "git-delta"
 brew "gemini-cli"
 
-tap "shopify/shopify"
-brew "shopify-cli"
+brew "oven-sh/bun/bun"
+brew "shopify/shopify/shopify-cli"
 
 if OS.mac?
   brew "wget"
@@ -52,9 +52,6 @@ if OS.mac?
   cask "visual-studio-code"
   cask "windows-app"
   cask "codex"
-
-  tap "th-ch/youtube-music"
-  cask "youtube-music"
 
   brew "mas"
   mas "hide.me", id: 953040671
