@@ -16,7 +16,6 @@ if ! grep -qF "$SOURCE_VIMRC" "$VIMRC_FILE"; then
     echo "Vim config successfully updated into $VIMRC_FILE"
 else
     echo "Vim config already exists in $VIMRC_FILE. No changes made."
-    exit
 fi
 
 for dir in "${VIM_DIRS[@]}"; do

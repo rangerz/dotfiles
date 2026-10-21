@@ -22,7 +22,6 @@ if ! grep -qF "$INCLUDE_CONFIG" "$SSH_CONFIG"; then
     echo "SSH config successfully updated into $SSH_CONFIG"
 else
     echo "SSH config already exists in $SSH_CONFIG. No changes made."
-    exit
 fi
 
 # Create necessary directories
