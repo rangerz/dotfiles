@@ -8,8 +8,10 @@ PATTERN='source[[:space:]].*\$ZSH/oh-my-zsh\.sh'
 
 install_oh_my_zsh() {
     if [ -d "$HOME/.oh-my-zsh" ]; then
+        # return, not exit: main must still sync the plugins block
+        # 用 return 不用 exit:main 還要接著同步 plugins 區塊
         echo "oh-my-zsh is installed"
-        exit 0
+        return 0
     fi
 
     RUNZSH=no CHSH=no KEEP_ZSHRC=no OVERWRITE_CONFIRMATION=no \

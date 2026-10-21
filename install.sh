@@ -13,8 +13,11 @@ download_dotfiles() {
     fi
 
     if [ -d "$DOTFILES/.git" ]; then
-        echo "Dotfiles already installed at $DOTFILES"
-        exit 0
+        # Already cloned: update, then continue so the remaining steps re-run
+        # 已經 clone 過:更新後繼續執行後續步驟(不可 exit,否則重跑會被跳過)
+        echo "Dotfiles already installed at $DOTFILES, updating"
+        git -C "$DOTFILES" pull --ff-only || echo "Update skipped (local changes or no network), continuing"
+        return 0
     fi
 
     echo "Cloning dotfiles into $DOTFILES"
