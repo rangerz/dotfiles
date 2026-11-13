@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # This corrects a shitty point of confusion with macOS where if you bounce
 # between wireless and wired connections, macOS will suddenly throw up its hands
@@ -13,9 +13,12 @@
 #
 # None of this really matters in the big scheme of things, but it bothered me.
 
+set -euo pipefail
+
 hostname=$(scutil --get LocalHostName)
 
 # if hostname contains a hyphen and then a number, remove the hyphen and number
+# shellcheck disable=SC2001 # anchored regex needs sed
 normal_hostname=$(echo "$hostname" | sed 's/-[0-9]*$//')
 
 # if our hostname was changed by macOS, change it back
