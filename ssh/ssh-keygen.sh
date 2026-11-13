@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# shellcheck disable=SC1071 # zsh script, not supported by shellcheck
 set -euo pipefail
 
 # Check if the ed25519 key already exists

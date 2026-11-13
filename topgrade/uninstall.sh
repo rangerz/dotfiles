@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/topgrade.d"
 CONF_TOML="$CONF_DIR/dotfiles.toml"
 

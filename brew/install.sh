@@ -73,7 +73,7 @@ add_line_if_missing() {
 
 # Persist Homebrew shellenv into common Bash and Zsh startup files
 persist_brew_shellenv() {
-    local brew_bin prefix line
+    local brew_bin prefix line os
     brew_bin="$(command -v brew || true)"
     if [[ -z "$brew_bin" ]]; then
         echo "brew not found in PATH after installation"
@@ -83,7 +83,7 @@ persist_brew_shellenv() {
     prefix="$("$brew_bin" --prefix)"
     line="eval \"\$($prefix/bin/brew shellenv)\""
 
-    local os="$(uname -s)"
+    os="$(uname -s)"
     local zhome="${ZDOTDIR:-$HOME}"
     local targets=()
 

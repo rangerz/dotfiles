@@ -5,7 +5,8 @@ set -eu
 DOTFILES="$HOME/.dotfiles"
 
 uninstall_confirm() {
-    read -r -p "Are you sure you want to remove dotfiles? [y/N] " confirmation
+    printf "Are you sure you want to remove dotfiles? [y/N] "
+    read -r confirmation
     if [ "$confirmation" != y ] && [ "$confirmation" != Y ]; then
         echo "Uninstall cancelled"
         exit

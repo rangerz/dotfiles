@@ -1,3 +1,4 @@
+# shellcheck shell=bash disable=SC2034 # sourced by .zshrc; oh-my-zsh reads plugins
 plugins=(
     # --- Environment / System level ---
     aws    # AWS CLI completions

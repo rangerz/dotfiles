@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# shellcheck disable=SC1071 # zsh script, not supported by shellcheck
 set -euo pipefail
 
 ZSHRC="$HOME/.zshrc"
