@@ -42,7 +42,7 @@ main() {
     "$DOTFILES/git/install.sh"
     "$DOTFILES/ssh/install.sh"
     "$DOTFILES/vim/install.sh"
-    #"$DOTFILES/mise/install.sh"
+    "$DOTFILES/mise/install.sh"
 
     echo "Done. Dotfiles installed in $DOTFILES"
 
