@@ -10,6 +10,7 @@ mise use -g \
     node@lts \
     python@3 \
     ruff@latest \
-    rust
+    "rust[targets=wasm32-wasip1]@latest" \
+    npm:ccstatusline
 
 echo "[mise] Installation completed."
