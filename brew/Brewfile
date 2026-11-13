@@ -4,6 +4,7 @@
 brew "jq"
 brew "yq"
 brew "shfmt"
+brew "shellcheck"
 brew "tlrc"   # Rust tldr
 brew "dos2unix"
 brew "lsd"
