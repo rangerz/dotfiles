@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Basics
 export CLICOLOR=1
 export EDITOR=/usr/bin/vim
@@ -97,7 +98,7 @@ fi
 
 # small utils
 alias path='echo "$PATH" | tr ":" "\n"'
-alias resh="exec ${SHELL} -l"
+alias resh='exec "$SHELL" -l'
 
 alias editHosts="sudo vim /etc/hosts"
 
@@ -197,11 +198,11 @@ alias update="brew upgrade topgrade && topgrade && brew cleanup && brew doctor"
 if ((_is_interactive)); then
     # override cd only in interactive shell
     cd() {
-        builtin cd "$@"
+        builtin cd "$@" || return
         ls -al
     }
 fi
-mcd() { mkdir -p "$1" && cd "$1"; }
+mcd() { mkdir -p "$1" && cd "$1" || return; }
 zipf() { zip -r "$1".zip "$1"; }
 edit() {
     if has subl; then
@@ -214,11 +215,14 @@ edit() {
 }
 
 # Git
-export GPG_TTY=$(tty) # Ensure GPG pinentry works
+GPG_TTY=$(tty) # Ensure GPG pinentry works
+export GPG_TTY
 alias g="git"
+# shellcheck disable=SC2142 # \$1 belongs to awk, not the alias
 alias glf="git log --oneline | fzf \
   --preview \"echo {} | awk '{print \\\$1}' | xargs -I % git show --color=always % \" \
   --preview-window=right:70%:wrap"
+# shellcheck disable=SC2142 # \$2 belongs to awk, not the alias
 alias gsf="git status -s | fzf \
   --preview \"echo {} | awk '{print \\\$2}' | xargs -I % git diff --color=always % \" \
   --preview-window=right:70%:wrap"
@@ -263,12 +267,14 @@ if has direnv; then
     if ((_is_interactive)); then
         if ((_is_zsh)); then
             # zsh uses PROMPT
+            # shellcheck disable=SC2016 # must expand at prompt time
             case "${PROMPT:-}" in
             *'$(venv_prompt)'*) : ;;
             *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
             esac
         else
             # bash uses PS1
+            # shellcheck disable=SC2016 # must expand at prompt time
             case "${PS1:-}" in
             *'$(venv_prompt)'*) : ;;
             *) PS1='$(venv_prompt)'"${PS1:-}" ;;
@@ -304,7 +310,7 @@ if has npm; then
 fi
 
 # oh-my-zsh
-if (($_is_zsh)) && has brew; then
+if ((_is_zsh)) && has brew; then
     ZSH_CUSTOM_PLUGINS="$(brew --prefix)/share"
 
     # zsh-completions
@@ -316,16 +322,18 @@ if (($_is_zsh)) && has brew; then
 
     # zsh-autosuggestions
     if [ -f "$ZSH_CUSTOM_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+        # shellcheck source=/dev/null
         source "$ZSH_CUSTOM_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh"
     fi
 
     # zsh-syntax-highlighting
     if [ -f "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+        # shellcheck source=/dev/null
         source "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
     fi
 fi
 
-if (($_is_zsh)); then
+if ((_is_zsh)); then
     # history-substring-search
     export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
     export HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=green,bold'
