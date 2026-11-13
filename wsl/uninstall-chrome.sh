@@ -10,7 +10,7 @@
 set -euo pipefail
 
 is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; }
-has()    { command -v "$1" >/dev/null 2>&1; }
+has() { command -v "$1" >/dev/null 2>&1; }
 
 main() {
     if ! is_wsl; then
@@ -39,8 +39,8 @@ main() {
     if [[ "${1:-}" == "--repo" ]]; then
         echo "[chrome] Removing Google's apt repo and keyring..."
         sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
-                   /etc/apt/trusted.gpg.d/google-chrome.gpg \
-                   /etc/apt/keyrings/google-chrome.gpg
+            /etc/apt/trusted.gpg.d/google-chrome.gpg \
+            /etc/apt/keyrings/google-chrome.gpg
         sudo apt-get update
     fi
 

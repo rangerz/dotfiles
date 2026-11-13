@@ -15,7 +15,7 @@ set -euo pipefail
 CHROME_DEB_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 
 is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; }
-has()    { command -v "$1" >/dev/null 2>&1; }
+has() { command -v "$1" >/dev/null 2>&1; }
 
 main() {
     if ! is_wsl; then

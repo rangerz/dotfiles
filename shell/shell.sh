@@ -22,8 +22,8 @@ _is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
 
 # Utils functions
 has() { command -v "$1" >/dev/null 2>&1; }
-is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }   # macOS check
-is_linux() { [[ "$(uname -s)" == "Linux" ]]; }   # Linux check
+is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }                     # macOS check
+is_linux() { [[ "$(uname -s)" == "Linux" ]]; }                      # Linux check
 is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; } # WSL check
 
 # Homebrew shellenv (macOS and LinuxBrew)
@@ -31,7 +31,7 @@ if has brew; then
     eval "$(/usr/bin/env brew shellenv)"
 fi
 
-if (( _is_interactive )); then
+if ((_is_interactive)); then
     # navigation
     alias ..="cd .."
     alias cd..="cd ../"
@@ -90,9 +90,9 @@ if (( _is_interactive )); then
 fi
 
 # sudo alias: keep alias expansion after sudo
-if (( _is_interactive )); then
-  alias sudo="sudo "
-  alias sudoe="sudo -E"
+if ((_is_interactive)); then
+    alias sudo="sudo "
+    alias sudoe="sudo -E"
 fi
 
 # small utils
@@ -106,22 +106,23 @@ if is_wsl && has wslview; then
 fi
 
 flushdns() {
-  # flush DNS cache
-  if is_macos; then
-    dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-  elif is_linux; then
-    if has resolvectl; then
-      sudo resolvectl flush-caches
-    elif has systemd-resolve; then
-      sudo systemd-resolve --flush-caches
-    elif has systemctl; then
-      # may work on systemd-resolved systems
-      sudo systemctl restart systemd-resolved || return 1
-    else
-      echo "no supported DNS flush command found" >&2
-      return 1
+    # flush DNS cache
+    if is_macos; then
+        dscacheutil -flushcache
+        sudo killall -HUP mDNSResponder
+    elif is_linux; then
+        if has resolvectl; then
+            sudo resolvectl flush-caches
+        elif has systemd-resolve; then
+            sudo systemd-resolve --flush-caches
+        elif has systemctl; then
+            # may work on systemd-resolved systems
+            sudo systemctl restart systemd-resolved || return 1
+        else
+            echo "no supported DNS flush command found" >&2
+            return 1
+        fi
     fi
-  fi
 }
 
 alias openPorts="sudo lsof -i | grep LISTEN"
@@ -134,56 +135,56 @@ alias sha1="shasum "
 alias hg="history | grep "
 
 myip() {
-  local results=()
+    local results=()
 
-  try() {
-    local name="$1"
-    local cmd="$2"
-    local ip
+    try() {
+        local name="$1"
+        local cmd="$2"
+        local ip
 
-    ip=$(eval "$cmd" 2>/dev/null | tr -d '\n')
-    if [[ -n "$ip" ]]; then
-      results+=("$(printf '%-15s %s' "$name" "$ip")")
+        ip=$(eval "$cmd" 2>/dev/null | tr -d '\n')
+        if [[ -n "$ip" ]]; then
+            results+=("$(printf '%-15s %s' "$name" "$ip")")
+        fi
+    }
+
+    try "ip.gs" "curl -fsS --max-time 2 https://ip.gs"
+    try "opendns" "dig +short myip.opendns.com @resolver1.opendns.com"
+    try "ifconfig.me" "curl -fsS --max-time 2 https://ifconfig.me"
+    try "icanhazip" "curl -fsS --max-time 2 https://icanhazip.com"
+
+    if ((${#results[@]} == 0)); then
+        echo "No IP source available" >&2
+        return 1
     fi
-  }
 
-  try "ip.gs"        "curl -fsS --max-time 2 https://ip.gs"
-  try "opendns"      "dig +short myip.opendns.com @resolver1.opendns.com"
-  try "ifconfig.me"  "curl -fsS --max-time 2 https://ifconfig.me"
-  try "icanhazip"    "curl -fsS --max-time 2 https://icanhazip.com"
-
-  if ((${#results[@]} == 0)); then
-    echo "No IP source available" >&2
-    return 1
-  fi
-
-  printf "%s\n" "${results[@]}"
+    printf "%s\n" "${results[@]}"
 }
 
 localip() {
-  if has ipconfig; then
-    # MacOS
-    ipconfig getifaddr en0
-  elif has ip; then
-    # Linux / WSL
-    ip -o -4 addr show | awk '{print $4}' | cut -d/ -f1
-  else
-    echo "No supported method to get local IP" >&2
-    return 1
-  fi
+    if has ipconfig; then
+        # MacOS
+        ipconfig getifaddr en0
+    elif has ip; then
+        # Linux / WSL
+        ip -o -4 addr show | awk '{print $4}' | cut -d/ -f1
+    else
+        echo "No supported method to get local IP" >&2
+        return 1
+    fi
 }
 
 ips() {
-  if has ip; then
-    # Linux / WSL
-    ip -o addr show | awk '{print $4}' | cut -d/ -f1
-  elif has ifconfig; then
-    # macOS fallback
-    ifconfig | grep -oE 'inet6? ([0-9a-fA-F:.]+)' | awk '{print $2}'
-  else
-    echo "No supported network tool found" >&2
-    return 1
-  fi
+    if has ip; then
+        # Linux / WSL
+        ip -o addr show | awk '{print $4}' | cut -d/ -f1
+    elif has ifconfig; then
+        # macOS fallback
+        ifconfig | grep -oE 'inet6? ([0-9a-fA-F:.]+)' | awk '{print $2}'
+    else
+        echo "No supported network tool found" >&2
+        return 1
+    fi
 }
 
 # Homebrew and APT updates
@@ -193,7 +194,7 @@ alias aptup="sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove 
 alias update="brew upgrade topgrade && topgrade && brew cleanup && brew doctor"
 
 # Functions
-if (( _is_interactive )); then
+if ((_is_interactive)); then
     # override cd only in interactive shell
     cd() {
         builtin cd "$@"
@@ -240,56 +241,56 @@ fi
 
 # DIRENV
 if has direnv; then
-  export VIRTUAL_ENV_DISABLE_PROMPT=1
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-  # venv prompt
-  if ! typeset -f venv_prompt >/dev/null 2>&1; then
-    venv_prompt() {
-      # Print "(venv) " if VIRTUAL_ENV is set
-      [ -n "${VIRTUAL_ENV:-}" ] || return 0
+    # venv prompt
+    if ! typeset -f venv_prompt >/dev/null 2>&1; then
+        venv_prompt() {
+            # Print "(venv) " if VIRTUAL_ENV is set
+            [ -n "${VIRTUAL_ENV:-}" ] || return 0
 
-      if (( _is_zsh )); then
-        # zsh: ${var:t} is basename
-        printf '(%s) ' "${VIRTUAL_ENV:t}"
-      else
-        # bash/posix: ${var##*/} is basename
-        printf '(%s) ' "${VIRTUAL_ENV##*/}"
-      fi
-    }
-  fi
-
-  # Only modify prompt in interactive shells
-  if (( _is_interactive )); then
-    if (( _is_zsh )); then
-      # zsh uses PROMPT
-      case "${PROMPT:-}" in
-        *'$(venv_prompt)'*) : ;;
-        *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
-      esac
-    else
-      # bash uses PS1
-      case "${PS1:-}" in
-        *'$(venv_prompt)'*) : ;;
-        *) PS1='$(venv_prompt)'"${PS1:-}" ;;
-      esac
+            if ((_is_zsh)); then
+                # zsh: ${var:t} is basename
+                printf '(%s) ' "${VIRTUAL_ENV:t}"
+            else
+                # bash/posix: ${var##*/} is basename
+                printf '(%s) ' "${VIRTUAL_ENV##*/}"
+            fi
+        }
     fi
-  fi
 
-  # Already handled by oh-my-zsh direnv plugin
-  #((_is_zsh)) && eval "$(direnv hook zsh)"
+    # Only modify prompt in interactive shells
+    if ((_is_interactive)); then
+        if ((_is_zsh)); then
+            # zsh uses PROMPT
+            case "${PROMPT:-}" in
+            *'$(venv_prompt)'*) : ;;
+            *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
+            esac
+        else
+            # bash uses PS1
+            case "${PS1:-}" in
+            *'$(venv_prompt)'*) : ;;
+            *) PS1='$(venv_prompt)'"${PS1:-}" ;;
+            esac
+        fi
+    fi
 
-  ((_is_bash)) && eval "$(direnv hook bash)"
+    # Already handled by oh-my-zsh direnv plugin
+    #((_is_zsh)) && eval "$(direnv hook zsh)"
+
+    ((_is_bash)) && eval "$(direnv hook bash)"
 fi
 
 # PIP
 export PIP_REQUIRE_VIRTUALENV=true
 pip-if-venv() {
-  # require venv for pip
-  if [ -z "${VIRTUAL_ENV:-}" ]; then
-    echo "pip blocked: activate a virtualenv first" >&2
-    return 1
-  fi
-  command pip "$@"
+    # require venv for pip
+    if [ -z "${VIRTUAL_ENV:-}" ]; then
+        echo "pip blocked: activate a virtualenv first" >&2
+        return 1
+    fi
+    command pip "$@"
 }
 alias pip="pip-if-venv"
 
@@ -334,31 +335,30 @@ fi
 
 # fzf
 if has bat; then
-  export FZF_PREVIEW_CMD="bat --style=numbers --color=always {} | head -100"
+    export FZF_PREVIEW_CMD="bat --style=numbers --color=always {} | head -100"
 else
-  export FZF_PREVIEW_CMD="sed -n '1,100p' {}"
+    export FZF_PREVIEW_CMD="sed -n '1,100p' {}"
 fi
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --info=inline --multi --preview '$FZF_PREVIEW_CMD'"
 
 # clipboard for chatGPT (macOS + WSL)
 clip() {
-  if has pbcopy; then
-    pbcopy
-    return
-  elif has clip.exe; then
-    if has iconv; then
-      iconv -f UTF-8 -t UTF-16LE | clip.exe
-      return
+    if has pbcopy; then
+        pbcopy
+        return
+    elif has clip.exe; then
+        if has iconv; then
+            iconv -f UTF-8 -t UTF-16LE | clip.exe
+            return
+        fi
+        clip.exe
+        return
     fi
-    clip.exe
-    return
-  fi
 
-  echo "clipboard command not found (need pbcopy or clip.exe)" >&2
-  return 1
+    echo "clipboard command not found (need pbcopy or clip.exe)" >&2
+    return 1
 }
 
 alias clip-review='(printf "根據 diff staged 去 code review，指出潛在 bug、可讀性問題與改進建議：\n\n"; git diff --cached) | clip'
 alias clip-commit='(printf "根據 diff staged 產生一則清楚、精簡、符合 Conventional Commits 的 commit message：\n\n"; git diff --cached) | clip'
 alias clip-pr='(printf "根據 show commit，產生可直接貼到 GitHub 的 Pull Request 英文說明（Markdown 格式）：\n\n"; git show HEAD) | clip'
-

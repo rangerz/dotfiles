@@ -8,11 +8,11 @@ set -euo pipefail
 # 在這裡新增 WSL 專屬的 apt 套件,一行一個,行內 "# ..." 註解可保留。
 # ---------------------------------------------------------------------------
 WSL_APT_PACKAGES=(
-    wslu # wslview/wslvar/wslsys... — open files & URLs with Windows default apps
+    wslu            # wslview/wslvar/wslsys... — open files & URLs with Windows default apps
     build-essential # 編譯工具
-    git # 程式碼版本控制
-    curl # 下載工具
-    fonts-noto-cjk # Noto CJK 字型
+    git             # 程式碼版本控制
+    curl            # 下載工具
+    fonts-noto-cjk  # Noto CJK 字型
 )
 
 # WSL check (matches shell/shell.sh)
