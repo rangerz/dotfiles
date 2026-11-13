@@ -7,9 +7,8 @@
 # chump when your machine is called "incredible-programmer-9390028", like
 # you're behind 9,390,027 other better programmers before you. Sheesh.
 #
-# Anyway, this runs in `dot` and only asks for your permission (usually TouchID)
-# if it actually needs to change your hostname for you, otherwise it's fast to
-# toss into `dot` anyway.
+# Run it manually; it only asks for your permission (usually TouchID) if it
+# actually needs to change your hostname for you.
 #
 # None of this really matters in the big scheme of things, but it bothered me.
 
