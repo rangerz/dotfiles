@@ -24,9 +24,9 @@ brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 brew "git-delta"
 brew "rclone"
+brew "sevenzip" # 7zz
 
 brew "flyctl"
-brew "oven-sh/bun/bun"
 
 # AI coding CLIs
 cask "claude-code@latest"
