@@ -23,9 +23,15 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 brew "git-delta"
+brew "rclone"
 
 brew "flyctl"
 brew "oven-sh/bun/bun"
+
+# AI coding CLIs
+cask "claude-code@latest"
+cask "codex"
+cask "antigravity-cli" # agy
 
 if OS.mac?
   brew "wget"
@@ -53,7 +59,6 @@ if OS.mac?
   cask "sublime-text"
   cask "visual-studio-code"
   cask "windows-app"
-  cask "codex"
 
   brew "mas"
   mas "hide.me", id: 953040671
