@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+TARGET="$HOME/.config/mise/config.toml"
+
 # brew's bin is not on PATH yet when called from the top-level install.sh
 if ! command -v mise >/dev/null 2>&1; then
     for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
@@ -16,13 +19,14 @@ if ! command -v mise >/dev/null 2>&1; then
     exit 1
 fi
 
-mise use -g \
-    node@lts \
-    python@3 \
-    ruff@latest \
-    "rust[targets=wasm32-wasip1]@latest" \
-    npm:ccstatusline \
-    npm:@axe-core/cli \
-    npm:@shopify/cli
+# Back up an existing real file before linking
+if [[ -f "$TARGET" && ! -L "$TARGET" ]]; then
+    mv "$TARGET" "$TARGET.bak"
+    echo "[mise] Backed up existing config to $TARGET.bak"
+fi
+mkdir -p "$(dirname "$TARGET")"
+ln -sfn "$CUR_DIR/config.toml" "$TARGET"
+
+mise install
 
 echo "[mise] Installation completed."

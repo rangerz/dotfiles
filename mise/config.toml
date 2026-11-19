@@ -1,0 +1,11 @@
+# mise global config (linked to ~/.config/mise/config.toml)
+
+[tools]
+node = "lts"
+python = "3"
+ruff = "latest"
+rust = { version = "latest", targets = "wasm32-wasip1" }
+
+"npm:ccstatusline" = "latest"
+"npm:@axe-core/cli" = "latest"
+"npm:@shopify/cli" = "latest"
