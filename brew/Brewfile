@@ -16,7 +16,7 @@ brew "mise"
 brew "direnv"
 brew "gh"
 brew "awscli"
-brew "azure-cli"
+cask "azure-cli" # formula removed from homebrew-core
 brew "openfortivpn"
 brew "topgrade"
 brew "zsh-autosuggestions"
