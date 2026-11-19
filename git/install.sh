@@ -15,4 +15,7 @@ else
     git config --global --add include.path "$GIT_CONFIG"
 fi
 
+# Enable this repo's pre-commit hook (shfmt + shellcheck)
+git -C "$CUR_DIR/.." config core.hooksPath .githooks
+
 echo "[Git] Installation completed."

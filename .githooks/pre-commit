@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Auto-format staged shell scripts with shfmt, then lint them with shellcheck
+set -euo pipefail
+
+for tool in shfmt shellcheck; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        echo "[pre-commit] $tool is not installed (brew install $tool), or skip with --no-verify."
+        exit 1
+    fi
+done
+
+staged=()
+while IFS= read -r -d '' f; do
+    staged+=("$f")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+[[ ${#staged[@]} -eq 0 ]] && exit 0
+
+# Plain assignment so a shfmt error stops the hook (set -e misses failures inside <(...))
+list=$(shfmt -f "${staged[@]}")
+[[ -z "$list" ]] && exit 0
+scripts=()
+while IFS= read -r f; do
+    scripts+=("$f")
+done <<<"$list"
+
+for f in "${scripts[@]}"; do
+    # Re-adding a partially staged file would sneak unstaged hunks into the commit, so only fix fully staged ones
+    if git diff --quiet -- "$f"; then
+        shfmt -w "$f"
+        git add -f -- "$f" # -f: file is already staged, but may match a global ignore (e.g. .githooks)
+    fi
+done
+
+# Check the staged copy, i.e. what will actually be committed, not the working tree
+fail=0
+for f in "${scripts[@]}"; do
+    # Linting stdin reports the file as "-", so print the real name
+    if ! out=$(git show ":$f" | shfmt -d --filename "$f" 2>&1 && git show ":$f" | shellcheck - 2>&1); then
+        echo "[pre-commit] $f"
+        echo "$out"
+        fail=1
+    fi
+done
+exit "$fail"

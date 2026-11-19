@@ -8,7 +8,7 @@ Dotfiles for macOS, Linux, and WSL. Each module directory (`brew/`, `git/`, `mis
 - Script dir: `CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"`.
 
 ## Checks
-`shfmt -f . | xargs shellcheck` and `shfmt -d .` must pass (fix with `shfmt -w .`).
+`shfmt -f . | xargs shellcheck` and `shfmt -d .` must pass (fix with `shfmt -w .`). `.githooks/pre-commit` runs both on staged scripts (enabled by `git/install.sh`).
 
 ## Commits
 Conventional Commits with folder scope, e.g. `feat(git): add delta config`.
