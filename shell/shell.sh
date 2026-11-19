@@ -218,8 +218,6 @@ edit() {
 }
 
 # Git
-GPG_TTY=$(tty) # Ensure GPG pinentry works
-export GPG_TTY
 alias g="git"
 # shellcheck disable=SC2142 # \$1 belongs to awk, not the alias
 alias glf="git log --oneline | fzf \
