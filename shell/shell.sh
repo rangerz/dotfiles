@@ -13,6 +13,9 @@ export BLOCK_SIZE=1K # GNU coreutils
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Shopify AI Toolkit telemetry off (its hook sends prompt text to shopify.dev)
+export OPT_OUT_INSTRUMENTATION=true
+
 # Disable Oh My Zsh auto update
 export DISABLE_AUTO_UPDATE=true
 
