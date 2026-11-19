@@ -23,14 +23,13 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zsh-completions"
 brew "git-delta"
-brew "gemini-cli"
 
 brew "oven-sh/bun/bun"
-brew "shopify/shopify/shopify-cli"
 
 if OS.mac?
   brew "wget"
 
+  cask "antigravity"
   cask "appcleaner"
   cask "caffeine"
   cask "chatgpt"
