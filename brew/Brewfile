@@ -40,6 +40,8 @@ if OS.mac?
   cask "appcleaner"
   cask "caffeine"
   cask "chatgpt"
+  cask "claude"
+  cask "steipete/tap/codexbar"
   cask "firefox"
   cask "font-jetbrains-mono-nerd-font"
   cask "google-chrome"
