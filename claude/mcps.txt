@@ -3,5 +3,7 @@
 # Add-only: removing a line does not remove the server / 只會新增，不會移除
 #
 # <name> <command> [args...]   (args are split on spaces; no quoting / 參數以空白切割，不支援引號)
+# <name> <http(s) url>         (remote HTTP server / 遠端 HTTP server)
 
 chrome-devtools npx -y chrome-devtools-mcp@latest --browserUrl http://127.0.0.1:9222
+atlassian https://mcp.atlassian.com/v2/mcp
