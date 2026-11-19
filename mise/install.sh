@@ -21,6 +21,7 @@ mise use -g \
     python@3 \
     ruff@latest \
     "rust[targets=wasm32-wasip1]@latest" \
-    npm:ccstatusline
+    npm:ccstatusline \
+    npm:@axe-core/cli
 
 echo "[mise] Installation completed."
