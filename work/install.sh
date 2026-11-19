@@ -5,10 +5,6 @@ if command -v brew >/dev/null 2>&1; then
     brew install flyctl
 fi
 
-if command -v npm >/dev/null 2>&1; then
-    npm install -g @shopify/cli@latest
-fi
-
-if command -v rustup >/dev/null 2>&1; then
-    rustup target add wasm32-wasip1
+if command -v mise >/dev/null 2>&1; then
+    mise use -g npm:@shopify/cli
 fi
