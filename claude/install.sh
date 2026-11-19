@@ -54,6 +54,22 @@ else
         *) echo "[claude] Unknown entry in plugins.txt: $kind $value" ;;
         esac
     done <"$CUR_DIR/plugins.txt"
+
+    # `claude mcp get` exits non-zero when the server is not configured; </dev/null keeps claude off the loop's stdin
+    # 未設定時 `claude mcp get` 回傳非 0;</dev/null 避免 claude 讀走迴圈的 stdin
+    # read -ra splits on whitespace without glob expansion / 只以空白切割，不展開萬用字元
+    while read -ra parts || [[ ${#parts[@]} -gt 0 ]]; do
+        name="${parts[0]:-}"
+        case "$name" in
+        "" | \#*) continue ;;
+        esac
+        if claude mcp get "$name" >/dev/null 2>&1 </dev/null; then
+            echo "[claude] MCP server $name already added."
+        else
+            # shortcut: args cannot contain spaces (no quoting support); switch to `claude mcp add-json` if one does
+            claude mcp add --scope user "$name" -- "${parts[@]:1}" </dev/null || echo "[claude] Failed to add MCP server $name, continuing."
+        fi
+    done <"$CUR_DIR/mcps.txt"
 fi
 
 echo "[claude] Installation completed."

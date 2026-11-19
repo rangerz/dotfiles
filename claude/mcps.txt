@@ -1,0 +1,7 @@
+# Claude Code MCP servers (user scope), installed by claude/install.sh
+# Claude Code 的 MCP server 清單(user scope),由 claude/install.sh 安裝
+# Add-only: removing a line does not remove the server / 只會新增，不會移除
+#
+# <name> <command> [args...]   (args are split on spaces; no quoting / 參數以空白切割，不支援引號)
+
+chrome-devtools npx -y chrome-devtools-mcp@latest --browserUrl http://127.0.0.1:9222

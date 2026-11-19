@@ -26,7 +26,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/unin
 ```text
 dotfiles/
 ├── brew/        # Homebrew packages and scripts
-├── claude/      # Claude Code tooling configs (ccstatusline)
+├── claude/      # Claude Code configs: ccstatusline, plugins, MCP servers
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
 ├── mise/        # Language/runtime manager configs
