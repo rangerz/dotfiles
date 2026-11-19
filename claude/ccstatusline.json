@@ -1,0 +1,98 @@
+{
+  "version": 4,
+  "lines": [
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "cyan",
+        "bold": true
+      },
+      {
+        "id": "3",
+        "type": "thinking-effort",
+        "color": "brightBlue"
+      },
+      {
+        "id": "5",
+        "type": "context-percentage",
+        "color": "green"
+      },
+      {
+        "id": "7",
+        "type": "session-usage",
+        "color": "yellow"
+      },
+      {
+        "id": "9",
+        "type": "reset-timer",
+        "color": "brightBlack"
+      },
+      {
+        "id": "11",
+        "type": "weekly-usage",
+        "color": "brightYellow"
+      },
+      {
+        "id": "8762028e-e9e2-4ebb-9401-f57ff363ac91",
+        "backgroundColor": "bgBrightWhite",
+        "type": "fable-weekly-usage"
+      }
+    ],
+    [
+      {
+        "id": "21",
+        "type": "git-origin-owner-repo",
+        "color": "magenta",
+        "bold": true
+      },
+      {
+        "id": "23",
+        "type": "git-branch",
+        "color": "brightMagenta"
+      },
+      {
+        "id": "25",
+        "type": "git-changes",
+        "color": "yellow"
+      },
+      {
+        "id": "27",
+        "type": "git-ahead-behind",
+        "color": "brightCyan"
+      },
+      {
+        "id": "29",
+        "type": "current-working-dir",
+        "color": "brightBlack",
+        "rawValue": true
+      }
+    ],
+    []
+  ],
+  "flexMode": "full",
+  "compactThreshold": 60,
+  "colorLevel": 2,
+  "defaultPadding": " ",
+  "defaultPaddingSide": "both",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "terminalWidthCacheTtlSeconds": 5,
+  "customCommandCacheTtlSeconds": 0,
+  "minimalistMode": false,
+  "powerline": {
+    "enabled": true,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "theme": "nord-aurora",
+    "autoAlign": false,
+    "continueThemeAcrossLines": true
+  }
+}

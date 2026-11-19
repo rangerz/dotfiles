@@ -1,0 +1,16 @@
+# Claude Code marketplaces and plugins, installed by claude/install.sh
+# Claude Code 的 marketplace 與 plugin 清單，由 claude/install.sh 安裝
+# Add-only: removing a line does not uninstall it / 只會新增，不會移除
+#
+# marketplace <owner/repo>
+# plugin      <name>@<marketplace>
+
+marketplace anthropics/claude-plugins-official
+marketplace anthropics/claude-plugins-community
+marketplace Shopify/shopify-ai-toolkit
+marketplace DietrichGebert/ponytail
+
+plugin code-review@claude-plugins-official
+plugin next-steps@claude-community
+plugin ponytail@ponytail
+plugin shopify-plugin@shopify-ai-toolkit

@@ -33,6 +33,7 @@ main() {
     "$DOTFILES/ssh/uninstall.sh"
     "$DOTFILES/vim/uninstall.sh"
     "$DOTFILES/mise/uninstall.sh"
+    "$DOTFILES/claude/uninstall.sh"
 
     "$DOTFILES/brew/uninstall.sh"
 
