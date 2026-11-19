@@ -22,6 +22,7 @@ mise use -g \
     ruff@latest \
     "rust[targets=wasm32-wasip1]@latest" \
     npm:ccstatusline \
-    npm:@axe-core/cli
+    npm:@axe-core/cli \
+    npm:@shopify/cli
 
 echo "[mise] Installation completed."
