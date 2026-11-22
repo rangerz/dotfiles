@@ -35,8 +35,8 @@
       },
       {
         "id": "8762028e-e9e2-4ebb-9401-f57ff363ac91",
-        "backgroundColor": "bgBrightWhite",
-        "type": "fable-weekly-usage"
+        "type": "fable-weekly-usage",
+        "color": "brightRed"
       }
     ],
     [
@@ -70,8 +70,6 @@
     ],
     []
   ],
-  "flexMode": "full",
-  "compactThreshold": 60,
   "colorLevel": 2,
   "defaultPadding": " ",
   "defaultPaddingSide": "both",
@@ -96,3 +94,4 @@
     "continueThemeAcrossLines": true
   }
 }
+
