@@ -6,8 +6,12 @@ SOURCE_VIMRC="source $DOTFILES/vim/vimrc"
 VIMRC_FILE="$HOME/.vimrc"
 VIM_DIRS=("$HOME/.vim/.backup" "$HOME/.vim/.swp" "$HOME/.vim/.undo")
 
-if grep -q "$SOURCE_VIMRC" "$VIMRC_FILE"; then
-    sed -i'' -e "/$SOURCE_VIMRC/d" "$VIMRC_FILE"
+if grep -qF "$SOURCE_VIMRC" "$VIMRC_FILE"; then
+    # Fixed-string match: the line holds a path whose "/" breaks a sed address; `|| true` keeps an emptied file
+    grep -vxF "$SOURCE_VIMRC" "$VIMRC_FILE" >"$VIMRC_FILE.tmp" || true
+    # cat (not mv) keeps the original file's mode and any symlink
+    cat "$VIMRC_FILE.tmp" >"$VIMRC_FILE"
+    rm -f "$VIMRC_FILE.tmp"
     echo "Vim config successfully removed from $VIMRC_FILE"
 else
     echo "No vim config found in $VIMRC_FILE. No changes made."
