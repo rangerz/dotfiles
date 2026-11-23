@@ -57,4 +57,4 @@ winget install -e --id th-ch.YouTubeMusic
 winget install -e --id eVenture.HideMe
 
 # OpenAI ChatGPT
-winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements –silent
+winget install --id=9NT1R1C2HH7J --source=msstore --accept-package-agreements --accept-source-agreements --silent
