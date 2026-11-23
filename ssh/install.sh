@@ -7,6 +7,12 @@ SSH_MUX_DIR="$HOME/.ssh/mux"
 INCLUDE_CONFIG="Include $CUR_DIR/config"
 SSH_KEYGEN="$CUR_DIR/ssh-keygen.sh"
 
+# A fresh machine may have no ~/.ssh; keygen would create it, but it is skipped without a TTY
+if [ ! -d "$HOME/.ssh" ]; then
+    mkdir -m 700 "$HOME/.ssh"
+    echo "Created directory (700): $HOME/.ssh"
+fi
+
 # Generating SSK Keys: rsa and ed25519
 "$SSH_KEYGEN"
 
