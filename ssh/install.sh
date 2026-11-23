@@ -13,7 +13,7 @@ if [ ! -d "$HOME/.ssh" ]; then
     echo "Created directory (700): $HOME/.ssh"
 fi
 
-# Generating SSK Keys: rsa and ed25519
+# Generate the ed25519 key (also used to sign git commits)
 "$SSH_KEYGEN"
 
 # Ensure the ~/.ssh/config file exists

@@ -19,11 +19,3 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 else
     echo "ed25519 SSH key already exists, skipping..."
 fi
-
-# Check if the RSA key already exists
-if [ ! -f "$HOME/.ssh/id_rsa" ]; then
-    echo "Generating RSA SSH key..."
-    ssh-keygen -t rsa -b 4096 -a 100 -f "$HOME/.ssh/id_rsa"
-else
-    echo "RSA SSH key already exists, skipping..."
-fi
