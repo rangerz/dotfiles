@@ -1,4 +1,5 @@
 # shellcheck shell=bash
+# Sourced from ~/.zshrc only (shell/install.sh); there is no bash support
 # Basics
 export CLICOLOR=1
 export EDITOR=/usr/bin/vim
@@ -21,7 +22,6 @@ export DISABLE_AUTO_UPDATE=true
 
 # Shell flags
 _is_zsh=$([[ -n "${ZSH_VERSION:-}" ]] && echo 1 || echo 0)
-_is_bash=$([[ -n "${BASH_VERSION:-}" ]] && echo 1 || echo 0)
 _is_interactive=$([[ $- == *i* ]] && echo 1 || echo 0)
 
 # Utils functions
@@ -223,21 +223,7 @@ alias gsf="git status -s | fzf \
   --preview \"echo {} | awk '{print \\\$2}' | xargs -I % git diff --color=always % \" \
   --preview-window=right:70%:wrap"
 
-# ZOXIDE
-if has zoxide; then
-    # Already handled by .zshrc zoxide plugin
-    #((_is_zsh)) && eval "$(zoxide init zsh)"
-
-    ((_is_bash)) && eval "$(zoxide init bash)"
-fi
-
-# MISE
-if has mise; then
-    # Already handled by .zshrc direnv plugin
-    #((_is_zsh)) && eval "$(mise activate zsh)"
-
-    ((_is_bash)) && eval "$(mise activate bash)"
-fi
+# zoxide, mise and direnv hooks come from the oh-my-zsh plugins (oh-my-zsh/plugins.sh)
 
 # DIRENV
 if has direnv; then
@@ -248,40 +234,18 @@ if has direnv; then
         venv_prompt() {
             # Print "(venv) " if VIRTUAL_ENV is set
             [ -n "${VIRTUAL_ENV:-}" ] || return 0
-
-            if ((_is_zsh)); then
-                # zsh: ${var:t} is basename
-                printf '(%s) ' "${VIRTUAL_ENV:t}"
-            else
-                # bash/posix: ${var##*/} is basename
-                printf '(%s) ' "${VIRTUAL_ENV##*/}"
-            fi
+            printf '(%s) ' "${VIRTUAL_ENV##*/}"
         }
     fi
 
     # Only modify prompt in interactive shells
     if ((_is_interactive)); then
-        if ((_is_zsh)); then
-            # zsh uses PROMPT
-            # shellcheck disable=SC2016 # must expand at prompt time
-            case "${PROMPT:-}" in
-            *'$(venv_prompt)'*) : ;;
-            *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
-            esac
-        else
-            # bash uses PS1
-            # shellcheck disable=SC2016 # must expand at prompt time
-            case "${PS1:-}" in
-            *'$(venv_prompt)'*) : ;;
-            *) PS1='$(venv_prompt)'"${PS1:-}" ;;
-            esac
-        fi
+        # shellcheck disable=SC2016 # must expand at prompt time
+        case "${PROMPT:-}" in
+        *'$(venv_prompt)'*) : ;;
+        *) PROMPT='$(venv_prompt)'"${PROMPT:-}" ;;
+        esac
     fi
-
-    # Already handled by oh-my-zsh direnv plugin
-    #((_is_zsh)) && eval "$(direnv hook zsh)"
-
-    ((_is_bash)) && eval "$(direnv hook bash)"
 fi
 
 # PIP: refuse install/uninstall outside a virtualenv (pip and pip3 alike)
