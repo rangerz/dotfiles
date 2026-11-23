@@ -302,12 +302,12 @@ pip-if-venv() {
 alias pip="pip-if-venv"
 
 # NPM
+# Env vars instead of `npm config set`: no npm startup on every shell, and they always apply
+export NPM_CONFIG_FUND=false
+export NPM_CONFIG_AUDIT=false
 if has npm; then
     alias nr="npm run"
     alias ni="npm install"
-
-    npm config get fund >/dev/null 2>&1 || npm config set fund false
-    npm config get audit >/dev/null 2>&1 || npm config set audit false
 fi
 
 # oh-my-zsh
