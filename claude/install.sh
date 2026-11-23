@@ -2,16 +2,21 @@
 set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-TARGET="${XDG_CONFIG_HOME:-$HOME/.config}/ccstatusline/settings.json"
 
 # Back up an existing real file before linking
 # 連結前先備份既有的實體檔案
-if [[ -f "$TARGET" && ! -L "$TARGET" ]]; then
-    mv "$TARGET" "$TARGET.bak"
-    echo "[claude] Backed up existing ccstatusline config to $TARGET.bak"
-fi
-mkdir -p "$(dirname "$TARGET")"
-ln -sfn "$CUR_DIR/ccstatusline.json" "$TARGET"
+link() {
+    local src="$1" target="$2"
+    if [[ -f "$target" && ! -L "$target" ]]; then
+        mv "$target" "$target.bak"
+        echo "[claude] Backed up existing $target to $target.bak"
+    fi
+    mkdir -p "$(dirname "$target")"
+    ln -sfn "$src" "$target"
+}
+
+link "$CUR_DIR/ccstatusline.json" "${XDG_CONFIG_HOME:-$HOME/.config}/ccstatusline/settings.json"
+link "$CUR_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
 # brew's bin is not on PATH yet when called from the top-level install.sh
 # 從頂層 install.sh 呼叫時，brew 的 bin 還不在 PATH 上

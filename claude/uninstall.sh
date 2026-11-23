@@ -14,4 +14,13 @@ if [[ -L "$TARGET" ]]; then
     echo "[claude] Replaced symlink with a copy at $TARGET"
 fi
 
+# Remove the CLAUDE.md link only if it points into this repo
+# 只在 CLAUDE.md 連結指向本 repo 時才移除
+CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+CLAUDE_MD="$HOME/.claude/CLAUDE.md"
+if [[ -L "$CLAUDE_MD" && "$(readlink "$CLAUDE_MD")" == "$CUR_DIR/CLAUDE.md" ]]; then
+    rm "$CLAUDE_MD"
+    echo "[claude] Removed symlink $CLAUDE_MD"
+fi
+
 echo "[claude] Uninstallation completed."
