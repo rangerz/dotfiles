@@ -1,4 +1,4 @@
-# Move into ~/.config/topgrade.d/
+# Linked to ~/.config/topgrade.d/dotfiles.toml by topgrade/install.sh
 [misc]
 pre_sudo = true
 assume_yes = true

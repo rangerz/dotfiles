@@ -6,12 +6,15 @@ TOPGRADE_TOML="$CUR_DIR/topgrade.toml"
 CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/topgrade.d"
 CONF_TOML="$CONF_DIR/dotfiles.toml"
 
-if [ ! -f "$CONF_TOML" ]; then
-    mkdir -p "$CONF_DIR"
-    cp "$TOPGRADE_TOML" "$CONF_TOML"
-    echo "[topgrade] Config file moved to $CONF_TOML"
-else
-    echo "[topgrade] Config file already exists at $CONF_TOML. No changes made."
+# Back up a real file that differs from ours; keep the backup outside topgrade.d so topgrade does not load it
+if [[ -f "$CONF_TOML" && ! -L "$CONF_TOML" ]] && ! cmp -s "$CONF_TOML" "$TOPGRADE_TOML"; then
+    mv "$CONF_TOML" "$CONF_DIR/../topgrade-dotfiles.toml.bak"
+    echo "[topgrade] Backed up existing config to $CONF_DIR/../topgrade-dotfiles.toml.bak"
 fi
+
+# Link (not copy) so later edits in the repo take effect
+mkdir -p "$CONF_DIR"
+ln -sfn "$TOPGRADE_TOML" "$CONF_TOML"
+echo "[topgrade] Linked $CONF_TOML -> $TOPGRADE_TOML"
 
 echo "[topgrade] Installation completed."
