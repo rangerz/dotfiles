@@ -19,10 +19,12 @@ install_oh_my_zsh() {
 }
 
 set_zshrc_plugins() {
-    cp "$ZSHRC" "$ZSHRC.bak"
+    # Keep the first backup only, so a bad rewrite on a later run cannot overwrite the original
+    [ -f "$ZSHRC.bak" ] || cp "$ZSHRC" "$ZSHRC.bak"
 
-    # Remove existing plugins
-    sed -e '/^plugins=(.*)$/d' \
+    # Remove existing plugins, plus the shellcheck header that plugins.sh carries in
+    sed -e '/copied into ~\/.zshrc by install.sh$/d' \
+        -e '/^plugins=(.*)$/d' \
         -e '/^plugins=(/,/^[[:space:]]*)[[:space:]]*$/d' \
         "$ZSHRC" >"$ZSHRC.tmp"
 
@@ -48,7 +50,7 @@ main() {
     install_oh_my_zsh
     set_zshrc_plugins
 
-    echo "plugins updated in $ZSHRC (backup: $ZSHRC.bak)"
+    echo "plugins updated in $ZSHRC (first-run backup: $ZSHRC.bak)"
 }
 
 main "$@"
