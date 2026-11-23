@@ -46,6 +46,7 @@ if OS.mac?
   cask "font-jetbrains-mono-nerd-font"
   cask "google-chrome"
   cask "iterm2"
+  cask "microsoft-auto-update" # updates the Office apps below
   cask "microsoft-edge"
   cask "microsoft-excel"
   cask "microsoft-outlook"
