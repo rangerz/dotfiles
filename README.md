@@ -29,12 +29,15 @@ dotfiles/
 ├── claude/      # Claude Code configs: ccstatusline, plugins, MCP servers
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
+├── macos/       # macOS helper scripts (e.g. fix hostname)
 ├── mise/        # Language/runtime manager configs
 ├── oh-my-zsh/   # Oh My Zsh plugins and setup
 ├── shell/       # General shell config setup
 ├── ssh/         # SSH config and key management
+├── topgrade/    # topgrade config (system-wide updates)
 ├── vim/         # Vim config
 ├── windows/     # Windows setup scripts (winget, WSL)
+├── wsl/         # WSL-only packages and Chrome install
 ├── zsh/         # Zsh installer
 ├── install.sh   # Entry point installer
 └── uninstall.sh # Entry point uninstaller
