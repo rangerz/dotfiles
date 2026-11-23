@@ -37,4 +37,10 @@ if [ ! -d "$SSH_MUX_DIR" ]; then
     echo "Created directory (700): $SSH_MUX_DIR"
 fi
 
+# git/configs/sign.ini signs every commit with this key, so without it every commit fails
+if [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
+    echo "[SSH] WARNING: $HOME/.ssh/id_ed25519.pub is missing, so git commits will fail to sign." >&2
+    echo "      Run $SSH_KEYGEN from an interactive shell, or commit with: git -c commit.gpgSign=false commit" >&2
+fi
+
 echo "[SSH] Installation completed."
