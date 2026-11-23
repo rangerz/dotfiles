@@ -59,9 +59,6 @@ set showmatch  "(sm) 顯示括號匹配 ()[]{}
 set nobackup        "(nobk) 不產生備份檔案 filename~
 set noswapfile      "(noswf) 不產生交換檔案 .filename.swap
 "set undofile       "(udf) 保留 undo 歷史紀錄
-set backupdir=~/.vim/.backup//  "(bdir)
-set directory=~/.vim/.swp//     "(dir)
-set undodir=~/.vim/.undo//      "(udir)
 "set autochdir       "(acd) 自動切換目錄
 set history=1000    "(hi) 紀錄歷史紀錄次數
 set autoread        "(ar) 偵測檔案被外部修改

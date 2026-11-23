@@ -4,6 +4,7 @@ set -euo pipefail
 DOTFILES="$HOME/.dotfiles"
 SOURCE_VIMRC="source $DOTFILES/vim/vimrc"
 VIMRC_FILE="$HOME/.vimrc"
+# Created by older installs; vimrc no longer uses them (nobackup, noswapfile, no undofile)
 VIM_DIRS=("$HOME/.vim/.backup" "$HOME/.vim/.swp" "$HOME/.vim/.undo")
 
 if grep -qF "$SOURCE_VIMRC" "$VIMRC_FILE"; then
