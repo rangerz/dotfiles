@@ -78,9 +78,10 @@ if has('clipboard')
 endif
 
 "Automatically remove trailing spaces when saving a file.
+"Skip markdown (two trailing spaces = line break) and diff/patch (trailing spaces are content).
 augroup TrimWhitespace
   autocmd!
-  autocmd BufWritePre * silent! keeppatterns %s/\s\+$//e
+  autocmd BufWritePre * if &filetype !~# '^\(markdown\|diff\)$' | silent! keeppatterns %s/\s\+$//e | endif
 augroup END
 
 "Avoiding redrawtime exceeded syntax highlighting disabled issue
