@@ -30,11 +30,6 @@ is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }                     # macOS chec
 is_linux() { [[ "$(uname -s)" == "Linux" ]]; }                      # Linux check
 is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; } # WSL check
 
-# Homebrew shellenv (macOS and LinuxBrew)
-if has brew; then
-    eval "$(/usr/bin/env brew shellenv)"
-fi
-
 if ((_is_interactive)); then
     # navigation
     alias ..="cd .."
@@ -311,8 +306,9 @@ if has npm; then
 fi
 
 # oh-my-zsh
-if ((_is_zsh)) && has brew; then
-    ZSH_CUSTOM_PLUGINS="$(brew --prefix)/share"
+# HOMEBREW_PREFIX comes from the `brew shellenv` that brew/install.sh puts in ~/.zprofile (macOS) or ~/.zshrc (Linux)
+if ((_is_zsh)) && [ -n "${HOMEBREW_PREFIX:-}" ]; then
+    ZSH_CUSTOM_PLUGINS="$HOMEBREW_PREFIX/share"
 
     # zsh-completions
     if [ -d "$ZSH_CUSTOM_PLUGINS/zsh-completions" ]; then
