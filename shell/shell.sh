@@ -284,17 +284,8 @@ if has direnv; then
     ((_is_bash)) && eval "$(direnv hook bash)"
 fi
 
-# PIP
+# PIP: refuse install/uninstall outside a virtualenv (pip and pip3 alike)
 export PIP_REQUIRE_VIRTUALENV=true
-pip-if-venv() {
-    # require venv for pip
-    if [ -z "${VIRTUAL_ENV:-}" ]; then
-        echo "pip blocked: activate a virtualenv first" >&2
-        return 1
-    fi
-    command pip "$@"
-}
-alias pip="pip-if-venv"
 
 # NPM
 # Env vars instead of `npm config set`: no npm startup on every shell, and they always apply
