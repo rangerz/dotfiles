@@ -1,40 +1,15 @@
 # fortivpn with Auto-it
 
-```au3
-;================================================================================
-; Auto-it script to launch FortiClient GUI and auto-fill VPN credentials
-;================================================================================
+The script is [`windows/vpn.au3`](../windows/vpn.au3). It opens FortiClient and types the VPN credentials.
 
-; Define your username and password here
-Global $sUser = "USER"
-Global $sPass = "PASS"
+1. Set the credentials once as user environment variables (PowerShell):
 
-Opt("WinTitleMatchMode", 2) ; partial match window title
+    ```powershell
+    [Environment]::SetEnvironmentVariable("VPN_USER", "your-user", "User")
+    [Environment]::SetEnvironmentVariable("VPN_PASS", "your-password", "User")
+    ```
 
-; Launch FortiClient console
-Run('"' & @ProgramFilesDir & '\Fortinet\FortiClient\FortiClientConsole.exe"')
+2. Sign out and back in (or restart Explorer) so new programs see the variables.
+3. Run `windows/vpn.au3` with AutoIt.
 
-; Wait up to 10 seconds for FortiClient VPN window to become active
-WinWaitActive("FortiClient VPN", "", 10)
-Sleep(1000) ; allow GUI to load
-
-; Paste username into input field
-Send("{TAB}")
-Send("{TAB}")
-Send("{TAB}")
-ClipPut($sUser)
-Send("^v")
-Sleep(1000)
-
-; Press TAB to move to password field
-Send("{TAB}")
-Sleep(500)
-
-; Paste password into input field
-ClipPut($sPass)
-Send("^v")
-Sleep(1000)
-
-; Press ENTER to submit / connect
-Send("{ENTER}")
-```
+The password is typed directly and never goes through the clipboard, so it does not end up in Win+V history.
