@@ -27,7 +27,7 @@ for f in "${scripts[@]}"; do
     # Re-adding a partially staged file would sneak unstaged hunks into the commit, so only fix fully staged ones
     if git diff --quiet -- "$f"; then
         shfmt -w "$f"
-        git add -f -- "$f" # -f: file is already staged, but may match a global ignore (e.g. .githooks)
+        git add -- "$f"
     fi
 done
 

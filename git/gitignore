@@ -1,11 +1,12 @@
 # Vim Temporary and Cache
 *~
 [._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+# Re-include .svg, which the swap patterns above also match
+!*.svg
 
 # Folder view configuration files
 .DS_Store
@@ -27,12 +28,8 @@ __pycache__/
 # Application specific files
 venv
 .venv
-node_module
-.claude.jsons
+node_modules
 .sass-cache
-
-# Git hooks
-.githooks
 
 # IDEs
 .vscode
