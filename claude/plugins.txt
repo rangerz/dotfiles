@@ -9,8 +9,11 @@ marketplace anthropics/claude-plugins-official
 marketplace anthropics/claude-plugins-community
 marketplace Shopify/shopify-ai-toolkit
 marketplace DietrichGebert/ponytail
+marketplace Leonxlnx/taste-skill
 
 plugin code-review@claude-plugins-official
+plugin modern-web-guidance@claude-plugins-official
 plugin next-steps@claude-community
 plugin ponytail@ponytail
 plugin shopify-plugin@shopify-ai-toolkit
+plugin taste-skill@taste-skill
