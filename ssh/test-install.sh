@@ -48,4 +48,14 @@ grep -qx 'Host keep' "$CONFIG" || fail "uninstall lost user config"
 [[ ! -e "$SSH_DIR/mux" ]] || fail "uninstall left ~/.ssh/mux"
 [[ -f "$SSH_DIR/id_ed25519.pub" ]] || fail "uninstall removed the key"
 
+# ~/.ssh/mux goes even when the Include line is already gone
+mkdir "$SSH_DIR/mux"
+run uninstall.sh
+[[ ! -e "$SSH_DIR/mux" ]] || fail "uninstall without the Include line left ~/.ssh/mux"
+
+# A commented-out copy of the line does not count as installed
+printf '# %s\n' "$LINE" >"$CONFIG"
+run install.sh
+[[ "$(count)" == 1 ]] || fail "install skipped the line because of a commented-out copy"
+
 echo "[ssh test] OK"

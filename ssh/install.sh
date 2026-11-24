@@ -23,7 +23,7 @@ if [ ! -f "$SSH_CONFIG" ]; then
 fi
 
 # Check if the configuration already exists
-if ! grep -qF "$INCLUDE_CONFIG" "$SSH_CONFIG"; then
+if ! grep -qxF "$INCLUDE_CONFIG" "$SSH_CONFIG"; then
     echo "$INCLUDE_CONFIG" >>"$SSH_CONFIG"
     echo "SSH config successfully updated into $SSH_CONFIG"
 else
