@@ -34,8 +34,10 @@ usage() {
 
 # Keep MODULES order, whatever order --only lists them in
 select_modules() {
+    # Split on commas and spaces once, so validation and selection see the same names
+    list=" $(echo "$1" | tr ',' ' ' | tr -s ' ') "
     selected=""
-    for want in $(echo "$1" | tr ',' ' '); do
+    for want in $list; do
         case " $MODULES " in
         *" $want "*) ;;
         *)
@@ -46,8 +48,8 @@ select_modules() {
         esac
     done
     for mod in $MODULES; do
-        case ",$1," in
-        *",$mod,"*) selected="$selected $mod" ;;
+        case "$list" in
+        *" $mod "*) selected="$selected $mod" ;;
         esac
     done
     echo "$selected"
@@ -67,7 +69,8 @@ main() {
     case "${1:-}" in
     "") ;;
     --only)
-        if [ -z "${2:-}" ]; then
+        # Extra arguments usually mean a space instead of a comma: "--only git claude"
+        if [ -z "${2:-}" ] || [ $# -gt 2 ]; then
             usage
             exit 1
         fi
@@ -75,6 +78,10 @@ main() {
             echo "$modules"
             exit 1
         }
+        if [ -z "$modules" ]; then
+            usage
+            exit 1
+        fi
         ;;
     -h | --help)
         usage
