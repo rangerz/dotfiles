@@ -14,8 +14,10 @@ done
 
 # Plain assignment so a shfmt error stops the script (set -e misses failures inside a pipe's left side)
 list=$(shfmt -f .)
+files=()
+[[ -n "$list" ]] && mapfile -t files <<<"$list"
 echo "[check] shellcheck"
-xargs shellcheck <<<"$list"
+((${#files[@]} == 0)) || shellcheck "${files[@]}"
 echo "[check] shfmt"
 shfmt -d .
 
