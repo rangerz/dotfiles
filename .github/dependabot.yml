@@ -1,0 +1,10 @@
+# Keep GitHub Actions versions (e.g. actions/checkout) up to date
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+      include: scope
