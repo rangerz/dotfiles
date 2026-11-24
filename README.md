@@ -32,6 +32,7 @@ dotfiles/
 ├── macos/       # macOS helper scripts (e.g. fix hostname)
 ├── mise/        # Language/runtime manager configs
 ├── oh-my-zsh/   # Oh My Zsh plugins and setup
+├── scripts/     # Repo checks (check.sh, also run by CI)
 ├── shell/       # General shell config setup
 ├── ssh/         # SSH config and key management
 ├── topgrade/    # topgrade config (system-wide updates)

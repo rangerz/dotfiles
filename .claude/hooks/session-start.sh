@@ -9,9 +9,9 @@ fi
 
 cd "${CLAUDE_PROJECT_DIR:-.}"
 
-# shfmt: no apt package recent enough, so build it with go (go fetches the toolchain it needs)
+# shfmt: pinned to the CI version; go fetches the toolchain it needs
 if ! command -v shfmt >/dev/null 2>&1; then
-    GOBIN=/usr/local/bin go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    GOBIN=/usr/local/bin go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
 fi
 
 # Install the missing ones of shellcheck, jq and zsh (oh-my-zsh/test-install.sh) from apt

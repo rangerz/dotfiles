@@ -8,7 +8,7 @@ Dotfiles for macOS, Linux, and WSL. Each module directory (`brew/`, `git/`, `mis
 - Script dir: `CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"`.
 
 ## Checks
-`shfmt -f . | xargs shellcheck` and `shfmt -d .` must pass (fix with `shfmt -w .`). `.githooks/pre-commit` runs both on staged scripts (enabled by `git/install.sh`).
+`scripts/check.sh` must pass: shellcheck, `shfmt -d .` (fix with `shfmt -w .`) and every `*/test-install.sh`. CI runs it on push and PR. `.githooks/pre-commit` runs both on staged scripts (enabled by `git/install.sh`).
 In Claude Code cloud sessions, `.claude/hooks/session-start.sh` installs these tools and enables the hook; do not run `git/install.sh` there (it overrides commit signing).
 
 ## Commits
