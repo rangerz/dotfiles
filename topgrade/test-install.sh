@@ -45,12 +45,29 @@ run install.sh
 linked || fail "install did not replace the user file with the link"
 grep -qx '# user' "$BACKUP" || fail "install did not back up the user file"
 
+# Uninstall restores the backed-up user file
+run uninstall.sh
+[[ ! -L "$CONF_TOML" ]] || fail "uninstall left the link"
+grep -qx '# user' "$CONF_TOML" || fail "uninstall did not restore the user file"
+[[ ! -e "$BACKUP" ]] || fail "uninstall left the backup behind"
+
+# A file that is not our link is left alone by uninstall
+run uninstall.sh
+grep -qx '# user' "$CONF_TOML" || fail "uninstall removed a file it did not link"
+
 # A real file identical to ours is replaced without a backup
 rm -f "$BACKUP" "$CONF_TOML"
 cp "$REPO" "$CONF_TOML"
 run install.sh
 linked || fail "install did not replace the identical copy with the link"
 [[ ! -e "$BACKUP" ]] || fail "install backed up a copy identical to ours"
+
+# An identical copy left by older copy-based installs is removed by uninstall
+rm -f "$CONF_TOML"
+cp "$REPO" "$CONF_TOML"
+run uninstall.sh
+[[ ! -e "$CONF_TOML" ]] || fail "uninstall left an identical copy"
+run install.sh
 
 # Uninstall keeps other files in topgrade.d and the directory with them
 printf '# other\n' >"$CONF_DIR/other.toml"
