@@ -37,4 +37,9 @@ grep -qx 'alias keep=me' "$ZSHRC" || fail "uninstall lost user lines"
 run uninstall.sh
 [[ "$(cat "$ZSHRC")" == 'alias keep=me' ]] || fail "second uninstall changed ~/.zshrc"
 
+# A commented-out copy of the line does not count as installed
+printf '# %s\n' "$LINE" >"$ZSHRC"
+run install.sh
+[[ "$(count)" == 1 ]] || fail "install skipped the line because of a commented-out copy"
+
 echo "[shell test] OK"

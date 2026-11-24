@@ -6,7 +6,7 @@ BOOTSTRAP_FILE="$CUR_DIR/shell.sh"
 BOOTSTRAP_LINE="source $BOOTSTRAP_FILE"
 RC_FILE="$HOME/.zshrc"
 
-if grep -qF "$BOOTSTRAP_LINE" "$RC_FILE"; then
+if grep -qxF "$BOOTSTRAP_LINE" "$RC_FILE"; then
     # Fixed-string match: the line holds a path whose "/" breaks a sed address; `|| true` keeps an emptied file
     grep -vxF "$BOOTSTRAP_LINE" "$RC_FILE" >"$RC_FILE.tmp" || true
     # cat (not mv) keeps the original file's mode and any symlink

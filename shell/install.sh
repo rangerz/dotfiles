@@ -6,7 +6,7 @@ BOOTSTRAP_FILE="$CUR_DIR/shell.sh"
 BOOTSTRAP_LINE="source $BOOTSTRAP_FILE"
 RC_FILE="$HOME/.zshrc"
 
-if ! grep -qF "$BOOTSTRAP_LINE" "$RC_FILE"; then
+if ! grep -qxF "$BOOTSTRAP_LINE" "$RC_FILE"; then
     echo "$BOOTSTRAP_LINE" >>"$RC_FILE"
     echo "Shell config successfully updated into $RC_FILE"
 else
