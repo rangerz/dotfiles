@@ -9,15 +9,22 @@ trap 'rm -rf "$TMP_HOME"' EXIT
 SSH_DIR="$TMP_HOME/.ssh"
 CONFIG="$SSH_DIR/config"
 LINE="Include $CUR_DIR/config"
-# No TTY on stdin, so ssh-keygen.sh skips key generation; stderr is kept for the signing warning
-run() { HOME="$TMP_HOME" "$CUR_DIR/$1" </dev/null >/dev/null 2>"$TMP_HOME/stderr"; }
-count() { grep -cxF "$LINE" "$CONFIG" || true; }
-# shellcheck disable=SC2012 # ls -ld prints the same mode column on GNU and BSD, unlike stat
-mode() { ls -ld "$1" | cut -c1-10; }
 fail() {
     echo "[ssh test] FAIL: $1" >&2
     exit 1
 }
+# No TTY on stdin, so ssh-keygen.sh skips key generation; stderr is kept for the signing warning.
+# ZDOTDIR is dropped so the zsh in ssh-keygen.sh does not read the real ~/.zshenv; output is shown on failure.
+run() {
+    env -u ZDOTDIR HOME="$TMP_HOME" "$CUR_DIR/$1" </dev/null >"$TMP_HOME/out" 2>"$TMP_HOME/stderr" ||
+        {
+            cat "$TMP_HOME/out" "$TMP_HOME/stderr" >&2
+            fail "$1 exited non-zero"
+        }
+}
+count() { grep -cxF "$LINE" "$CONFIG" || true; }
+# shellcheck disable=SC2012 # ls -ld prints the same mode column on GNU and BSD, unlike stat
+mode() { ls -ld "$1" | cut -c1-10; }
 
 # Fresh HOME: ~/.ssh and ~/.ssh/mux are created 700, the Include line added once even on rerun
 run install.sh

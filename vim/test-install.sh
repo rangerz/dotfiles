@@ -9,13 +9,16 @@ trap 'rm -rf "$TMP_HOME"' EXIT
 VIMRC="$TMP_HOME/.vimrc"
 # The installers point at ~/.dotfiles, not at this checkout
 LINE="source $TMP_HOME/.dotfiles/vim/vimrc"
-# stderr dropped: grep reports the missing rc file on the first run
-run() { HOME="$TMP_HOME" "$CUR_DIR/$1" >/dev/null 2>&1; }
-count() { grep -cxF "$LINE" "$VIMRC" || true; }
 fail() {
     echo "[vim test] FAIL: $1" >&2
     exit 1
 }
+# Output is kept quiet but shown when an installer fails
+run() { HOME="$TMP_HOME" "$CUR_DIR/$1" >"$TMP_HOME/out" 2>&1 || {
+    cat "$TMP_HOME/out" >&2
+    fail "$1 exited non-zero"
+}; }
+count() { grep -cxF "$LINE" "$VIMRC" || true; }
 
 # Uninstall before any install: no ~/.vimrc, no error
 run uninstall.sh

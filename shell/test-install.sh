@@ -8,13 +8,16 @@ trap 'rm -rf "$TMP_HOME"' EXIT
 
 ZSHRC="$TMP_HOME/.zshrc"
 LINE="source $CUR_DIR/shell.sh"
-# stderr dropped: grep reports the missing rc file on the first run
-run() { HOME="$TMP_HOME" "$CUR_DIR/$1" >/dev/null 2>&1; }
-count() { grep -cxF "$LINE" "$ZSHRC" || true; }
 fail() {
     echo "[shell test] FAIL: $1" >&2
     exit 1
 }
+# Output is kept quiet but shown when an installer fails
+run() { HOME="$TMP_HOME" "$CUR_DIR/$1" >"$TMP_HOME/out" 2>&1 || {
+    cat "$TMP_HOME/out" >&2
+    fail "$1 exited non-zero"
+}; }
+count() { grep -cxF "$LINE" "$ZSHRC" || true; }
 
 # No ~/.zshrc yet: install creates it with the line once, even on rerun
 run install.sh
