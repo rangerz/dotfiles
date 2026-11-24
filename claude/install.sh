@@ -35,8 +35,10 @@ if ! command -v jq >/dev/null 2>&1; then
     echo "[claude] jq not found, skipping settings merge."
 else
     [[ -f "$SETTINGS" ]] || echo '{}' >"$SETTINGS"
-    tmp="$(mktemp)"
+    # Same dir keeps mv atomic; mktemp creates 0600, so restore 0644
+    tmp="$(mktemp "$SETTINGS.XXXXXX")"
     if jq -s '.[0] * .[1]' "$SETTINGS" "$CUR_DIR/settings.json" >"$tmp"; then
+        chmod 644 "$tmp"
         mv "$tmp" "$SETTINGS"
         echo "[claude] Merged settings into $SETTINGS"
     else
