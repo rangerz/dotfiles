@@ -17,6 +17,9 @@ These scripts help bootstrap a development environment across macOS, Linux, and 
 # Install
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/install.sh)"
 
+# Install only some modules (kept in install order; no switch to zsh at the end)
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/install.sh)" -- --only git,claude
+
 # Uninstall
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/uninstall.sh)"
 ```

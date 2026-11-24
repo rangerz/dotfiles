@@ -24,34 +24,82 @@ download_dotfiles() {
     git clone --depth=1 --single-branch --branch "$BRANCH" "$REMOTE" "$DOTFILES"
 }
 
+# Install order matters: brew provides the tools that the later modules use
+MODULES="wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude"
+
+usage() {
+    echo "Usage: install.sh [--only <module>[,<module>...]]"
+    echo "Modules: $MODULES"
+}
+
+# Keep MODULES order, whatever order --only lists them in
+select_modules() {
+    selected=""
+    for want in $(echo "$1" | tr ',' ' '); do
+        case " $MODULES " in
+        *" $want "*) ;;
+        *)
+            echo "Unknown module: $want"
+            usage
+            exit 1
+            ;;
+        esac
+    done
+    for mod in $MODULES; do
+        case ",$1," in
+        *",$mod,"*) selected="$selected $mod" ;;
+        esac
+    done
+    echo "$selected"
+}
+
+run_module() {
+    case "$1" in
+    # WSL-only utilities (no-op outside WSL); failure must not block core setup
+    # WSL 專屬工具(非 WSL 時為 no-op);失敗不應中斷後續核心安裝
+    wsl) "$DOTFILES/wsl/install.sh" || echo "WSL setup skipped/failed, continuing" ;;
+    *) "$DOTFILES/$1/install.sh" ;;
+    esac
+}
+
 main() {
+    modules="$MODULES"
+    case "${1:-}" in
+    "") ;;
+    --only)
+        if [ -z "${2:-}" ]; then
+            usage
+            exit 1
+        fi
+        modules="$(select_modules "$2")" || {
+            echo "$modules"
+            exit 1
+        }
+        ;;
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+
     echo "Installing dotfiles into $DOTFILES"
 
     download_dotfiles
 
-    # Install WSL-only utilities (no-op outside WSL); failure must not block core setup
-    # 安裝 WSL 專屬工具(非 WSL 時為 no-op);失敗不應中斷後續核心安裝
-    "$DOTFILES/wsl/install.sh" || echo "WSL setup skipped/failed, continuing"
-
-    # Install zsh and oh-my-zsh
-    "$DOTFILES/zsh/install.sh"
-    "$DOTFILES/oh-my-zsh/install.sh"
-
-    # Install Homebrew and packages
-    "$DOTFILES/brew/install.sh"
-
-    # Set configs for shell + git + ssh + vim + mise + topgrade + claude
-    "$DOTFILES/shell/install.sh"
-    "$DOTFILES/git/install.sh"
-    "$DOTFILES/ssh/install.sh"
-    "$DOTFILES/vim/install.sh"
-    "$DOTFILES/mise/install.sh"
-    "$DOTFILES/topgrade/install.sh"
-    "$DOTFILES/claude/install.sh"
+    for mod in $modules; do
+        run_module "$mod"
+    done
 
     echo "Done. Dotfiles installed in $DOTFILES"
 
-    exec zsh -l
+    # Only a full install switches to zsh; a partial one may not have installed it
+    if [ -z "${1:-}" ]; then
+        exec zsh -l
+    fi
 }
 
 main "$@"
