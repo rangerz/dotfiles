@@ -14,6 +14,9 @@ ensure_no_local_work() {
 }
 
 uninstall_confirm() {
+    echo "This also runs oh-my-zsh's own uninstaller, which asks again. If you answer y there,"
+    echo "$HOME/.zshrc is renamed to $HOME/.zshrc.omz-uninstalled-<date> and $HOME/.zshrc.pre-oh-my-zsh is restored."
+    echo "If you answer n, $HOME/.oh-my-zsh stays but its plugins block in $HOME/.zshrc points into the removed $DOTFILES."
     printf "Are you sure you want to remove dotfiles? [y/N] "
     read -r confirmation
     if [ "$confirmation" != y ] && [ "$confirmation" != Y ]; then

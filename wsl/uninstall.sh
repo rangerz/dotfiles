@@ -14,5 +14,7 @@ To remove them, check wsl/install.sh for the list and run, for example:
 
     sudo apt-get remove wslu fonts-noto-cjk
 
-To remove Google Chrome, run wsl/uninstall-chrome.sh.
+To remove Google Chrome (installed by wsl/install-chrome.sh), run:
+
+    sudo apt-get purge google-chrome-stable
 MSG
