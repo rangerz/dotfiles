@@ -18,9 +18,9 @@ link() {
 link "$CUR_DIR/ccstatusline.json" "${XDG_CONFIG_HOME:-$HOME/.config}/ccstatusline/settings.json"
 link "$CUR_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
-# brew's bin is not on PATH yet when called from the top-level install.sh
+# brew's bin is not on PATH yet when called from the top-level install.sh; claude may come from elsewhere, so check jq too
 # 從頂層 install.sh 呼叫時，brew 的 bin 還不在 PATH 上
-if ! command -v claude >/dev/null 2>&1; then
+if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
         if [[ -x "$prefix/bin/brew" ]]; then
             eval "$("$prefix/bin/brew" shellenv)"
@@ -43,7 +43,7 @@ else
         echo "[claude] Merged settings into $SETTINGS"
     else
         rm -f "$tmp"
-        echo "[claude] Could not parse $SETTINGS, skipping settings merge."
+        echo "[claude] Could not merge settings (see jq error above), skipping."
     fi
 fi
 
