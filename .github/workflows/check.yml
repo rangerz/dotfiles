@@ -10,20 +10,46 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     env:
       SHFMT_VERSION: v3.14.1
     steps:
       - uses: actions/checkout@v4
 
-      # shellcheck and jq come with the runner image
-      - name: Install shfmt and zsh
+      # Same pinned shfmt release as .claude/hooks/session-start.sh, so formatting matches everywhere
+      - name: Install shfmt
         run: |
+          os=$(uname -s | tr '[:upper:]' '[:lower:]')
+          case "$(uname -m)" in
+          x86_64) arch=amd64 ;;
+          arm64 | aarch64) arch=arm64 ;;
+          *) echo "Unsupported arch: $(uname -m)" >&2; exit 1 ;;
+          esac
           sudo curl -fsSL -o /usr/local/bin/shfmt \
-            "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_linux_amd64"
+            "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_${os}_${arch}"
           sudo chmod +x /usr/local/bin/shfmt
+
+      # shellcheck and jq come with the Ubuntu image; zsh does not
+      - name: Install zsh (Linux)
+        if: runner.os == 'Linux'
+        run: |
           sudo apt-get update -q
           sudo apt-get install -y -q zsh
 
+      # zsh comes with macOS; the image's brew bash would hide bash 3.2 bugs, so put /bin/bash first
+      - name: Install shellcheck and use stock bash (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install shellcheck jq
+          mkdir -p "$RUNNER_TEMP/stock-bash"
+          ln -s /bin/bash "$RUNNER_TEMP/stock-bash/bash"
+          echo "$RUNNER_TEMP/stock-bash" >>"$GITHUB_PATH"
+
       - name: Run checks
-        run: scripts/check.sh
+        run: |
+          bash --version | head -1
+          scripts/check.sh
