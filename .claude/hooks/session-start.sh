@@ -9,9 +9,16 @@ fi
 
 cd "${CLAUDE_PROJECT_DIR:-.}"
 
-# shfmt: pinned to the CI version; go fetches the toolchain it needs
+# shfmt: same pinned release binary as CI; a failure must not skip the steps below
+SHFMT_VERSION=v3.14.1
 if ! command -v shfmt >/dev/null 2>&1; then
-    GOBIN=/usr/local/bin go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
+    if curl -fsSL -o /usr/local/bin/shfmt \
+        "https://github.com/mvdan/sh/releases/download/$SHFMT_VERSION/shfmt_${SHFMT_VERSION}_linux_amd64"; then
+        chmod +x /usr/local/bin/shfmt
+    else
+        rm -f /usr/local/bin/shfmt
+        echo "[session-start] shfmt install failed, continuing" >&2
+    fi
 fi
 
 # Install the missing ones of shellcheck, jq and zsh (oh-my-zsh/test-install.sh) from apt
