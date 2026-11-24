@@ -9,6 +9,7 @@ Dotfiles for macOS, Linux, and WSL. Each module directory (`brew/`, `git/`, `mis
 
 ## Checks
 `shfmt -f . | xargs shellcheck` and `shfmt -d .` must pass (fix with `shfmt -w .`). `.githooks/pre-commit` runs both on staged scripts (enabled by `git/install.sh`).
+In Claude Code cloud sessions, `.claude/hooks/session-start.sh` installs these tools and enables the hook; do not run `git/install.sh` there (it overrides commit signing).
 
 ## Commits
 Conventional Commits with folder scope, e.g. `feat(git): add delta config`.

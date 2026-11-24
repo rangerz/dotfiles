@@ -1,0 +1,3 @@
+# git/gitignore ignores .claude/ globally; track this repo's shared Claude config
+!.claude/
+.claude/settings.local.json
