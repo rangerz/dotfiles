@@ -29,6 +29,22 @@ if ! command -v claude >/dev/null 2>&1; then
     done
 fi
 
+# Merge tracked settings into the live file (repo wins); not a symlink because Claude rewrites this file
+SETTINGS="$HOME/.claude/settings.json"
+if ! command -v jq >/dev/null 2>&1; then
+    echo "[claude] jq not found, skipping settings merge."
+else
+    [[ -f "$SETTINGS" ]] || echo '{}' >"$SETTINGS"
+    tmp="$(mktemp)"
+    if jq -s '.[0] * .[1]' "$SETTINGS" "$CUR_DIR/settings.json" >"$tmp"; then
+        mv "$tmp" "$SETTINGS"
+        echo "[claude] Merged settings into $SETTINGS"
+    else
+        rm -f "$tmp"
+        echo "[claude] Could not parse $SETTINGS, skipping settings merge."
+    fi
+fi
+
 if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     echo "[claude] claude or jq not found, skipping plugins."
 else
