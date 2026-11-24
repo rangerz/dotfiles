@@ -26,7 +26,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/unin
 ```text
 dotfiles/
 ├── brew/        # Homebrew packages and scripts
-├── claude/      # Claude Code configs: ccstatusline, plugins, MCP servers
+├── claude/      # Claude Code configs: settings, ccstatusline, plugins, MCP servers
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
 ├── macos/       # macOS helper scripts (e.g. fix hostname)
@@ -57,6 +57,16 @@ git skip git/configs/personal.ini
 # For ~/Workspaces/ only
 git skip git/configs/work.ini
 ```
+
+## Claude Code Settings
+
+`claude/install.sh` does not symlink `claude/settings.json`, because Claude Code rewrites `~/.claude/settings.json` itself. It merges the repo file into it with `jq`:
+
+- Keys in the repo file overwrite the same keys in `~/.claude/settings.json`.
+- Keys that exist only locally (for example `permissions.allow` or `hooks`) are kept.
+- Removing a key from the repo file does not remove it locally.
+
+If you change a tracked setting with `/model` or `/config`, the next install changes it back. Edit `claude/settings.json` instead.
 
 ## License
 
