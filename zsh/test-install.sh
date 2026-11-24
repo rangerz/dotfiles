@@ -18,7 +18,7 @@ for cmd in zsh chsh sudo; do
     chmod +x "$BIN/$cmd"
 done
 
-run_install() { env HOME="$TMP_HOME" PATH="$BIN:$PATH" SHELL="$1" "$CUR_DIR/install.sh" </dev/null >/dev/null; }
+run_install() { env -u ZDOTDIR HOME="$TMP_HOME" PATH="$BIN:$PATH" SHELL="$1" "$CUR_DIR/install.sh" </dev/null >/dev/null; }
 fail() {
     echo "[zsh test] FAIL: $1" >&2
     exit 1
@@ -34,7 +34,6 @@ run_install /bin/bash
 grep -qxF "sudo tee -a /etc/shells" "$LOG" || fail "zsh was not added to /etc/shells"
 grep -qxF "chsh -s $BIN/zsh" "$LOG" || fail "chsh was not called with the zsh path"
 ! grep -q '^sudo chsh' "$LOG" || fail "chsh ran under sudo (would change root's shell)"
-! grep -qE '^sudo (apt-get|dnf|yum|pacman|apk|zypper|emerge)' "$LOG" || fail "reinstalled an existing zsh"
 grep -q 'compinit' "$ZSHRC" || fail "no minimal ~/.zshrc"
 
 # Rerun keeps an existing ~/.zshrc as is

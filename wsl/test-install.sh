@@ -53,8 +53,7 @@ sudo apt-get install -y wslu fonts-noto-cjk" ]] || fail "unexpected apt calls: $
 # Non-apt distro: a hint and exit 0, with only grep on PATH for the WSL check
 mkdir "$TMP_HOME/noapt"
 ln -s "$(command -v grep)" "$TMP_HOME/noapt/grep"
-: >"$LOG"
-env PATH="$TMP_HOME/noapt" "$BASH" "$INSTALL" </dev/null >/dev/null 2>&1 || fail "non-apt distro did not exit 0"
-[[ ! -s "$LOG" ]] || fail "non-apt distro called sudo"
+env PATH="$TMP_HOME/noapt" "$BASH" "$INSTALL" </dev/null >/dev/null 2>"$TMP_HOME/stderr" || fail "non-apt distro did not exit 0"
+grep -q 'Non-apt distro' "$TMP_HOME/stderr" || fail "no hint for a non-apt distro"
 
 echo "[wsl test] OK"

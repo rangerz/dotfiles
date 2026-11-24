@@ -21,7 +21,11 @@ fail() {
 run uninstall.sh
 [[ ! -e "$VIMRC" ]] || fail "uninstall created ~/.vimrc"
 
-# Install creates ~/.vimrc with the line once, even on rerun, after existing lines
+# Install creates a missing ~/.vimrc with the line
+run install.sh
+[[ "$(count)" == 1 ]] || fail "install did not create ~/.vimrc with the source line"
+
+# Appended after existing lines, once even on rerun
 printf 'set number\n' >"$VIMRC"
 run install.sh
 run install.sh
