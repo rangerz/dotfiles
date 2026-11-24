@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Self-check for install.sh/uninstall.sh's ~/.vimrc source line, run against a throwaway HOME (no real files touched)
+set -euo pipefail
+
+CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+TMP_HOME="$(mktemp -d)"
+trap 'rm -rf "$TMP_HOME"' EXIT
+
+VIMRC="$TMP_HOME/.vimrc"
+# The installers point at ~/.dotfiles, not at this checkout
+LINE="source $TMP_HOME/.dotfiles/vim/vimrc"
+# stderr dropped: grep reports the missing rc file on the first run
+run() { HOME="$TMP_HOME" "$CUR_DIR/$1" >/dev/null 2>&1; }
+count() { grep -cxF "$LINE" "$VIMRC" || true; }
+fail() {
+    echo "[vim test] FAIL: $1" >&2
+    exit 1
+}
+
+# Uninstall before any install: no ~/.vimrc, no error
+run uninstall.sh
+[[ ! -e "$VIMRC" ]] || fail "uninstall created ~/.vimrc"
+
+# Install creates ~/.vimrc with the line once, even on rerun, after existing lines
+printf 'set number\n' >"$VIMRC"
+run install.sh
+run install.sh
+[[ "$(count)" == 1 ]] || fail "expected the source line once, got $(count)"
+
+# Uninstall drops only that line and the legacy dirs from older installs
+mkdir -p "$TMP_HOME/.vim/.backup" "$TMP_HOME/.vim/.swp" "$TMP_HOME/.vim/.undo" "$TMP_HOME/.vim/keep"
+run uninstall.sh
+[[ "$(cat "$VIMRC")" == 'set number' ]] || fail "uninstall did not leave just the user lines"
+for dir in .backup .swp .undo; do
+    [[ ! -e "$TMP_HOME/.vim/$dir" ]] || fail "uninstall left ~/.vim/$dir"
+done
+[[ -d "$TMP_HOME/.vim/keep" ]] || fail "uninstall removed an unrelated ~/.vim dir"
+
+echo "[vim test] OK"
