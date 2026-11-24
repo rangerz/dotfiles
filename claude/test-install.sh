@@ -29,7 +29,7 @@ cat >"$SETTINGS" <<'EOF'
 {
   "model": "local-model",
   "permissions": { "defaultMode": "local-mode", "allow": ["Bash(ls)"] },
-  "hooks": { "Stop": [] }
+  "localOnly": true
 }
 EOF
 chmod 600 "$SETTINGS"
@@ -37,10 +37,10 @@ run_install
 cp "$SETTINGS" "$TMP_HOME/first"
 run_install
 
-[[ "$(key .model)" == "$(jq -c .model "$REPO")" ]] || fail "repo value did not overwrite local value"
-[[ "$(key .permissions.defaultMode)" == "$(jq -c .permissions.defaultMode "$REPO")" ]] || fail "nested repo value not applied"
+# Merging the repo file again changes nothing only if every repo value is already applied
+[[ "$(jq -s '.[0] * .[1] == .[0]' "$SETTINGS" "$REPO")" == true ]] || fail "repo values not applied"
 [[ "$(key .permissions.allow)" == '["Bash(ls)"]' ]] || fail "lost local permissions.allow (shallow merge?)"
-[[ "$(key .hooks)" == '{"Stop":[]}' ]] || fail "lost local-only key"
+[[ "$(key .localOnly)" == true ]] || fail "lost local-only key"
 cmp -s "$SETTINGS" "$TMP_HOME/first" || fail "rerun changed settings.json"
 [[ -n "$(find "$SETTINGS" -perm 644)" ]] || fail "settings.json is not 0644"
 compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind"
