@@ -23,7 +23,8 @@ fi
 rm "$CONF_TOML"
 echo "[topgrade] Removed $CONF_TOML"
 
-if [[ -f "$BACKUP" ]]; then
+# -L too: the backup may be a link, possibly dangling
+if [[ -f "$BACKUP" || -L "$BACKUP" ]]; then
     mv "$BACKUP" "$CONF_TOML"
     echo "[topgrade] Restored previous config from $BACKUP"
 fi

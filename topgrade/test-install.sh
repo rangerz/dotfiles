@@ -69,6 +69,19 @@ run uninstall.sh
 [[ ! -e "$CONF_TOML" ]] || fail "uninstall left an identical copy"
 run install.sh
 
+# A link to somewhere else, even dangling, is backed up on install and restored on uninstall
+run uninstall.sh
+mkdir -p "$CONF_DIR"
+ln -s "$TMP_HOME/elsewhere.toml" "$CONF_TOML"
+run install.sh
+linked || fail "install did not replace the foreign link with ours"
+[[ "$(readlink "$BACKUP")" == "$TMP_HOME/elsewhere.toml" ]] || fail "install did not back up the foreign link"
+run uninstall.sh
+[[ "$(readlink "$CONF_TOML")" == "$TMP_HOME/elsewhere.toml" ]] || fail "uninstall did not restore the foreign link"
+[[ ! -e "$BACKUP" && ! -L "$BACKUP" ]] || fail "uninstall left the link backup behind"
+rm "$CONF_TOML"
+run install.sh
+
 # Uninstall keeps other files in topgrade.d and the directory with them
 printf '# other\n' >"$CONF_DIR/other.toml"
 run uninstall.sh
