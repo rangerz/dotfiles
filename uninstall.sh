@@ -46,6 +46,12 @@ main() {
     "$DOTFILES/topgrade/uninstall.sh"
     "$DOTFILES/claude/uninstall.sh"
 
+    # Runs after shell/uninstall.sh: it renames ~/.zshrc and restores the pre-oh-my-zsh one
+    "$DOTFILES/oh-my-zsh/uninstall.sh" || echo "oh-my-zsh uninstall failed, continuing"
+
+    # These only print manual steps
+    "$DOTFILES/zsh/uninstall.sh"
+    "$DOTFILES/wsl/uninstall.sh"
     "$DOTFILES/brew/uninstall.sh"
 
     remove_dotfiles
