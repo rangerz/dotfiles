@@ -20,11 +20,9 @@ index="$(mktemp -d)"
 trap 'rm -rf "$index"' EXIT
 git checkout-index -a --prefix="$index/"
 
-# These installers edit real files in $HOME (~/.zshrc, ~/.claude/settings.json), so test them whenever they change
-for mod in oh-my-zsh claude; do
-    if printf '%s\n' "${staged[@]}" | grep -q "^$mod/"; then
-        "$index/$mod/test-install.sh"
-    fi
+# Run every installer self-check; together they take about a second, and scripts/ covers top-level files too
+for test in "$index"/*/test-install.sh; do
+    "$test"
 done
 
 # Plain assignment so a shfmt error stops the hook (set -e misses failures inside <(...))
