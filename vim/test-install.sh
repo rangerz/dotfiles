@@ -43,4 +43,14 @@ for dir in .backup .swp .undo; do
 done
 [[ -d "$TMP_HOME/.vim/keep" ]] || fail "uninstall removed an unrelated ~/.vim dir"
 
+# The legacy dirs go even when the source line is already gone
+mkdir -p "$TMP_HOME/.vim/.backup"
+run uninstall.sh
+[[ ! -e "$TMP_HOME/.vim/.backup" ]] || fail "uninstall without the source line left ~/.vim/.backup"
+
+# A commented-out copy of the line does not count as installed
+printf '" %s\n' "$LINE" >"$VIMRC"
+run install.sh
+[[ "$(count)" == 1 ]] || fail "install skipped the line because of a commented-out copy"
+
 echo "[vim test] OK"

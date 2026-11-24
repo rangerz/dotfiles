@@ -10,7 +10,7 @@ if [ ! -f "$VIMRC_FILE" ]; then
     echo "Created $VIMRC_FILE"
 fi
 
-if ! grep -qF "$SOURCE_VIMRC" "$VIMRC_FILE"; then
+if ! grep -qxF "$SOURCE_VIMRC" "$VIMRC_FILE"; then
     echo "$SOURCE_VIMRC" >>"$VIMRC_FILE"
     echo "Vim config successfully updated into $VIMRC_FILE"
 else
