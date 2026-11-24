@@ -14,10 +14,16 @@ done
 
 # Plain assignment so a shfmt error stops the script (set -e misses failures inside a pipe's left side)
 list=$(shfmt -f .)
+# A read loop, not mapfile: macOS ships bash 3.2
 files=()
-[[ -n "$list" ]] && mapfile -t files <<<"$list"
+while IFS= read -r f; do
+    [[ -n "$f" ]] && files+=("$f")
+done <<<"$list"
 echo "[check] shellcheck"
-((${#files[@]} == 0)) || shellcheck "${files[@]}"
+# Guarded: bash 3.2 treats an empty "${files[@]}" as unbound under set -u
+if ((${#files[@]} > 0)); then
+    shellcheck "${files[@]}"
+fi
 echo "[check] shfmt"
 shfmt -d .
 
