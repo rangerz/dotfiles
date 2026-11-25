@@ -18,13 +18,15 @@ fail() {
 }
 
 # Commit with a throwaway identity and no signing, so the host's git config does not matter
-git_commit() { git -C "$1" -c user.name=test -c user.email=test@example.com -c commit.gpgSign=false commit -qm "$2"; }
+git_commit() { git -C "$1" -c user.name=test -c user.email=test@example.com -c commit.gpgSign=false commit -qm "$2" "${@:3}"; }
 
-# A real repo with no remote: install.sh's pull fails and continues, uninstall.sh sees no local work
+# A real repo pushed to a local bare remote: install.sh's pull is a no-op, uninstall.sh sees no local work
 make_dotfiles() {
-    rm -rf "$DOTFILES"
+    rm -rf "$DOTFILES" "$TMP_HOME/remote.git"
+    git init -q --bare "$TMP_HOME/remote.git"
     mkdir -p "$DOTFILES"
-    git -C "$DOTFILES" init -q
+    git -C "$DOTFILES" init -q -b main
+    git -C "$DOTFILES" remote add origin "$TMP_HOME/remote.git"
     local mod
     for mod in "${MODULES[@]}"; do
         mkdir -p "$DOTFILES/$mod"
@@ -37,6 +39,8 @@ make_dotfiles() {
     chmod +x "$DOTFILES"/*/*.sh
     git -C "$DOTFILES" add -A
     git_commit "$DOTFILES" stubs
+    # push.negotiate (if the host sets it) only warns against a local bare repo
+    git -C "$DOTFILES" -c push.negotiate=false push -q -u origin main
 }
 
 # A stub zsh records the final `exec zsh -l`
@@ -87,6 +91,22 @@ if run "$REPO/uninstall.sh" <<<y; then
 fi
 expect_log "uninstall with local work" ""
 [[ -f "$DOTFILES/local-change" ]] || fail "uninstall removed local work"
+
+# Uninstall refuses with a commit on a branch that has no upstream, or with a stash
+make_dotfiles
+git -C "$DOTFILES" checkout -q -b local-only
+git_commit "$DOTFILES" local --allow-empty
+if run "$REPO/uninstall.sh" <<<y; then
+    fail "uninstall should refuse with a commit on a branch without upstream"
+fi
+[[ -d "$DOTFILES" ]] || fail "uninstall removed a branch without upstream"
+make_dotfiles
+echo change >>"$DOTFILES/git/install.sh"
+git -C "$DOTFILES" -c user.name=test -c user.email=test@example.com stash -q
+if run "$REPO/uninstall.sh" <<<y; then
+    fail "uninstall should refuse with a stash"
+fi
+[[ -d "$DOTFILES" ]] || fail "uninstall removed a stash"
 
 # The SessionStart hook does nothing outside Claude Code cloud sessions
 project="$TMP_HOME/project"

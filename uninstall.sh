@@ -6,9 +6,11 @@ DOTFILES="$HOME/.dotfiles"
 
 # rm -rf below would destroy local work, so refuse while any exists
 ensure_no_local_work() {
+    # --branches --not --remotes: commits on any local branch, with or without an upstream, that no remote has
     if [ -n "$(git -C "$DOTFILES" status --porcelain 2>/dev/null)" ] ||
-        [ -n "$(git -C "$DOTFILES" log --oneline '@{u}..' 2>/dev/null)" ]; then
-        echo "$DOTFILES has uncommitted or unpushed changes; commit and push them first"
+        [ -n "$(git -C "$DOTFILES" log --oneline --branches --not --remotes 2>/dev/null)" ] ||
+        [ -n "$(git -C "$DOTFILES" stash list 2>/dev/null)" ]; then
+        echo "$DOTFILES has uncommitted, unpushed or stashed changes; commit and push them first"
         exit 1
     fi
 }
