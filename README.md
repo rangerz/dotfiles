@@ -24,6 +24,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/inst
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/uninstall.sh)"
 ```
 
+The repo always lives at `~/.dotfiles`; some scripts and `git/gitconfig` use that path directly.
+Linux support covers WSL and other distros (apt, dnf, yum, pacman, apk for Homebrew's prerequisites).
+
 ## Structure
 
 ```text

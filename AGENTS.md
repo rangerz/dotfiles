@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-Dotfiles for macOS, Linux, and WSL. Each module directory (`brew/`, `git/`, `mise/`, …) has its own `install.sh`/`uninstall.sh`; run the one you touched to test. Brew packages live in `brew/Brewfile`.
+Dotfiles for macOS, Linux, and WSL. The repo always lives at `~/.dotfiles` (install.sh clones it there), so scripts may use that path directly. Each module directory (`brew/`, `git/`, `mise/`, …) has its own `install.sh`/`uninstall.sh`; run the one you touched to test. Brew packages live in `brew/Brewfile`.
 
 ## Style
 - `#!/usr/bin/env bash` + `set -euo pipefail`, 4-space indent.
