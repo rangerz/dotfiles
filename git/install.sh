@@ -12,7 +12,7 @@ fi
 if [[ "${CLAUDE_CODE_REMOTE:-}" == true ]]; then
     # Cloud sessions sign commits with their own key; sign.ini would point signing at a missing key
     echo "Claude Code cloud session: skipping include.path (it would break commit signing)."
-elif git config --get-all include.path | grep -q "$GIT_CONFIG"; then
+elif git config --global --get-all include.path | grep -qxF "$GIT_CONFIG"; then
     echo "Git config already exists in ~/.gitconfig. No changes made."
 else
     git config --global --add include.path "$GIT_CONFIG"

@@ -9,10 +9,12 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! git config --get-all include.path | grep -q "$GIT_CONFIG"; then
+# Whole-line fixed-string match on the global file only: install.sh writes there, and the path's "." is a regex wildcard
+if ! git config --global --get-all include.path | grep -qxF "$GIT_CONFIG"; then
     echo "No git config found in ~/.gitconfig. No changes made."
 else
-    git config --global --unset include.path "$GIT_CONFIG"
+    # --fixed-value: match the path literally; --unset-all also clears duplicates
+    git config --global --fixed-value --unset-all include.path "$GIT_CONFIG"
 fi
 
 echo "[Git] Uninstallation completed."

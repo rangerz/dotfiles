@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Self-check for install.sh's include.path and its Claude Code cloud guard,
+# Self-check for install.sh/uninstall.sh's include.path and install.sh's Claude Code cloud guard,
 # run on a copy of git/ inside a throwaway repo and HOME (no network, no real files touched)
 set -euo pipefail
 
@@ -20,6 +20,7 @@ fail() {
 # Isolate from the host's global and system git config
 gitc() { env -u GIT_CONFIG_GLOBAL HOME="$TMP_HOME" GIT_CONFIG_NOSYSTEM=1 git "$@"; }
 run_install() { env -u GIT_CONFIG_GLOBAL HOME="$TMP_HOME" GIT_CONFIG_NOSYSTEM=1 "$@" "$REPO/git/install.sh" >/dev/null; }
+run_uninstall() { env -u GIT_CONFIG_GLOBAL HOME="$TMP_HOME" GIT_CONFIG_NOSYSTEM=1 "$REPO/git/uninstall.sh" >/dev/null; }
 includes() { gitc config --global --get-all include.path || true; }
 
 # Cloud session: hook enabled, include.path skipped (it would override commit signing)
@@ -31,5 +32,18 @@ run_install env CLAUDE_CODE_REMOTE=true
 run_install env -u CLAUDE_CODE_REMOTE
 run_install env -u CLAUDE_CODE_REMOTE
 [[ "$(includes)" == "$GIT_CONFIG" ]] || fail "expected include.path [$GIT_CONFIG] once, got [$(includes)]"
+
+# Uninstall removes our path (duplicates too) and keeps a longer path that merely contains it
+gitc config --global --add include.path "$GIT_CONFIG"
+gitc config --global --add include.path "$GIT_CONFIG.local"
+run_uninstall
+[[ "$(includes)" == "$GIT_CONFIG.local" ]] || fail "uninstall: expected [$GIT_CONFIG.local] left, got [$(includes)]"
+
+# That longer path does not count as installed; a second uninstall is a no-op
+run_install env -u CLAUDE_CODE_REMOTE
+[[ "$(includes)" == "$GIT_CONFIG.local"$'\n'"$GIT_CONFIG" ]] || fail "install skipped because of [$GIT_CONFIG.local]"
+run_uninstall
+run_uninstall
+[[ "$(includes)" == "$GIT_CONFIG.local" ]] || fail "uninstall rerun: expected [$GIT_CONFIG.local] left, got [$(includes)]"
 
 echo "[git test] OK"
