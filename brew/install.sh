@@ -95,8 +95,10 @@ persist_brew_shellenv() {
         )
         ;;
     Linux)
+        # .zshenv, not .zshrc: oh-my-zsh plugins (zoxide, fzf, mise, direnv) look up their commands
+        # when .zshrc sources oh-my-zsh, which is before anything appended to .zshrc runs
         targets=(
-            "$zhome/.zshrc"
+            "$zhome/.zshenv"
             "$HOME/.bashrc"
         )
         ;;
