@@ -67,13 +67,14 @@ if ((_is_interactive)); then
     fi
 
     # grep/rg
-    alias rg="rg --color=always --smart-case"
+    # No --color=always: it would put ANSI codes into pipes and redirects (rg/bat color a TTY by default)
+    alias rg="rg --smart-case"
     alias grep="grep --color=auto --binary-files=without-match"
     alias egrep="egrep --color=auto --binary-files=without-match"
     alias fgrep="fgrep --color=auto --binary-files=without-match"
 
     if has bat; then
-        alias cat="bat --style=plain --paging=never --color=always"
+        alias cat="bat --style=plain --paging=never"
     fi
 
     alias df="df -H"
@@ -261,7 +262,7 @@ if has npm; then
 fi
 
 # oh-my-zsh
-# HOMEBREW_PREFIX comes from the `brew shellenv` that brew/install.sh puts in ~/.zprofile (macOS) or ~/.zshrc (Linux)
+# HOMEBREW_PREFIX comes from the `brew shellenv` that brew/install.sh puts in ~/.zprofile (macOS) or ~/.zshenv (Linux)
 if ((_is_zsh)) && [ -n "${HOMEBREW_PREFIX:-}" ]; then
     ZSH_CUSTOM_PLUGINS="$HOMEBREW_PREFIX/share"
 
