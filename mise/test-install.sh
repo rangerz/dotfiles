@@ -53,4 +53,13 @@ grep -qx '# user' "$TARGET" || fail "uninstall did not restore the user config"
 run uninstall.sh
 grep -qx '# user' "$TARGET" || fail "uninstall touched a config it did not link"
 
+# A link to another config is backed up on install and restored on uninstall
+rm "$TARGET"
+ln -s "$TMP_HOME/other.toml" "$TARGET"
+run install.sh
+linked || fail "install did not replace the other link with ours"
+[[ "$(readlink "$TARGET.bak")" == "$TMP_HOME/other.toml" ]] || fail "install did not back up the other link"
+run uninstall.sh
+[[ "$(readlink "$TARGET")" == "$TMP_HOME/other.toml" ]] || fail "uninstall did not restore the other link"
+
 echo "[mise test] OK"

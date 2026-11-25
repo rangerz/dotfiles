@@ -19,8 +19,9 @@ if ! command -v mise >/dev/null 2>&1; then
     exit 1
 fi
 
-# Back up an existing real file before linking
-if [[ -f "$TARGET" && ! -L "$TARGET" ]]; then
+# Back up an existing real file, or a link to another config, before linking
+if [[ -f "$TARGET" && ! -L "$TARGET" ]] ||
+    [[ -L "$TARGET" && "$(readlink "$TARGET")" != "$CUR_DIR/config.toml" ]]; then
     mv "$TARGET" "$TARGET.bak"
     echo "[mise] Backed up existing config to $TARGET.bak"
 fi

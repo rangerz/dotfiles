@@ -7,7 +7,8 @@ TARGET="$HOME/.config/mise/config.toml"
 # Undo install.sh's link only, so it does not dangle once the repo is removed
 if [[ -L "$TARGET" && "$(readlink "$TARGET")" == "$CUR_DIR/config.toml" ]]; then
     rm "$TARGET"
-    if [[ -f "$TARGET.bak" ]]; then
+    # -L too: the backup may be a link, possibly dangling
+    if [[ -f "$TARGET.bak" || -L "$TARGET.bak" ]]; then
         mv "$TARGET.bak" "$TARGET"
         echo "[mise] Restored previous config from $TARGET.bak"
     else

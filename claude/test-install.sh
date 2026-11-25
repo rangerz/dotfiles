@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Self-check for install.sh's settings.json merge, run against a throwaway HOME (no network, no real files touched)
+# Self-check for install.sh's settings.json merge and CLAUDE.md link, run against a throwaway HOME (no network, no real files touched)
 set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
@@ -49,5 +49,14 @@ compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind"
 echo '{oops' >"$SETTINGS"
 run_install || fail "install failed on invalid settings.json"
 [[ "$(cat "$SETTINGS")" == '{oops' ]] || fail "invalid settings.json was modified"
+
+# CLAUDE.md: a link to somewhere else is backed up, our own link is not, on rerun
+CLAUDE_MD="$TMP_HOME/.claude/CLAUDE.md"
+rm -f "$CLAUDE_MD" "$CLAUDE_MD.bak"
+ln -s "$TMP_HOME/other.md" "$CLAUDE_MD"
+run_install
+run_install
+[[ "$(readlink "$CLAUDE_MD")" == "$CUR_DIR/CLAUDE.md" ]] || fail "install did not link CLAUDE.md to the repo"
+[[ "$(readlink "$CLAUDE_MD.bak")" == "$TMP_HOME/other.md" ]] || fail "install did not back up the other CLAUDE.md link"
 
 echo "[claude test] OK"

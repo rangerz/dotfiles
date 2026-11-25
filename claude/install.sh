@@ -3,11 +3,12 @@ set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
-# Back up an existing real file before linking
-# 連結前先備份既有的實體檔案
+# Back up an existing real file, or a link to somewhere else, before linking
+# 連結前先備份既有的實體檔案，或指向別處的連結
 link() {
     local src="$1" target="$2"
-    if [[ -f "$target" && ! -L "$target" ]]; then
+    if [[ -f "$target" && ! -L "$target" ]] ||
+        [[ -L "$target" && "$(readlink "$target")" != "$src" ]]; then
         mv "$target" "$target.bak"
         echo "[claude] Backed up existing $target to $target.bak"
     fi
