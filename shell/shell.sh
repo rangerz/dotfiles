@@ -2,9 +2,15 @@
 # Sourced from ~/.zshrc only (shell/install.sh); there is no bash support
 # Basics
 export CLICOLOR=1
-export EDITOR=/usr/bin/vim
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+export EDITOR=vim
+# Many Linux installs have no en_US.UTF-8 (perl, apt etc. then warn); C.UTF-8 is built into glibc 2.35+
+if [[ "$(uname -s)" != Linux ]] || locale -a 2>/dev/null | grep -qixE 'en_US\.utf-?8'; then
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+else
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+fi
 
 # Set block size for ls/df/du (BSD vs GNU)
 export BLOCKSIZE=1k  # macOS BSD ls
@@ -60,6 +66,11 @@ if ((_is_interactive)); then
         alias ls="lsd -Fh --group-dirs=first --icon=auto --date '+%Y-%m-%d %H:%M:%S'"
         alias ll="ls -l"
         alias la="ls -lA"
+    elif command ls --color=auto -d . >/dev/null 2>&1; then
+        # GNU ls: -G means --no-group there, not color
+        alias ls="ls --color=auto -Fh"
+        alias ll="ls -lp"
+        alias la="ls -lA"
     else
         alias ls="ls -GFh"
         alias ll="ls -FGlhp"
@@ -103,6 +114,8 @@ alias editHosts="sudo vim /etc/hosts"
 
 if is_wsl && has wslview; then
     alias open="wslview"
+elif is_linux && has xdg-open; then
+    alias open="xdg-open"
 fi
 
 flushdns() {
@@ -302,7 +315,7 @@ else
 fi
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --info=inline --multi --preview '$FZF_PREVIEW_CMD'"
 
-# clipboard for chatGPT (macOS + WSL)
+# clipboard for chatGPT (macOS, WSL, Linux on Wayland or X11)
 clip() {
     if has pbcopy; then
         pbcopy
@@ -314,9 +327,18 @@ clip() {
         fi
         clip.exe
         return
+    elif [[ -n "${WAYLAND_DISPLAY:-}" ]] && has wl-copy; then
+        wl-copy
+        return
+    elif has xclip; then
+        xclip -selection clipboard
+        return
+    elif has xsel; then
+        xsel --clipboard --input
+        return
     fi
 
-    echo "clipboard command not found (need pbcopy or clip.exe)" >&2
+    echo "clipboard command not found (need pbcopy, clip.exe, wl-copy, xclip or xsel)" >&2
     return 1
 }
 

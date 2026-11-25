@@ -42,4 +42,15 @@ printf '# %s\n' "$LINE" >"$ZSHRC"
 run install.sh
 [[ "$(count)" == 1 ]] || fail "install skipped the line because of a commented-out copy"
 
+# Sourcing shell.sh in a bare interactive zsh prints nothing to stderr, perl included (catches a missing locale)
+err="$(env -u HOMEBREW_PREFIX HOME="$TMP_HOME" zsh -fic "source '$CUR_DIR/shell.sh'; command -v perl >/dev/null && perl -e1" 2>&1 >/dev/null)" ||
+    fail "sourcing shell.sh failed: $err"
+[[ -z "$err" ]] || fail "sourcing shell.sh printed to stderr: $err"
+
+# GNU ls: the fallback alias must not pass -G (--no-group there, not color)
+if command ls --color=auto -d . >/dev/null 2>&1; then
+    ls_alias="$(env -u HOMEBREW_PREFIX HOME="$TMP_HOME" PATH="/usr/bin:/bin" zsh -fic "source '$CUR_DIR/shell.sh'; alias ls" 2>/dev/null)"
+    [[ "$ls_alias" != *-G* ]] || fail "GNU ls alias uses -G: $ls_alias"
+fi
+
 echo "[shell test] OK"
