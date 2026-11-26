@@ -18,7 +18,7 @@ These scripts help bootstrap a development environment across macOS, Linux, and 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/install.sh)"
 
 # Install only some modules (kept in install order; no switch to zsh at the end)
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/install.sh)" -- --only git,claude
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/install.sh)" -- --only git,claude,codex
 
 # Uninstall
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/rangerz/dotfiles/main/uninstall.sh)"
@@ -32,7 +32,9 @@ Linux support covers WSL and other distros (apt, dnf, yum, pacman, apk for Homeb
 ```text
 dotfiles/
 ├── brew/        # Homebrew packages and scripts
-├── claude/      # Claude Code configs: settings, ccstatusline, plugins, MCP servers
+├── agents/      # AI coding agent configs
+│   ├── claude/  # Claude Code settings, ccstatusline, plugins, MCP servers
+│   └── codex/   # Codex hooks and skills
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
 ├── macos/       # macOS helper scripts (e.g. fix hostname)
@@ -67,13 +69,13 @@ git skip git/configs/work.ini
 
 ## Claude Code Settings
 
-`claude/install.sh` does not symlink `claude/settings.json`, because Claude Code rewrites `~/.claude/settings.json` itself. It merges the repo file into it with `jq`:
+`agents/claude/install.sh` does not symlink `agents/claude/settings.json`, because Claude Code rewrites `~/.claude/settings.json` itself. It merges the repo file into it with `jq`:
 
 - Keys in the repo file overwrite the same keys in `~/.claude/settings.json`.
 - Keys that exist only locally (for example `permissions.allow` or `hooks`) are kept.
 - Removing a key from the repo file does not remove it locally.
 
-If you change a tracked setting with `/model` or `/config`, the next install changes it back. Edit `claude/settings.json` instead.
+If you change a tracked setting with `/model` or `/config`, the next install changes it back. Edit `agents/claude/settings.json` instead.
 
 ## License
 

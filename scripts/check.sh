@@ -31,5 +31,10 @@ for test in */test-install.sh; do
     echo "[check] $test"
     "./$test"
 done
+for test in agents/*/test-install.sh; do
+    [[ -f "$test" ]] || continue
+    echo "[check] $test"
+    "./$test"
+done
 
 echo "[check] All checks passed."

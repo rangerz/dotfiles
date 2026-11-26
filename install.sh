@@ -25,7 +25,7 @@ download_dotfiles() {
 }
 
 # Install order matters: brew provides the tools that the later modules use
-MODULES="wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude"
+MODULES="wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude codex"
 
 usage() {
     echo "Usage: install.sh [--only <module>[,<module>...]]"
@@ -60,6 +60,8 @@ run_module() {
     # WSL-only utilities (no-op outside WSL); failure must not block core setup
     # WSL 專屬工具(非 WSL 時為 no-op);失敗不應中斷後續核心安裝
     wsl) "$DOTFILES/wsl/install.sh" || echo "WSL setup skipped/failed, continuing" ;;
+    codex) "$DOTFILES/agents/codex/install.sh" ;;
+    claude) "$DOTFILES/agents/claude/install.sh" ;;
     *) "$DOTFILES/$1/install.sh" ;;
     esac
 }

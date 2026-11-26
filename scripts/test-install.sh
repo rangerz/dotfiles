@@ -8,7 +8,7 @@ REPO="$CUR_DIR/.."
 TMP_HOME="$(mktemp -d)"
 trap 'rm -rf "$TMP_HOME"' EXIT
 
-MODULES=(wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude)
+MODULES=(wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude codex)
 LOG="$TMP_HOME/log"
 DOTFILES="$TMP_HOME/.dotfiles"
 
@@ -29,14 +29,17 @@ make_dotfiles() {
     git -C "$DOTFILES" remote add origin "$TMP_HOME/remote.git"
     local mod
     for mod in "${MODULES[@]}"; do
-        mkdir -p "$DOTFILES/$mod"
-        printf '#!/bin/sh\necho "install %s" >>"%s"\n' "$mod" "$LOG" >"$DOTFILES/$mod/install.sh"
-        printf '#!/bin/sh\necho "uninstall %s" >>"%s"\n' "$mod" "$LOG" >"$DOTFILES/$mod/uninstall.sh"
+        local mod_dir="$DOTFILES/$mod"
+        [[ "$mod" != claude ]] || mod_dir="$DOTFILES/agents/claude"
+        [[ "$mod" != codex ]] || mod_dir="$DOTFILES/agents/codex"
+        mkdir -p "$mod_dir"
+        printf '#!/bin/sh\necho "install %s" >>"%s"\n' "$mod" "$LOG" >"$mod_dir/install.sh"
+        printf '#!/bin/sh\necho "uninstall %s" >>"%s"\n' "$mod" "$LOG" >"$mod_dir/uninstall.sh"
     done
     # Failures here must not stop the rest
     printf '#!/bin/sh\necho "install wsl" >>"%s"\nexit 1\n' "$LOG" >"$DOTFILES/wsl/install.sh"
     printf '#!/bin/sh\necho "uninstall oh-my-zsh" >>"%s"\nexit 1\n' "$LOG" >"$DOTFILES/oh-my-zsh/uninstall.sh"
-    chmod +x "$DOTFILES"/*/*.sh
+    chmod +x "$DOTFILES"/*/*.sh "$DOTFILES"/agents/claude/*.sh "$DOTFILES"/agents/codex/*.sh
     git -C "$DOTFILES" add -A
     git_commit "$DOTFILES" stubs
     # push.negotiate (if the host sets it) only warns against a local bare repo
@@ -78,7 +81,7 @@ for args in "--only" "--only ," "--only foo" "--only git claude" "--bogus"; do
 done
 
 # Uninstall: answer y, every module in order (oh-my-zsh failing does not stop it), then remove the repo
-expected="$(printf 'uninstall %s ' shell git ssh vim mise topgrade claude oh-my-zsh zsh wsl brew | sed 's/ $//')"
+expected="$(printf 'uninstall %s ' shell git ssh vim mise topgrade claude codex oh-my-zsh zsh wsl brew | sed 's/ $//')"
 run "$REPO/uninstall.sh" <<<y || fail "uninstall failed"
 expect_log "uninstall" "$expected"
 [[ ! -e "$DOTFILES" ]] || fail "uninstall did not remove $DOTFILES"
