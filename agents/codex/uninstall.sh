@@ -2,51 +2,43 @@
 set -euo pipefail
 
 CODEX_DIR="$HOME/.codex"
-HOOK_SCRIPT="$CODEX_DIR/hooks/next_steps.py"
+HOOK_SCRIPT="$CODEX_DIR/hooks/next_steps.sh"
+OLD_HOOK_SCRIPT="$CODEX_DIR/hooks/next_steps.py"
 HOOK_CONFIG="$CODEX_DIR/hooks.json"
-HOOK_COMMAND="python3 \"$HOOK_SCRIPT\""
+HOOK_COMMAND="bash \"$HOOK_SCRIPT\""
+OLD_HOOK_COMMAND="python3 \"$OLD_HOOK_SCRIPT\""
 
-if [[ -f "$HOOK_CONFIG" ]]; then
-    python3 - "$HOOK_CONFIG" "$HOOK_COMMAND" <<'PY'
-import json
-import os
-import sys
-import tempfile
-
-path, command = sys.argv[1:]
-with open(path, encoding="utf-8") as stream:
-    config = json.load(stream)
-
-hooks = config.get("hooks", {})
-stop_hooks = hooks.get("Stop", [])
-for group in stop_hooks:
-    group["hooks"] = [
-        handler for handler in group.get("hooks", [])
-        if handler.get("command") != command
-    ]
-hooks["Stop"] = [group for group in stop_hooks if group.get("hooks")]
-if not hooks["Stop"]:
-    hooks.pop("Stop")
-if not hooks:
-    config.pop("hooks")
-
-directory = os.path.dirname(path)
-fd, temporary_path = tempfile.mkstemp(prefix="hooks.json.", dir=directory)
-try:
-    with os.fdopen(fd, "w", encoding="utf-8") as stream:
-        json.dump(config, stream, indent=2, ensure_ascii=False)
-        stream.write("\n")
-    os.chmod(temporary_path, 0o644)
-    os.replace(temporary_path, path)
-except Exception:
-    if os.path.exists(temporary_path):
-        os.unlink(temporary_path)
-    raise
-PY
+if [[ -f "$HOOK_CONFIG" ]] && ! command -v jq >/dev/null 2>&1; then
+    echo "[codex] jq is required to update hooks.json; install the brew module first" >&2
+    exit 1
 fi
 
-if [[ -L "$HOOK_SCRIPT" && "$(readlink "$HOOK_SCRIPT")" == "$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/hooks/next_steps.py" ]]; then
+if [[ -f "$HOOK_CONFIG" ]]; then
+    TEMP_HOOK_CONFIG="$(mktemp "$CODEX_DIR/hooks.json.XXXXXX")"
+    jq --arg command "$HOOK_COMMAND" --arg old_command "$OLD_HOOK_COMMAND" '
+    if .hooks.Stop then
+        .hooks.Stop = (
+            .hooks.Stop
+            | map(.hooks = ((.hooks // []) | map(select(.command != $command and .command != $old_command))))
+            | map(select(.hooks | length > 0))
+        )
+    else . end |
+    if (.hooks.Stop // [] | length) == 0 then del(.hooks.Stop) else . end |
+    if (.hooks // {} | length) == 0 then del(.hooks) else . end
+' "$HOOK_CONFIG" >"$TEMP_HOOK_CONFIG"
+    mv "$TEMP_HOOK_CONFIG" "$HOOK_CONFIG"
+fi
+
+if [[ -L "$HOOK_SCRIPT" && "$(readlink "$HOOK_SCRIPT")" == "$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)/hooks/next_steps.sh" ]]; then
     rm "$HOOK_SCRIPT"
+fi
+if [[ -L "$OLD_HOOK_SCRIPT" ]]; then
+    CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+    OLD_HOOK_TARGET="$(readlink "$OLD_HOOK_SCRIPT")"
+    if [[ "$OLD_HOOK_TARGET" == "$CUR_DIR/hooks/next_steps.py" ||
+        "$OLD_HOOK_TARGET" == "$CUR_DIR/hooks/next_steps_legacy.py" ]]; then
+        rm "$OLD_HOOK_SCRIPT"
+    fi
 fi
 
 echo "[codex] Next steps hook removed."

@@ -4,63 +4,63 @@ set -euo pipefail
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 CODEX_DIR="$HOME/.codex"
 HOOKS_DIR="$CODEX_DIR/hooks"
-HOOK_SCRIPT="$HOOKS_DIR/next_steps.py"
+HOOK_SCRIPT="$HOOKS_DIR/next_steps.sh"
+OLD_HOOK_SCRIPT="$HOOKS_DIR/next_steps.py"
 HOOK_CONFIG="$CODEX_DIR/hooks.json"
-HOOK_COMMAND="python3 \"$HOOK_SCRIPT\""
+CODEX_CONFIG="$CODEX_DIR/config.toml"
+STATUS_LINE_CONFIG="$CUR_DIR/config/status-line.toml"
+HOOK_COMMAND="bash \"$HOOK_SCRIPT\""
+OLD_HOOK_COMMAND="python3 \"$OLD_HOOK_SCRIPT\""
+
+if ! command -v yq >/dev/null 2>&1; then
+    echo "[codex] yq is required to apply TOML settings; install the brew module first" >&2
+    exit 1
+fi
+if ! command -v jq >/dev/null 2>&1; then
+    echo "[codex] jq is required to update hooks.json; install the brew module first" >&2
+    exit 1
+fi
 
 mkdir -p "$HOOKS_DIR"
 if [[ -e "$HOOK_SCRIPT" && ! -L "$HOOK_SCRIPT" ]] ||
-    [[ -L "$HOOK_SCRIPT" && "$(readlink "$HOOK_SCRIPT")" != "$CUR_DIR/hooks/next_steps.py" ]]; then
+    [[ -L "$HOOK_SCRIPT" && "$(readlink "$HOOK_SCRIPT")" != "$CUR_DIR/hooks/next_steps.sh" ]]; then
     mv "$HOOK_SCRIPT" "$HOOK_SCRIPT.bak"
     echo "[codex] Backed up existing hook to $HOOK_SCRIPT.bak"
 fi
-ln -sfn "$CUR_DIR/hooks/next_steps.py" "$HOOK_SCRIPT"
+ln -sfn "$CUR_DIR/hooks/next_steps.sh" "$HOOK_SCRIPT"
+if [[ -L "$OLD_HOOK_SCRIPT" ]]; then
+    OLD_HOOK_TARGET="$(readlink "$OLD_HOOK_SCRIPT")"
+    if [[ "$OLD_HOOK_TARGET" == "$CUR_DIR/hooks/next_steps.py" ||
+        "$OLD_HOOK_TARGET" == "$CUR_DIR/hooks/next_steps_legacy.py" ]]; then
+        rm "$OLD_HOOK_SCRIPT"
+    fi
+fi
 
-python3 - "$HOOK_CONFIG" "$HOOK_COMMAND" <<'PY'
-import json
-import os
-import sys
-import tempfile
+if [[ -e "$CODEX_CONFIG" ]]; then
+    TEMP_CONFIG="$(mktemp "$CODEX_DIR/config.toml.XXXXXX")"
+    trap '[[ -z "${TEMP_CONFIG:-}" ]] || rm -f "$TEMP_CONFIG"; [[ -z "${TEMP_HOOK_CONFIG:-}" ]] || rm -f "$TEMP_HOOK_CONFIG"' EXIT
+    yq ea -p toml -o toml \
+        'select(fileIndex == 0).tui.status_line = select(fileIndex == 1).tui.status_line | select(fileIndex == 0)' \
+        "$CODEX_CONFIG" "$STATUS_LINE_CONFIG" >"$TEMP_CONFIG"
+    mv "$TEMP_CONFIG" "$CODEX_CONFIG"
+    TEMP_CONFIG=""
+else
+    cp "$STATUS_LINE_CONFIG" "$CODEX_CONFIG"
+fi
 
-path, command = sys.argv[1:]
-config = {}
-if os.path.exists(path):
-    with open(path, encoding="utf-8") as stream:
-        config = json.load(stream)
+if [[ ! -f "$HOOK_CONFIG" ]]; then
+    printf '{}\n' >"$HOOK_CONFIG"
+fi
+TEMP_HOOK_CONFIG="$(mktemp "$CODEX_DIR/hooks.json.XXXXXX")"
+jq --arg command "$HOOK_COMMAND" --arg old_command "$OLD_HOOK_COMMAND" '
+    .hooks = (.hooks // {}) |
+    .hooks.Stop = (
+        ((.hooks.Stop // []) | map(.hooks = ((.hooks // []) | map(select(.command != $old_command)))))
+        | map(select(.hooks | length > 0))
+        | if any(.[]; any(.hooks[]; .command == $command)) then . else . + [{"hooks": [{"type": "command", "command": $command, "timeout": 10, "statusMessage": "Preparing next steps"}]}] end
+    )
+' "$HOOK_CONFIG" >"$TEMP_HOOK_CONFIG"
+mv "$TEMP_HOOK_CONFIG" "$HOOK_CONFIG"
+TEMP_HOOK_CONFIG=""
 
-hooks = config.setdefault("hooks", {})
-stop_hooks = hooks.setdefault("Stop", [])
-entry = {
-    "hooks": [
-        {
-            "type": "command",
-            "command": command,
-            "timeout": 10,
-            "statusMessage": "Preparing next steps",
-        }
-    ]
-}
-
-already_configured = any(
-    handler.get("command") == command
-    for group in stop_hooks
-    for handler in group.get("hooks", [])
-)
-if not already_configured:
-    stop_hooks.append(entry)
-
-directory = os.path.dirname(path)
-fd, temporary_path = tempfile.mkstemp(prefix="hooks.json.", dir=directory)
-try:
-    with os.fdopen(fd, "w", encoding="utf-8") as stream:
-        json.dump(config, stream, indent=2, ensure_ascii=False)
-        stream.write("\n")
-    os.chmod(temporary_path, 0o644)
-    os.replace(temporary_path, path)
-except Exception:
-    if os.path.exists(temporary_path):
-        os.unlink(temporary_path)
-    raise
-PY
-
-echo "[codex] Next steps hook installed. Review and trust it with /hooks."
+echo "[codex] Next steps hook installed. Review and trust it with /hooks before it runs."
