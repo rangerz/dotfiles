@@ -5,15 +5,21 @@
 # marketplace <owner/repo>
 # plugin      <name>@<marketplace>
 
-marketplace anthropics/claude-plugins-official
-marketplace anthropics/claude-plugins-community
-marketplace Shopify/shopify-ai-toolkit
 marketplace DietrichGebert/ponytail
-marketplace Leonxlnx/taste-skill
+plugin ponytail@ponytail
 
+marketplace Leonxlnx/taste-skill
+plugin taste-skill@taste-skill
+
+marketplace Shopify/shopify-ai-toolkit
+plugin shopify-plugin@shopify-ai-toolkit
+
+marketplace anthropics/claude-plugins-community
+plugin next-steps@claude-community
+
+marketplace anthropics/claude-plugins-official
 plugin code-review@claude-plugins-official
 plugin modern-web-guidance@claude-plugins-official
-plugin next-steps@claude-community
-plugin ponytail@ponytail
-plugin shopify-plugin@shopify-ai-toolkit
-plugin taste-skill@taste-skill
+
+marketplace openai/codex-plugin-cc
+plugin codex@openai-codex
