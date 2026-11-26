@@ -19,6 +19,13 @@
         "color": "green"
       },
       {
+        "id": "7f8adcb4-26d9-4358-839e-eb2f8d5981ce",
+        "type": "compaction-counter",
+        "backgroundColor": "bgCyan"
+      }
+    ],
+    [
+      {
         "id": "7",
         "type": "session-usage",
         "color": "yellow"
@@ -37,6 +44,16 @@
         "id": "8762028e-e9e2-4ebb-9401-f57ff363ac91",
         "type": "fable-weekly-usage",
         "color": "brightRed"
+      },
+      {
+        "id": "extra-usage-remaining",
+        "type": "extra-usage-remaining",
+        "color": "brightGreen"
+      },
+      {
+        "id": "1b5c1e3d-cacf-4b17-81fd-4aba073b171c",
+        "type": "session-cost",
+        "backgroundColor": "bgBrightGreen"
       }
     ],
     [
@@ -67,8 +84,7 @@
         "color": "brightBlack",
         "rawValue": true
       }
-    ],
-    []
+    ]
   ],
   "colorLevel": 2,
   "defaultPadding": " ",
@@ -77,7 +93,7 @@
   "globalBold": false,
   "gitCacheTtlSeconds": 5,
   "terminalWidthCacheTtlSeconds": 5,
-  "customCommandCacheTtlSeconds": 0,
+  "customCommandCacheTtlSeconds": 5,
   "minimalistMode": false,
   "powerline": {
     "enabled": true,
