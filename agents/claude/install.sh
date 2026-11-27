@@ -6,16 +6,16 @@ CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 AGENTS_MD="$(cd "$CUR_DIR/.." && pwd)/global.md"
 
 # Back up an existing real file, or a link to somewhere else, before linking
-# A timestamp keeps an older .bak (the original file) from being overwritten
+# .bak always holds the file moved away last (uninstall restores it); an older .bak gets a timestamp
 link() {
-    local src="$1" target="$2" bak="$2.bak"
+    local src="$1" target="$2"
     if [[ -f "$target" && ! -L "$target" ]] ||
         [[ -L "$target" && "$(readlink "$target")" != "$src" ]]; then
-        if [[ -e "$bak" || -L "$bak" ]]; then
-            bak="$target.bak.$(date +%Y%m%d%H%M%S)"
+        if [[ -e "$target.bak" || -L "$target.bak" ]]; then
+            mv "$target.bak" "$target.bak.$(date +%Y%m%d%H%M%S)"
         fi
-        mv "$target" "$bak"
-        echo "[claude] Backed up existing $target to $bak"
+        mv "$target" "$target.bak"
+        echo "[claude] Backed up existing $target to $target.bak"
     fi
     mkdir -p "$(dirname "$target")"
     ln -sfn "$src" "$target"

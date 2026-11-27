@@ -78,7 +78,7 @@ git skip git/configs/work.ini
 - `~/.claude/CLAUDE.md`（`agents/claude/install.sh`）
 - `~/.codex/AGENTS.md`（`agents/codex/install.sh`）
 
-要同時修改兩邊，編輯 `agents/global.md` 即可。如果這兩個路徑已經有一般檔案，或是指向其他位置的連結，安裝程式會先把它改名成 `.bak`（如果 `.bak` 已經存在，就改成 `.bak.<時間戳記>`）。解除安裝時會移除連結，並把 `.bak` 搬回原位。
+要同時修改兩邊，編輯 `agents/global.md` 即可。如果這兩個路徑已經有一般檔案，或是指向其他位置的連結，安裝程式會先把它改名成 `.bak`。原本已經存在的 `.bak` 會改名成 `.bak.<時間戳記>` 保留下來，所以 `.bak` 永遠是最後一次被移開的檔案。解除安裝時會移除連結，並把 `.bak` 搬回原位。
 
 ## Claude Code 設定
 

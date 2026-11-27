@@ -116,13 +116,13 @@ grep -qF '[codex] MCP server atlassian already added.' "$TMP_HOME/rerun.log" || 
 [[ "$(wc -l <"$MCP_LOG")" -eq 2 ]] || fail "rerun added an MCP server again"
 [[ "$(cat "$AGENTS_MD.bak")" == "my instructions" ]] || fail "rerun overwrote the AGENTS.md backup"
 
-# A real file in place of the link (e.g. after `sed -i`) gets a timestamped backup, not the .bak slot
+# A real file in place of the link (e.g. after `sed -i`) goes to .bak; the older .bak is kept under a timestamp
 rm "$AGENTS_MD"
 echo "edited" >"$AGENTS_MD"
 PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" MCP_LOG="$MCP_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
-[[ "$(cat "$AGENTS_MD.bak")" == "my instructions" ]] || fail "install overwrote the existing AGENTS.md.bak"
+[[ "$(cat "$AGENTS_MD.bak")" == edited ]] || fail "install did not move the edited AGENTS.md to .bak"
 stamped=("$AGENTS_MD".bak.*)
-[[ ${#stamped[@]} -eq 1 && "$(cat "${stamped[0]}")" == edited ]] || fail "install did not keep the edited AGENTS.md as a timestamped backup"
+[[ ${#stamped[@]} -eq 1 && "$(cat "${stamped[0]}")" == "my instructions" ]] || fail "install did not keep the older AGENTS.md.bak under a timestamp"
 [[ "$(readlink "$AGENTS_MD")" == "$AGENTS_SRC" ]] || fail "install did not relink AGENTS.md"
 [[ "$(jq -r '[.hooks.Stop[].hooks[] | select(.command == "echo custom")] | length' "$HOOK_CONFIG")" == 1 ]] || fail "custom Stop hook was changed"
 [[ "$(jq -r --arg command "$HOOK_COMMAND" '[.hooks.Stop[].hooks[] | select(.command == $command)] | length' "$HOOK_CONFIG")" == 1 ]] || fail "rerun duplicated the Codex hook"
@@ -138,7 +138,7 @@ hook_output="$(printf '%s' '{"stop_hook_active":true,"last_assistant_message":"D
 ln -s "$CUR_DIR/hooks/next_steps_legacy.py" "$OLD_HOOK_SCRIPT"
 HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
 [[ ! -e "$HOOK_SCRIPT" && ! -L "$HOOK_SCRIPT" ]] || fail "uninstall left the repo symlink"
-[[ ! -L "$AGENTS_MD" && "$(cat "$AGENTS_MD")" == "my instructions" ]] || fail "uninstall did not restore AGENTS.md from .bak"
+[[ ! -L "$AGENTS_MD" && "$(cat "$AGENTS_MD")" == edited ]] || fail "uninstall did not restore AGENTS.md from .bak"
 [[ ! -e "$AGENTS_MD.bak" ]] || fail "uninstall left AGENTS.md.bak"
 [[ ! -e "$OLD_HOOK_SCRIPT" && ! -L "$OLD_HOOK_SCRIPT" ]] || fail "uninstall left the obsolete hook symlink"
 [[ "$(jq -r '[.hooks.Stop[].hooks[] | select(.command == "echo custom")] | length' "$HOOK_CONFIG")" == 1 ]] || fail "uninstall removed the custom Stop hook"
