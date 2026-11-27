@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # WSL-only packages from wsl/install.sh are common tools (git, curl, ...), so do not remove them automatically.
-# wsl/install.sh 裝的是常用工具(git、curl 等),不自動移除。
 set -euo pipefail
 
 # WSL check (matches wsl/install.sh)

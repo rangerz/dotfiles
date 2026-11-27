@@ -3,51 +3,51 @@
 ## Usage
 
 ```bash
-# Install WSL (安裝 WSL)
+# Install WSL
 wsl --install
 
-# Install specific distro (安裝特定發行版)
+# Install specific distro
 wsl --install -d Ubuntu
 wsl --install -d Debian
 wsl --install -d Ubuntu-24.04
 
-# Show WSL status (檢查狀態)
+# Show WSL status
 wsl --status
 
-# Show WSL version (檢查版本)
+# Show WSL version
 wsl --version
 
-# Update WSL (更新 WSL 版本)
+# Update WSL
 wsl --update
 
-# List installed distros (列出已安裝的發行版)
+# List installed distros
 wsl --list --verbose
 wsl -l -v
 
-# List available online distros (列出可安裝的發行版)
+# List available online distros
 wsl --list --online
 wsl -l -o
 
-# Set default distro (設定預設發行版)
+# Set default distro
 wsl --set-default Ubuntu-24.04
 wsl -s Ubuntu-24.04
 
-# Enter default distro (進入預設發行版)
+# Enter default distro
 wsl
 
-# Enter specific distro (進入指定發行版)
+# Enter specific distro
 wsl -d Ubuntu-22.04
 
-# Shutdown all WSL instances (關閉所有 WSL)
+# Shutdown all WSL instances
 wsl --shutdown
 
-# Export a distro (匯出發行版)
+# Export a distro
 wsl --export Ubuntu backup.tar
 
-# Import a distro (匯入發行版)
+# Import a distro
 wsl --import MyDistro D:\WSL D:\backup.tar
 
-# Unregister (reset) a distro (重置發行版)
+# Unregister (reset) a distro
 wsl --unregister Ubuntu
 wsl --install -d Ubuntu
 ```

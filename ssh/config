@@ -1,8 +1,6 @@
 Host *
     # Load keys into ssh-agent on first use; UseKeychain is macOS-only,
     # so IgnoreUnknown must come first to keep Linux OpenSSH from erroring.
-    # 第一次使用時把 key 載入 ssh-agent;UseKeychain 只有 macOS 認得,
-    # IgnoreUnknown 必須放在前面,Linux 的 OpenSSH 才不會報錯。
     IgnoreUnknown UseKeychain
     AddKeysToAgent yes
     UseKeychain yes

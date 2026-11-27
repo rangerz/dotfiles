@@ -342,6 +342,6 @@ clip() {
     return 1
 }
 
-alias clip-review='(printf "根據 diff staged 去 code review，指出潛在 bug、可讀性問題與改進建議：\n\n"; git diff --cached) | clip'
-alias clip-commit='(printf "根據 diff staged 產生一則清楚、精簡、符合 Conventional Commits 的 commit message：\n\n"; git diff --cached) | clip'
-alias clip-pr='(printf "根據 show commit，產生可直接貼到 GitHub 的 Pull Request 英文說明（Markdown 格式）：\n\n"; git show HEAD) | clip'
+alias clip-review='(printf "Review the staged diff below. Point out potential bugs, readability issues, and improvements. Reply in Traditional Chinese.\n\n"; git diff --cached) | clip'
+alias clip-commit='(printf "Write a clear, concise Conventional Commits message for the staged diff below.\n\n"; git diff --cached) | clip'
+alias clip-pr='(printf "Write an English GitHub pull request description in Markdown for the commit below, ready to paste.\n\n"; git show HEAD) | clip'

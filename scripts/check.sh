@@ -26,6 +26,14 @@ if ((${#files[@]} > 0)); then
 fi
 echo "[check] shfmt"
 shfmt -d .
+echo "[check] English only"
+# Exit 1 means no match; anything above 1 is a git error (e.g. no PCRE), which must fail too
+status=0
+git grep -nP '[\p{Han}\x{3000}-\x{303f}\x{ff00}-\x{ffef}]' -- . ':!README.zh-TW.md' || status=$?
+if ((status != 1)); then
+    echo "[check] Chinese text is only allowed in README.zh-TW.md (or git grep failed)." >&2
+    exit 1
+fi
 
 for test in */test-install.sh; do
     echo "[check] $test"

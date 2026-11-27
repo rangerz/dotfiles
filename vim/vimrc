@@ -1,77 +1,77 @@
 "Vim Options: http://vimdoc.sourceforge.net/htmldoc/options.html
 
-"編碼 - Encode
+"Encoding
 set encoding=utf-8                    "(enc)
 set fileencodings=ucs-bom,utf-8,cp950 "(fencs)
 "set termencoding=utf-8              "(tenc)
 
-"基本配置
+"Basics
 syntax on
 syntax enable
-set nocompatible    "(nocp) 不與 vi 相容
+set nocompatible    "(nocp) not vi-compatible
 set showmode        "(smd)
 set showcmd         "(sc)
 set fileformat=unix "(ff)
 colo torte
 filetype plugin indent on
 
-"啟用鼠標 - Mouse
+"Mouse
 set mouse=a
 set selection=exclusive  "(sel)
 set selectmode=mouse,key "(slm)
 
-"縮行 - Indent
-set autoindent      "(ai) 繼承前一行縮行
-set smartindent     "(si) 偵測括號 {}
-set cindent         "(cin) 偵測 C 程式語言
-set expandtab       "(et) 輸入 Tab 轉換成 Space
-set tabstop=8       "(ts) Tab 顯示為 8 個空格
-set shiftwidth=4    "(sw) 縮行寬度
-set softtabstop=0 smarttab     "(sts) Backspace 寬度
+"Indent
+set autoindent      "(ai) keep the previous line's indent
+set smartindent     "(si) indent after braces {}
+set cindent         "(cin) C-style indenting
+set expandtab       "(et) insert spaces for Tab
+set tabstop=8       "(ts) show a Tab as 8 spaces
+set shiftwidth=4    "(sw) indent width
+set softtabstop=0 smarttab     "(sts) Backspace width
 set backspace=eol,start,indent "(bs)
 
-"外觀
-set ruler           "(ru) 顯示標尺
-set number          "(nu) 顯示行號
-"set relativenumber "(rnu) 顯示相對行號
-set cursorline      "(cul) 顯示當前行
-"set cursorcolumn   "(cuc) 顯示當前列
+"Appearance
+set ruler           "(ru) show the ruler
+set number          "(nu) show line numbers
+"set relativenumber "(rnu) show relative line numbers
+set cursorline      "(cul) highlight the cursor line
+"set cursorcolumn   "(cuc) highlight the cursor column
 "set textwidth=80   "(tw)
-set wrap            "自動換行
-set linebreak       "(lbr) 不在單字中斷行
+set wrap            "wrap long lines
+set linebreak       "(lbr) do not break words when wrapping
 set wrapmargin=2    "(wm)
-set laststatus=3    "(ls) 顯示狀態欄 0=不顯示 1=多視窗才顯示 2=顯示
-set scrolloff=3     "(so) 保持上方下方三行距離
+set laststatus=3    "(ls) status line: 0=never 1=only with split windows 2=always 3=one global line
+set scrolloff=3     "(so) keep 3 lines above and below the cursor
 
-"用淺色高亮顯示當前行
+"Highlight the cursor line only in Insert mode
 autocmd InsertLeave * set nocursorline
 autocmd InsertEnter * set cursorline
 
-"搜尋 - Search
-set hlsearch   "(hls) 高亮顯示匹配結果
-set incsearch  "(is) 每輸入一個字符 就自動跳到第一個匹配的結果
-set ignorecase "(ic) 搜尋字串不分大小寫
-set smartcase  "(scs) 部分大寫字母的搜索詞時 搜尋字串區分大小寫
-set showmatch  "(sm) 顯示括號匹配 ()[]{}
+"Search
+set hlsearch   "(hls) highlight matches
+set incsearch  "(is) jump to the first match while typing
+set ignorecase "(ic) case-insensitive search
+set smartcase  "(scs) case-sensitive when the pattern has uppercase letters
+set showmatch  "(sm) show matching brackets ()[]{}
 
-"編輯 - Edit
-"set spell spelllang=en_us "檢查英文拼寫
-set nobackup        "(nobk) 不產生備份檔案 filename~
-set noswapfile      "(noswf) 不產生交換檔案 .filename.swap
-"set undofile       "(udf) 保留 undo 歷史紀錄
-"set autochdir       "(acd) 自動切換目錄
-set history=1000    "(hi) 紀錄歷史紀錄次數
-set autoread        "(ar) 偵測檔案被外部修改
-set listchars=tab:▸\ ,trail:·,extends:>,precedes:< " (lcs) 行尾有多餘的空格和 Tab 顯示其符號
+"Editing
+"set spell spelllang=en_us "English spell check
+set nobackup        "(nobk) no backup files (filename~)
+set noswapfile      "(noswf) no swap files (.filename.swp)
+"set undofile       "(udf) keep undo history
+"set autochdir       "(acd) change to the file's directory
+set history=1000    "(hi) command history size
+set autoread        "(ar) reload files changed outside Vim
+set listchars=tab:▸\ ,trail:·,extends:>,precedes:< " (lcs) show symbols for tabs and trailing spaces
 set list
-set wildmenu        "(wmnu) 自動補全(tab) menu 指令
+set wildmenu        "(wmnu) Tab completion menu for commands
 set wildmode=longest:list,full  "(wim)
-set noerrorbells    "(noeb) 關閉錯誤訊息鈴聲
-set visualbell      "(vb) 顯示可視化提示
+set noerrorbells    "(noeb) no error bell
+set visualbell      "(vb) visual bell
 set pastetoggle=<F12> "(pt) F12 switch paste mode
 
 if has('clipboard')
-  set clipboard+=unnamedplus    "與系統剪貼簿整合 / Use system clipboard
+  set clipboard+=unnamedplus    "Use the system clipboard
 endif
 
 "Automatically remove trailing spaces when saving a file.

@@ -4,7 +4,6 @@ set -euo pipefail
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 # Back up an existing real file, or a link to somewhere else, before linking
-# 連結前先備份既有的實體檔案，或指向別處的連結
 link() {
     local src="$1" target="$2"
     if [[ -f "$target" && ! -L "$target" ]] ||
@@ -20,7 +19,6 @@ link "$CUR_DIR/ccstatusline.json" "${XDG_CONFIG_HOME:-$HOME/.config}/ccstatuslin
 link "$CUR_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
 # brew's bin is not on PATH yet when called from the top-level install.sh; claude may come from elsewhere, so check jq too
-# 從頂層 install.sh 呼叫時，brew 的 bin 還不在 PATH 上
 if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
         if [[ -x "$prefix/bin/brew" ]]; then
@@ -52,12 +50,10 @@ if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     echo "[claude] claude or jq not found, skipping plugins."
 else
     # Match marketplaces by repo (case-insensitive): their local name comes from the repo, not from us
-    # 以 repo 比對 marketplace(不分大小寫):本地名稱由 repo 決定，不是我們指定的
     installed_markets="$(claude plugin marketplace list --json | jq -r '.[].repo // empty' | tr '[:upper:]' '[:lower:]' || true)"
     installed_plugins="$(claude plugin list --json | jq -r '.[].id' || true)"
 
     # `|| [[ -n "$kind" ]]` keeps a last line that has no trailing newline
-    # 保留結尾沒有換行字元的最後一行
     while read -r kind value || [[ -n "$kind" ]]; do
         case "$kind" in
         marketplace)
@@ -80,8 +76,7 @@ else
     done <"$CUR_DIR/plugins.txt"
 
     # `claude mcp get` exits non-zero when the server is not configured; </dev/null keeps claude off the loop's stdin
-    # 未設定時 `claude mcp get` 回傳非 0;</dev/null 避免 claude 讀走迴圈的 stdin
-    # read -ra splits on whitespace without glob expansion / 只以空白切割，不展開萬用字元
+    # read -ra splits on whitespace without glob expansion
     while read -ra parts || [[ ${#parts[@]} -gt 0 ]]; do
         name="${parts[0]:-}"
         case "$name" in

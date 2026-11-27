@@ -14,7 +14,7 @@
 A File Icon
 Alignment
 BracketHighlighter
-CSS3０
+CSS3
 Emmet
 SideBarEnhancements
 TrailingSpaces
@@ -48,4 +48,4 @@ sudo codesign --sign - --force --deep /Applications/Sublime\ Text.app
 ```
 
 ### Learning Resources
-- [開始撰寫程式碼-程式碼平台安裝(Sublime)](https://medium.com/jeasee%E9%9A%A8%E7%AD%86/%E9%96%8B%E5%A7%8B%E6%92%B0%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%A2%BC-%E7%A8%8B%E5%BC%8F%E7%A2%BC%E5%B9%B3%E5%8F%B0%E5%AE%89%E8%A3%9D-sublime-3d1184489e74)
+- [Getting started: installing Sublime Text (Chinese article)](https://medium.com/jeasee%E9%9A%A8%E7%AD%86/%E9%96%8B%E5%A7%8B%E6%92%B0%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%A2%BC-%E7%A8%8B%E5%BC%8F%E7%A2%BC%E5%B9%B3%E5%8F%B0%E5%AE%89%E8%A3%9D-sublime-3d1184489e74)

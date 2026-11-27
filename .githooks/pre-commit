@@ -25,6 +25,15 @@ for test in "$index"/*/test-install.sh; do
     "$test"
 done
 
+# English only on the staged copy; same pattern as scripts/check.sh, keep them in sync.
+# Exit 1 means no match; anything above 1 is a git error (e.g. no PCRE), which must fail too
+status=0
+git grep --cached -nP '[\p{Han}\x{3000}-\x{303f}\x{ff00}-\x{ffef}]' -- . ':!README.zh-TW.md' || status=$?
+if ((status != 1)); then
+    echo "[pre-commit] Chinese text is only allowed in README.zh-TW.md (or git grep failed)." >&2
+    exit 1
+fi
+
 # Plain assignment so a shfmt error stops the hook (set -e misses failures inside <(...))
 list=$(shfmt -f "${staged[@]}")
 [[ -z "$list" ]] && exit 0

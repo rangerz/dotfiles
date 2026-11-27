@@ -4,8 +4,6 @@ set -euo pipefail
 
 # Keys are generated WITH a passphrase (ssh-keygen prompts for it); never use -N ""
 # because the ed25519 key also signs git commits.
-# 私鑰一律設 passphrase(由 ssh-keygen 互動詢問),不可用 -N "",
-# 因為 ed25519 同時用來簽 git commit。
 if [ ! -t 0 ]; then
     echo "[SSH] No terminal for the passphrase prompt; skipping key generation." >&2
     echo "      Run ssh/ssh-keygen.sh from an interactive shell later." >&2

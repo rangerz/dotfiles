@@ -106,8 +106,6 @@ hook_output="$(printf '%s' '{"last_assistant_message":"Done"}' | bash "$HOOK_SCR
 [[ "$(jq -r '.decision' <<<"$hook_output")" == block ]] || fail "hook did not block for a review"
 hook_output="$(printf '%s' '{"last_assistant_message":"Done\n\nNext steps:"}' | bash "$HOOK_SCRIPT")"
 [[ -z "$hook_output" ]] || fail "hook blocked an answer that already has next steps"
-hook_output="$(printf '%s' '{"last_assistant_message":"Done\n\n接下來可以："}' | bash "$HOOK_SCRIPT")"
-[[ -z "$hook_output" ]] || fail "hook blocked an answer that already has Chinese next steps"
 hook_output="$(printf '%s' '{"stop_hook_active":true,"last_assistant_message":"Done"}' | bash "$HOOK_SCRIPT")"
 [[ -z "$hook_output" ]] || fail "hook continued an already-continued turn"
 

@@ -1,6 +1,6 @@
 # Codex plugins, installed by agents/codex/install.sh
-# Codex plugin 清單，由 agents/codex/install.sh 安裝
-# Add-only: removing a line does not uninstall it / 只會新增，不會移除
+# Codex plugins, installed by agents/codex/install.sh
+# Add-only: removing a line does not uninstall it
 #
 # <plugin>@<marketplace>
 

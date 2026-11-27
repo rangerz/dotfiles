@@ -51,7 +51,7 @@
 - Keyboard
   - Press Fn key to → Change Input Source
   - Text Input
-    - Add Zhuyin - Traditional (注音輸入法)
+    - Add Zhuyin - Traditional
   - Edit "All Input Source"
     - Capitalize words automatically → Off
     - Add period with double-space → Off

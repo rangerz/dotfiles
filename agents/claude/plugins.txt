@@ -1,6 +1,6 @@
 # Claude Code marketplaces and plugins, installed by agents/claude/install.sh
-# Claude Code 的 marketplace 與 plugin 清單，由 agents/claude/install.sh 安裝
-# Add-only: removing a line does not uninstall it / 只會新增，不會移除
+# Claude Code marketplaces and plugins, installed by agents/claude/install.sh
+# Add-only: removing a line does not uninstall it
 #
 # marketplace <owner/repo>
 # plugin      <name>@<marketplace>

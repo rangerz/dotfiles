@@ -1,5 +1,7 @@
 # rangerz/dotfiles
 
+**English** | [Traditional Chinese](README.zh-TW.md)
+
 My personal dotfiles, including shell, git, vim, and ssh configs.  
 These scripts help bootstrap a development environment across macOS, Linux, and Windows.
 
