@@ -21,6 +21,18 @@ if ! command -v shfmt >/dev/null 2>&1; then
     fi
 fi
 
+# yq (agents/codex/test-install.sh): mikefarah's Go binary; apt's yq is a different Python tool, so check the version string
+YQ_VERSION=v4.54.3
+if ! yq --version 2>/dev/null | grep -qF mikefarah; then
+    if curl -fsSL -o /usr/local/bin/yq \
+        "https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_linux_amd64"; then
+        chmod +x /usr/local/bin/yq
+    else
+        rm -f /usr/local/bin/yq
+        echo "[session-start] yq install failed, continuing" >&2
+    fi
+fi
+
 # Install the missing ones of shellcheck, jq and zsh (oh-my-zsh/test-install.sh) from apt
 missing=()
 for cmd in shellcheck jq zsh; do
