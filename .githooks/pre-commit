@@ -20,8 +20,9 @@ index="$(mktemp -d)"
 trap 'rm -rf "$index"' EXIT
 git checkout-index -a --prefix="$index/"
 
-# Run every installer self-check; together they take about a second, and scripts/ covers top-level files too
-for test in "$index"/*/test-install.sh; do
+# Run every installer self-check, same set as scripts/check.sh; scripts/ covers top-level files too
+for test in "$index"/*/test-install.sh "$index"/agents/*/test-install.sh; do
+    [[ -f "$test" ]] || continue
     "$test"
 done
 
