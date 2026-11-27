@@ -37,6 +37,7 @@ dotfiles/
 ├── agents/      # AI coding agent 設定
 │   ├── claude/  # Claude Code 設定、ccstatusline、plugins
 │   ├── codex/   # Codex hooks 與 skills
+│   ├── global.md # Claude Code 與 Codex 共用的全域指令
 │   └── mcps.txt # Claude Code 與 Codex 共用的 MCP servers
 ├── docs/        # 筆記：macOS、WSL、winget、vscode 等
 ├── git/         # Git 設定、alias、workflow、commit 範本
@@ -69,6 +70,15 @@ git skip git/configs/personal.ini
 # 只用於 ~/Workspaces/
 git skip git/configs/work.ini
 ```
+
+## 全域 Agent 指令
+
+`agents/global.md` 是 Claude Code 與 Codex 共用的全域指令。安裝程式會把它連結到：
+
+- `~/.claude/CLAUDE.md`（`agents/claude/install.sh`）
+- `~/.codex/AGENTS.md`（`agents/codex/install.sh`）
+
+要同時修改兩邊，編輯 `agents/global.md` 即可。如果這兩個路徑已經有一般檔案，或是指向其他位置的連結，安裝程式會先把它改名成 `.bak`。
 
 ## Claude Code 設定
 

@@ -37,6 +37,7 @@ dotfiles/
 ├── agents/      # AI coding agent configs
 │   ├── claude/  # Claude Code settings, ccstatusline, plugins
 │   ├── codex/   # Codex hooks and skills
+│   ├── global.md # Global instructions shared by Claude Code and Codex
 │   └── mcps.txt # MCP servers shared by Claude Code and Codex
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
@@ -69,6 +70,15 @@ git skip git/configs/personal.ini
 # For ~/Workspaces/ only
 git skip git/configs/work.ini
 ```
+
+## Global Agent Instructions
+
+`agents/global.md` holds the global instructions that Claude Code and Codex share. The installers link it to:
+
+- `~/.claude/CLAUDE.md` (`agents/claude/install.sh`)
+- `~/.codex/AGENTS.md` (`agents/codex/install.sh`)
+
+Edit `agents/global.md` to change both. If either path already exists as a real file or a link to somewhere else, the installer renames it to `.bak` first.
 
 ## Claude Code Settings
 
