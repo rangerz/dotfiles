@@ -64,3 +64,19 @@ mv "$TEMP_HOOK_CONFIG" "$HOOK_CONFIG"
 TEMP_HOOK_CONFIG=""
 
 echo "[codex] Next steps hook installed. Review and trust it with /hooks before it runs."
+
+if ! command -v codex >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
+    echo "[codex] codex or jq not found, skipping plugins."
+else
+    installed_plugins="$(codex plugin list --json 2>/dev/null | jq -r '.installed[]?.pluginId // empty' || true)"
+    while read -r plugin || [[ -n "$plugin" ]]; do
+        case "$plugin" in
+        "" | \#*) continue ;;
+        esac
+        if grep -qxF "$plugin" <<<"$installed_plugins"; then
+            echo "[codex] Plugin $plugin already installed."
+        else
+            codex plugin add "$plugin" || echo "[codex] Failed to install plugin $plugin, continuing."
+        fi
+    done <"$CUR_DIR/plugins.txt"
+fi
