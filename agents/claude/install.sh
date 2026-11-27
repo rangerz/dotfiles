@@ -2,6 +2,8 @@
 set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+# Global instructions shared with Codex
+AGENTS_MD="$(cd "$CUR_DIR/.." && pwd)/global.md"
 
 # Back up an existing real file, or a link to somewhere else, before linking
 link() {
@@ -16,7 +18,11 @@ link() {
 }
 
 link "$CUR_DIR/ccstatusline.json" "${XDG_CONFIG_HOME:-$HOME/.config}/ccstatusline/settings.json"
-link "$CUR_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+# Drop our old link (agents/claude/CLAUDE.md, now gone) so it is not backed up as a dangling .bak
+if [[ -L "$HOME/.claude/CLAUDE.md" && "$(readlink "$HOME/.claude/CLAUDE.md")" == "$CUR_DIR/CLAUDE.md" ]]; then
+    rm "$HOME/.claude/CLAUDE.md"
+fi
+link "$AGENTS_MD" "$HOME/.claude/CLAUDE.md"
 
 # brew's bin is not on PATH yet when called from the top-level install.sh; claude may come from elsewhere, so check jq too
 if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then

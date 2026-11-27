@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Self-check for install.sh's settings.json merge and CLAUDE.md link, run against a throwaway HOME (no network, no real files touched)
+# Self-check for install.sh's settings.json merge and CLAUDE.md link (to the shared agents/global.md), run against a throwaway HOME (no network, no real files touched)
 set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
@@ -52,11 +52,23 @@ run_install || fail "install failed on invalid settings.json"
 
 # CLAUDE.md: a link to somewhere else is backed up, our own link is not, on rerun
 CLAUDE_MD="$TMP_HOME/.claude/CLAUDE.md"
+AGENTS_MD="$(cd "$CUR_DIR/.." && pwd)/global.md"
 rm -f "$CLAUDE_MD" "$CLAUDE_MD.bak"
 ln -s "$TMP_HOME/other.md" "$CLAUDE_MD"
 run_install
 run_install
-[[ "$(readlink "$CLAUDE_MD")" == "$CUR_DIR/CLAUDE.md" ]] || fail "install did not link CLAUDE.md to the repo"
+[[ "$(readlink "$CLAUDE_MD")" == "$AGENTS_MD" ]] || fail "install did not link CLAUDE.md to the shared global.md"
 [[ "$(readlink "$CLAUDE_MD.bak")" == "$TMP_HOME/other.md" ]] || fail "install did not back up the other CLAUDE.md link"
+
+# Our old link to agents/claude/CLAUDE.md is replaced without a backup
+rm -f "$CLAUDE_MD" "$CLAUDE_MD.bak"
+ln -s "$CUR_DIR/CLAUDE.md" "$CLAUDE_MD"
+run_install
+[[ "$(readlink "$CLAUDE_MD")" == "$AGENTS_MD" ]] || fail "install did not replace the old CLAUDE.md link"
+[[ ! -e "$CLAUDE_MD.bak" && ! -L "$CLAUDE_MD.bak" ]] || fail "install backed up the old CLAUDE.md link"
+
+# Uninstall removes our link
+env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
+[[ ! -L "$CLAUDE_MD" ]] || fail "uninstall left the CLAUDE.md link"
 
 echo "[claude test] OK"

@@ -7,6 +7,9 @@ HOOKS_DIR="$CODEX_DIR/hooks"
 HOOK_SCRIPT="$HOOKS_DIR/next_steps.sh"
 OLD_HOOK_SCRIPT="$HOOKS_DIR/next_steps.py"
 HOOK_CONFIG="$CODEX_DIR/hooks.json"
+# Global instructions shared with Claude
+AGENTS_SRC="$(cd "$CUR_DIR/.." && pwd)/global.md"
+AGENTS_MD="$CODEX_DIR/AGENTS.md"
 CODEX_CONFIG="$CODEX_DIR/config.toml"
 STATUS_LINE_CONFIG="$CUR_DIR/config/status-line.toml"
 HOOK_COMMAND="bash \"$HOOK_SCRIPT\""
@@ -21,13 +24,20 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 1
 fi
 
-mkdir -p "$HOOKS_DIR"
-if [[ -e "$HOOK_SCRIPT" && ! -L "$HOOK_SCRIPT" ]] ||
-    [[ -L "$HOOK_SCRIPT" && "$(readlink "$HOOK_SCRIPT")" != "$CUR_DIR/hooks/next_steps.sh" ]]; then
-    mv "$HOOK_SCRIPT" "$HOOK_SCRIPT.bak"
-    echo "[codex] Backed up existing hook to $HOOK_SCRIPT.bak"
-fi
-ln -sfn "$CUR_DIR/hooks/next_steps.sh" "$HOOK_SCRIPT"
+# Back up an existing real file, or a link to somewhere else, before linking
+link() {
+    local src="$1" target="$2"
+    if [[ -e "$target" && ! -L "$target" ]] ||
+        [[ -L "$target" && "$(readlink "$target")" != "$src" ]]; then
+        mv "$target" "$target.bak"
+        echo "[codex] Backed up existing $target to $target.bak"
+    fi
+    mkdir -p "$(dirname "$target")"
+    ln -sfn "$src" "$target"
+}
+
+link "$AGENTS_SRC" "$AGENTS_MD"
+link "$CUR_DIR/hooks/next_steps.sh" "$HOOK_SCRIPT"
 if [[ -L "$OLD_HOOK_SCRIPT" ]]; then
     OLD_HOOK_TARGET="$(readlink "$OLD_HOOK_SCRIPT")"
     if [[ "$OLD_HOOK_TARGET" == "$CUR_DIR/hooks/next_steps.py" ||

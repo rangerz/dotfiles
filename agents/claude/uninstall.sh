@@ -15,7 +15,7 @@ fi
 # Remove the CLAUDE.md link only if it points into this repo
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 CLAUDE_MD="$HOME/.claude/CLAUDE.md"
-if [[ -L "$CLAUDE_MD" && "$(readlink "$CLAUDE_MD")" == "$CUR_DIR/CLAUDE.md" ]]; then
+if [[ -L "$CLAUDE_MD" && "$(readlink "$CLAUDE_MD")" == "$(cd "$CUR_DIR/.." && pwd)/global.md" ]]; then
     rm "$CLAUDE_MD"
     echo "[claude] Removed symlink $CLAUDE_MD"
 fi
