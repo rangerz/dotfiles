@@ -33,27 +33,27 @@ Linux support covers WSL and other distros (apt, dnf, yum, pacman, apk for Homeb
 
 ```text
 dotfiles/
-├── brew/        # Homebrew packages and scripts
-├── agents/      # AI coding agent configs
-│   ├── claude/  # Claude Code settings, ccstatusline, plugins
-│   ├── codex/   # Codex hooks and skills
+├── brew/         # Homebrew packages and scripts
+├── agents/       # AI coding agent configs
+│   ├── claude/   # Claude Code settings, ccstatusline, plugins
+│   ├── codex/    # Codex hooks and skills
 │   ├── global.md # Global instructions shared by Claude Code and Codex
-│   └── mcps.txt # MCP servers shared by Claude Code and Codex
-├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
-├── git/         # Git config, aliases, workflow, commit templates
-├── macos/       # macOS helper scripts (e.g. fix hostname)
-├── mise/        # Language/runtime manager configs
-├── oh-my-zsh/   # Oh My Zsh plugins and setup
-├── scripts/     # Repo checks (check.sh, also run by CI)
-├── shell/       # General shell config setup
-├── ssh/         # SSH config and key management
-├── topgrade/    # topgrade config (system-wide updates)
-├── vim/         # Vim config
-├── windows/     # Windows setup scripts (winget, WSL)
-├── wsl/         # WSL-only packages and Chrome install
-├── zsh/         # Zsh installer
-├── install.sh   # Entry point installer
-└── uninstall.sh # Entry point uninstaller
+│   └── mcps.txt  # MCP servers shared by Claude Code and Codex
+├── docs/         # Notes: macOS, WSL, winget, vscode, etc.
+├── git/          # Git config, aliases, workflow, commit templates
+├── macos/        # macOS helper scripts (e.g. fix hostname)
+├── mise/         # Language/runtime manager configs
+├── oh-my-zsh/    # Oh My Zsh plugins and setup
+├── scripts/      # Repo checks (check.sh, also run by CI)
+├── shell/        # General shell config setup
+├── ssh/          # SSH config and key management
+├── topgrade/     # topgrade config (system-wide updates)
+├── vim/          # Vim config
+├── windows/      # Windows setup scripts (winget, WSL)
+├── wsl/          # WSL-only packages and Chrome install
+├── zsh/          # Zsh installer
+├── install.sh    # Entry point installer
+└── uninstall.sh  # Entry point uninstaller
 ```
 
 ## Post-install Setup

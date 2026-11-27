@@ -33,27 +33,27 @@ Linux 支援 WSL 與其他發行版（Homebrew 的前置套件可透過 apt、dn
 
 ```text
 dotfiles/
-├── brew/        # Homebrew 套件與腳本
-├── agents/      # AI coding agent 設定
-│   ├── claude/  # Claude Code 設定、ccstatusline、plugins
-│   ├── codex/   # Codex hooks 與 skills
+├── brew/         # Homebrew 套件與腳本
+├── agents/       # AI coding agent 設定
+│   ├── claude/   # Claude Code 設定、ccstatusline、plugins
+│   ├── codex/    # Codex hooks 與 skills
 │   ├── global.md # Claude Code 與 Codex 共用的全域指令
-│   └── mcps.txt # Claude Code 與 Codex 共用的 MCP servers
-├── docs/        # 筆記：macOS、WSL、winget、vscode 等
-├── git/         # Git 設定、alias、workflow、commit 範本
-├── macos/       # macOS 輔助腳本（例如修正 hostname）
-├── mise/        # 語言 / runtime 管理工具設定
-├── oh-my-zsh/   # Oh My Zsh plugins 與設定
-├── scripts/     # repo 檢查（check.sh，CI 也會執行）
-├── shell/       # 通用 shell 設定
-├── ssh/         # SSH 設定與金鑰管理
-├── topgrade/    # topgrade 設定（全系統更新）
-├── vim/         # Vim 設定
-├── windows/     # Windows 安裝腳本（winget、WSL）
-├── wsl/         # WSL 專用套件與 Chrome 安裝
-├── zsh/         # Zsh 安裝程式
-├── install.sh   # 安裝入口
-└── uninstall.sh # 解除安裝入口
+│   └── mcps.txt  # Claude Code 與 Codex 共用的 MCP servers
+├── docs/         # 筆記：macOS、WSL、winget、vscode 等
+├── git/          # Git 設定、alias、workflow、commit 範本
+├── macos/        # macOS 輔助腳本（例如修正 hostname）
+├── mise/         # 語言 / runtime 管理工具設定
+├── oh-my-zsh/    # Oh My Zsh plugins 與設定
+├── scripts/      # repo 檢查（check.sh，CI 也會執行）
+├── shell/        # 通用 shell 設定
+├── ssh/          # SSH 設定與金鑰管理
+├── topgrade/     # topgrade 設定（全系統更新）
+├── vim/          # Vim 設定
+├── windows/      # Windows 安裝腳本（winget、WSL）
+├── wsl/          # WSL 專用套件與 Chrome 安裝
+├── zsh/          # Zsh 安裝程式
+├── install.sh    # 安裝入口
+└── uninstall.sh  # 解除安裝入口
 ```
 
 ## 安裝後設定
