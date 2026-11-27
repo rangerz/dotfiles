@@ -35,8 +35,9 @@ Linux 支援 WSL 與其他發行版（Homebrew 的前置套件可透過 apt、dn
 dotfiles/
 ├── brew/        # Homebrew 套件與腳本
 ├── agents/      # AI coding agent 設定
-│   ├── claude/  # Claude Code 設定、ccstatusline、plugins、MCP servers
-│   └── codex/   # Codex hooks 與 skills
+│   ├── claude/  # Claude Code 設定、ccstatusline、plugins
+│   ├── codex/   # Codex hooks 與 skills
+│   └── mcps.txt # Claude Code 與 Codex 共用的 MCP servers
 ├── docs/        # 筆記：macOS、WSL、winget、vscode 等
 ├── git/         # Git 設定、alias、workflow、commit 範本
 ├── macos/       # macOS 輔助腳本（例如修正 hostname）

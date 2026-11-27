@@ -13,6 +13,7 @@ HOOK_CONFIG="$CODEX_DIR/hooks.json"
 HOOK_COMMAND="bash \"$HOOK_SCRIPT\""
 MOCK_BIN="$TMP_HOME/mock-bin"
 PLUGIN_LOG="$TMP_HOME/plugin.log"
+MCP_LOG="$TMP_HOME/mcp.log"
 
 fail() {
     echo "[codex test] FAIL: $1" >&2
@@ -50,6 +51,13 @@ case "$*" in
     "plugin add "*)
         printf '%s\n' "${3:?}" >>"$PLUGIN_LOG"
         ;;
+    "mcp get "*)
+        # A server exists once a previous run added it
+        grep -qF "mcp add ${3:?} " "$MCP_LOG" 2>/dev/null
+        ;;
+    "mcp add "*)
+        printf '%s\n' "$*" >>"$MCP_LOG"
+        ;;
     *)
         exit 1
         ;;
@@ -83,10 +91,11 @@ cat >"$HOOK_CONFIG" <<'EOF'
 }
 EOF
 
-PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >"$TMP_HOME/install.log"
+PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" MCP_LOG="$MCP_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >"$TMP_HOME/install.log"
 grep -qF '[codex] Marketplace ponytail already added.' "$TMP_HOME/install.log" || fail "added marketplace was not skipped"
 grep -qF '[codex] Plugin ponytail@ponytail already installed.' "$TMP_HOME/install.log" || fail "installed plugin was not skipped"
 [[ "$(cat "$PLUGIN_LOG")" == $'marketplace https://github.com/GoogleChrome/modern-web-guidance.git\nmodern-web-guidance@googlechrome\nshopify@openai-curated' ]] || fail "marketplaces and plugins were not installed in order"
+[[ "$(cat "$MCP_LOG")" == $'mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add atlassian --url https://mcp.atlassian.com/v2/mcp' ]] || fail "MCP servers were not added with their args"
 [[ -L "$HOOK_SCRIPT" ]] || fail "hook script was not symlinked"
 [[ "$(readlink "$HOOK_SCRIPT")" == "$CUR_DIR/hooks/next_steps.sh" ]] || fail "hook points to the wrong repo path"
 [[ ! -e "$OLD_HOOK_SCRIPT" && ! -L "$OLD_HOOK_SCRIPT" ]] || fail "install left the obsolete hook symlink"
@@ -97,7 +106,9 @@ grep -qF '"model-with-reasoning"' "$CODEX_DIR/config.toml" || fail "status line 
 grep -qF '"five-hour-limit"' "$CODEX_DIR/config.toml" || fail "status line config was not copied"
 [[ "$(yq -p toml -o json '.tui.status_line_use_colors' "$CODEX_DIR/config.toml")" == true ]] || fail "following TUI setting was changed"
 
-PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
+PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" MCP_LOG="$MCP_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >"$TMP_HOME/rerun.log"
+grep -qF '[codex] MCP server atlassian already added.' "$TMP_HOME/rerun.log" || fail "added MCP server was not skipped"
+[[ "$(wc -l <"$MCP_LOG")" -eq 2 ]] || fail "rerun added an MCP server again"
 [[ "$(jq -r '[.hooks.Stop[].hooks[] | select(.command == "echo custom")] | length' "$HOOK_CONFIG")" == 1 ]] || fail "custom Stop hook was changed"
 [[ "$(jq -r --arg command "$HOOK_COMMAND" '[.hooks.Stop[].hooks[] | select(.command == $command)] | length' "$HOOK_CONFIG")" == 1 ]] || fail "rerun duplicated the Codex hook"
 [[ "$(grep -c '^status_line =' "$CODEX_DIR/config.toml")" == 1 ]] || fail "rerun duplicated status line"

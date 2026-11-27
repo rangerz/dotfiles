@@ -35,8 +35,9 @@ Linux support covers WSL and other distros (apt, dnf, yum, pacman, apk for Homeb
 dotfiles/
 ├── brew/        # Homebrew packages and scripts
 ├── agents/      # AI coding agent configs
-│   ├── claude/  # Claude Code settings, ccstatusline, plugins, MCP servers
-│   └── codex/   # Codex hooks and skills
+│   ├── claude/  # Claude Code settings, ccstatusline, plugins
+│   ├── codex/   # Codex hooks and skills
+│   └── mcps.txt # MCP servers shared by Claude Code and Codex
 ├── docs/        # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/         # Git config, aliases, workflow, commit templates
 ├── macos/       # macOS helper scripts (e.g. fix hostname)

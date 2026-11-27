@@ -90,7 +90,7 @@ else
             # shortcut: args cannot contain spaces (no quoting support); switch to `claude mcp add-json` if one does
             claude mcp add --scope user "$name" -- "${parts[@]:1}" </dev/null || echo "[claude] Failed to add MCP server $name, continuing."
         fi
-    done <"$CUR_DIR/mcps.txt"
+    done <"$CUR_DIR/../mcps.txt"
 fi
 
 echo "[claude] Installation completed."

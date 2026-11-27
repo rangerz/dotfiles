@@ -92,4 +92,20 @@ else
             codex plugin add "$plugin" </dev/null || echo "[codex] Failed to install plugin $plugin, continuing."
         fi
     done <"$CUR_DIR/plugins.txt"
+
+    # Same list and format as agents/claude/install.sh; read -ra splits on whitespace without glob expansion
+    while read -ra parts || [[ ${#parts[@]} -gt 0 ]]; do
+        name="${parts[0]:-}"
+        case "$name" in
+        "" | \#*) continue ;;
+        esac
+        if codex mcp get "$name" >/dev/null 2>&1 </dev/null; then
+            echo "[codex] MCP server $name already added."
+        elif [[ "${parts[1]:-}" == http*://* ]]; then
+            codex mcp add "$name" --url "${parts[1]}" </dev/null || echo "[codex] Failed to add MCP server $name, continuing."
+        else
+            # shortcut: args cannot contain spaces (no quoting support); edit config.toml directly if one does
+            codex mcp add "$name" -- "${parts[@]:1}" </dev/null || echo "[codex] Failed to add MCP server $name, continuing."
+        fi
+    done <"$CUR_DIR/../mcps.txt"
 fi

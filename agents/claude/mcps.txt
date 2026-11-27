@@ -1,9 +1,0 @@
-# Claude Code MCP servers (user scope), installed by agents/claude/install.sh
-# Claude Code MCP servers (user scope), installed by agents/claude/install.sh
-# Add-only: removing a line does not remove the server
-#
-# <name> <command> [args...]   (args are split on spaces; no quoting)
-# <name> <http(s) url>         (remote HTTP server)
-
-chrome-devtools npx -y chrome-devtools-mcp@latest --browserUrl http://127.0.0.1:9222
-atlassian https://mcp.atlassian.com/v2/mcp

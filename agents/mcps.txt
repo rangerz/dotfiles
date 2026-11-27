@@ -1,0 +1,9 @@
+# MCP servers shared by Claude Code (user scope) and Codex,
+# installed by agents/claude/install.sh and agents/codex/install.sh
+# Add-only: removing a line does not remove the server
+#
+# <name> <command> [args...]   (args are split on spaces; no quoting)
+# <name> <http(s) url>         (remote HTTP server)
+
+chrome-devtools npx -y chrome-devtools-mcp@latest
+atlassian https://mcp.atlassian.com/v2/mcp
