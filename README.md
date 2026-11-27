@@ -78,7 +78,7 @@ git skip git/configs/work.ini
 - `~/.claude/CLAUDE.md` (`agents/claude/install.sh`)
 - `~/.codex/AGENTS.md` (`agents/codex/install.sh`)
 
-Edit `agents/global.md` to change both. If either path already exists as a real file or a link to somewhere else, the installer renames it to `.bak` first.
+Edit `agents/global.md` to change both. If either path already exists as a real file or a link to somewhere else, the installer renames it to `.bak` first (or `.bak.<timestamp>` if a `.bak` already exists). Uninstall removes the link and moves `.bak` back.
 
 ## Claude Code Settings
 

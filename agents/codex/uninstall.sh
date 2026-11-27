@@ -45,6 +45,11 @@ AGENTS_MD="$CODEX_DIR/AGENTS.md"
 if [[ -L "$AGENTS_MD" && "$(readlink "$AGENTS_MD")" == "$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)/global.md" ]]; then
     rm "$AGENTS_MD"
     echo "[codex] Removed symlink $AGENTS_MD"
+    # Put back the file install.sh backed up
+    if [[ -e "$AGENTS_MD.bak" || -L "$AGENTS_MD.bak" ]]; then
+        mv "$AGENTS_MD.bak" "$AGENTS_MD"
+        echo "[codex] Restored $AGENTS_MD from $AGENTS_MD.bak"
+    fi
 fi
 
 echo "[codex] Next steps hook removed."

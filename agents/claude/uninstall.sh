@@ -18,6 +18,11 @@ CLAUDE_MD="$HOME/.claude/CLAUDE.md"
 if [[ -L "$CLAUDE_MD" && "$(readlink "$CLAUDE_MD")" == "$(cd "$CUR_DIR/.." && pwd)/global.md" ]]; then
     rm "$CLAUDE_MD"
     echo "[claude] Removed symlink $CLAUDE_MD"
+    # Put back the file install.sh backed up
+    if [[ -e "$CLAUDE_MD.bak" || -L "$CLAUDE_MD.bak" ]]; then
+        mv "$CLAUDE_MD.bak" "$CLAUDE_MD"
+        echo "[claude] Restored $CLAUDE_MD from $CLAUDE_MD.bak"
+    fi
 fi
 
 echo "[claude] Uninstallation completed."

@@ -67,8 +67,18 @@ run_install
 [[ "$(readlink "$CLAUDE_MD")" == "$AGENTS_MD" ]] || fail "install did not replace the old CLAUDE.md link"
 [[ ! -e "$CLAUDE_MD.bak" && ! -L "$CLAUDE_MD.bak" ]] || fail "install backed up the old CLAUDE.md link"
 
-# Uninstall removes our link
+# An existing .bak is kept; the new backup gets a timestamp
+ln -s "$TMP_HOME/other.md" "$CLAUDE_MD.bak"
+rm "$CLAUDE_MD"
+echo "edited" >"$CLAUDE_MD"
+run_install
+[[ "$(readlink "$CLAUDE_MD.bak")" == "$TMP_HOME/other.md" ]] || fail "install overwrote the existing CLAUDE.md.bak"
+stamped=("$CLAUDE_MD".bak.*)
+[[ ${#stamped[@]} -eq 1 && "$(cat "${stamped[0]}")" == edited ]] || fail "install did not keep the edited CLAUDE.md as a timestamped backup"
+
+# Uninstall removes our link and puts the .bak back
 env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
-[[ ! -L "$CLAUDE_MD" ]] || fail "uninstall left the CLAUDE.md link"
+[[ "$(readlink "$CLAUDE_MD")" == "$TMP_HOME/other.md" ]] || fail "uninstall did not restore CLAUDE.md from .bak"
+[[ ! -e "$CLAUDE_MD.bak" && ! -L "$CLAUDE_MD.bak" ]] || fail "uninstall left CLAUDE.md.bak"
 
 echo "[claude test] OK"
