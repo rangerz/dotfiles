@@ -1,0 +1,8 @@
+# Codex plugin marketplaces, added by agents/codex/install.sh before plugins.txt
+# Codex plugin marketplace 清單，由 agents/codex/install.sh 在安裝 plugin 前加入
+# openai-curated is built in and needs no entry / openai-curated 內建，不用列
+#
+# <name> <source>
+
+ponytail https://github.com/DietrichGebert/ponytail.git
+googlechrome https://github.com/GoogleChrome/modern-web-guidance.git

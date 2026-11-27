@@ -65,10 +65,23 @@ TEMP_HOOK_CONFIG=""
 
 echo "[codex] Next steps hook installed. Review and trust it with /hooks before it runs."
 
-if ! command -v codex >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
-    echo "[codex] codex or jq not found, skipping plugins."
+if ! command -v codex >/dev/null 2>&1; then
+    echo "[codex] codex not found, skipping plugins."
 else
-    installed_plugins="$(codex plugin list --json 2>/dev/null | jq -r '.installed[]?.pluginId // empty' || true)"
+    # </dev/null: keep codex from reading the list files the loops feed on stdin
+    marketplaces="$(codex plugin marketplace list --json </dev/null 2>/dev/null | jq -r '.marketplaces[]?.name // empty' || true)"
+    while read -r name source || [[ -n "$name" ]]; do
+        case "$name" in
+        "" | \#*) continue ;;
+        esac
+        if grep -qxF "$name" <<<"$marketplaces"; then
+            echo "[codex] Marketplace $name already added."
+        else
+            codex plugin marketplace add "$source" </dev/null || echo "[codex] Failed to add marketplace $name, continuing."
+        fi
+    done <"$CUR_DIR/marketplaces.txt"
+
+    installed_plugins="$(codex plugin list --json </dev/null 2>/dev/null | jq -r '.installed[]?.pluginId // empty' || true)"
     while read -r plugin || [[ -n "$plugin" ]]; do
         case "$plugin" in
         "" | \#*) continue ;;
@@ -76,7 +89,7 @@ else
         if grep -qxF "$plugin" <<<"$installed_plugins"; then
             echo "[codex] Plugin $plugin already installed."
         else
-            codex plugin add "$plugin" || echo "[codex] Failed to install plugin $plugin, continuing."
+            codex plugin add "$plugin" </dev/null || echo "[codex] Failed to install plugin $plugin, continuing."
         fi
     done <"$CUR_DIR/plugins.txt"
 fi
