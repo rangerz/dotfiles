@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew 套件與腳本
 ├── agents/       # AI coding agent 設定
 │   ├── claude/   # Claude Code 設定、ccstatusline、plugins
-│   ├── agy/      # Antigravity CLI (agy)：全域指令、從 Claude 匯入的 plugins、MCPs
+│   ├── agy/      # Antigravity CLI (agy)：全域指令、next steps hook、從 Claude 匯入的 plugins、MCPs
 │   ├── codex/    # Codex hooks 與 skills
 │   ├── global.md # Claude Code、Codex 與 agy 共用的全域指令
 │   └── mcps.txt  # Claude Code、Codex 與 agy 共用的 MCP servers
@@ -98,7 +98,7 @@ agy 無法從 GitHub 加入 marketplace，所以沒有自己的 plugin 清單。
 
 - topgrade 負責同步：它更新完 Claude Code 的 plugins 後，會執行 `agy plugin import claude --force`（見 `topgrade/topgrade.toml`）。在 agy 裡停用的 plugin 會維持停用。
 - 從 Claude Code 移除的 plugin，不會從 agy 移除。
-- 只為 Claude Code 寫的 plugin 在 agy 裡沒有作用。例如 `next-steps` 只有一個 Claude Code hook（`hooks/register.tsx`），agy 匯入後不會有任何元件。
+- 只為 Claude Code 寫的 plugin 在 agy 裡沒有作用。例如 `next-steps` 只有一個 Claude Code hook（`hooks/register.tsx`），agy 匯入後不會有任何元件。`agents/agy/install.sh` 改在 `~/.gemini/config/hooks.json` 加一個 Stop hook 提供同樣的功能，重用 Codex 的 hook（`agents/codex/hooks/next_steps.sh`）。
 
 ## 授權
 

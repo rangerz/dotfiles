@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew packages and scripts
 ├── agents/       # AI coding agent configs
 │   ├── claude/   # Claude Code settings, ccstatusline, plugins
-│   ├── agy/      # Antigravity CLI (agy): instructions, plugins from Claude, MCPs
+│   ├── agy/      # Antigravity CLI (agy): instructions, next steps hook, plugins from Claude, MCPs
 │   ├── codex/    # Codex hooks and skills
 │   ├── global.md # Global instructions shared by Claude Code, Codex and agy
 │   └── mcps.txt  # MCP servers shared by Claude Code, Codex and agy
@@ -98,7 +98,7 @@ agy cannot add marketplaces from GitHub, so it has no plugin list of its own. `a
 
 - topgrade keeps them in sync: after it updates the Claude Code plugins, it runs `agy plugin import claude --force` (see `topgrade/topgrade.toml`). Plugins you disabled in agy stay disabled.
 - Plugins removed from Claude Code are not removed from agy.
-- Plugins built only for Claude Code do nothing in agy. For example, `next-steps` only has a Claude Code hook (`hooks/register.tsx`), so agy imports it without any component.
+- Plugins built only for Claude Code do nothing in agy. For example, `next-steps` only has a Claude Code hook (`hooks/register.tsx`), so agy imports it without any component. `agents/agy/install.sh` adds the same behavior as a Stop hook in `~/.gemini/config/hooks.json` instead, reusing the Codex hook (`agents/codex/hooks/next_steps.sh`).
 
 ## License
 

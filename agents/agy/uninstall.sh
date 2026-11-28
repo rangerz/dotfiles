@@ -14,4 +14,16 @@ if [[ -L "$GEMINI_MD" && "$(readlink "$GEMINI_MD")" == "$(cd "$CUR_DIR/.." && pw
     fi
 fi
 
+HOOKS_JSON="$HOME/.gemini/config/hooks.json"
+if [[ -f "$HOOKS_JSON" ]]; then
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "[agy] jq is required to update hooks.json; install the brew module first" >&2
+        exit 1
+    fi
+    TEMP_HOOKS_JSON="$(mktemp "$HOOKS_JSON.XXXXXX")"
+    jq 'del(.["dotfiles-next-steps"])' "$HOOKS_JSON" >"$TEMP_HOOKS_JSON"
+    mv "$TEMP_HOOKS_JSON" "$HOOKS_JSON"
+    echo "[agy] Next steps hook removed."
+fi
+
 # Imported plugins and MCP servers stay, like the Claude and Codex uninstallers

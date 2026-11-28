@@ -45,14 +45,34 @@ esac
 EOF
 chmod +x "$MOCK_BIN/agy"
 
-mkdir -p "$TMP_HOME/.gemini"
+mkdir -p "$TMP_HOME/.gemini/config"
 echo "my instructions" >"$GEMINI_MD"
+HOOKS_JSON="$TMP_HOME/.gemini/config/hooks.json"
+HOOK_COMMAND="bash \"$CUR_DIR/hooks/next_steps.sh\""
+printf '{"mine": {"Stop": [{"command": "echo keep"}]}}\n' >"$HOOKS_JSON"
 
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
 [[ "$(cat "$AGY_LOG")" == $'plugin import claude\nmcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add atlassian https://mcp.atlassian.com/v2/mcp' ]] ||
     fail "plugins were not imported or MCP servers were not added with their args: $(cat "$AGY_LOG")"
 [[ "$(readlink "$GEMINI_MD")" == "$GLOBAL_SRC" ]] || fail "GEMINI.md was not linked to the shared file"
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "existing GEMINI.md was not backed up"
+[[ "$(jq -r '.["dotfiles-next-steps"].Stop[0].command' "$HOOKS_JSON")" == "$HOOK_COMMAND" ]] || fail "next steps hook was not registered"
+[[ "$(jq -r '.mine.Stop[0].command' "$HOOKS_JSON")" == "echo keep" ]] || fail "install changed another hook"
+
+# The adapter asks for next steps once, only after a normal turn end without them
+TRANSCRIPT="$TMP_HOME/transcript.jsonl"
+run_hook() { jq -cn --arg t "$TRANSCRIPT" "{transcriptPath: \$t} + $1" | bash "$CUR_DIR/hooks/next_steps.sh"; }
+printf '%s\n' '{"type":"USER_INPUT","content":"hi"}' '{"type":"PLANNER_RESPONSE","content":"Done"}' >"$TRANSCRIPT"
+[[ "$(run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: false}' | jq -r '.decision')" == continue ]] ||
+    fail "hook did not ask for next steps"
+run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: false}' | jq -e '.reason | contains("Next steps:")' >/dev/null ||
+    fail "hook did not pass the shared prompt"
+[[ "$(run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: true}')" == '{}' ]] || fail "hook asked again in the same turn"
+[[ "$(run_hook '{terminationReason: "USER_CANCELED", continuationActive: false}')" == '{}' ]] || fail "hook continued a canceled turn"
+printf '%s\n' '{"type":"PLANNER_RESPONSE","content":"Done\n\nNext steps:\n1. x"}' >"$TRANSCRIPT"
+[[ "$(run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: false}')" == '{}' ]] || fail "hook blocked an answer with next steps"
+rm "$TRANSCRIPT"
+[[ "$(run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: false}')" == '{}' ]] || fail "hook blocked without a transcript"
 
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "rerun overwrote the GEMINI.md backup"
@@ -71,5 +91,6 @@ stamped=("$GEMINI_MD".bak.*)
 HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
 [[ ! -L "$GEMINI_MD" && "$(cat "$GEMINI_MD")" == edited ]] || fail "uninstall did not restore GEMINI.md from .bak"
 [[ ! -e "$GEMINI_MD.bak" ]] || fail "uninstall left GEMINI.md.bak"
+[[ "$(jq -c 'keys' "$HOOKS_JSON")" == '["mine"]' ]] || fail "uninstall did not remove only the next steps hook"
 
 echo "[agy test] OK"
