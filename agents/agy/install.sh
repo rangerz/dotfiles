@@ -28,8 +28,13 @@ mkdir -p "$(dirname "$SETTINGS")"
 [[ -f "$SETTINGS" ]] || echo '{}' >"$SETTINGS"
 tmp="$(mktemp "$SETTINGS.XXXXXX")"
 trap 'rm -f "${tmp:-}" "${TEMP_HOOKS_JSON:-}"' EXIT
-if jq -s '.[0] * .[1]' "$SETTINGS" "$CUR_DIR/settings.json" >"$tmp"; then
-    chmod 644 "$tmp"
+# `*` replaces arrays, so union permissions.deny instead: a local deny rule must never be dropped
+if jq -s '.[0] as $local | .[1] as $repo | ($local * $repo)
+    | if ($local.permissions.deny // $repo.permissions.deny) == null then . else
+        .permissions.deny = (($local.permissions.deny // []) + ($repo.permissions.deny // [])
+            | reduce .[] as $rule ([]; if any(.[]; . == $rule) then . else . + [$rule] end))
+      end' "$SETTINGS" "$CUR_DIR/settings.json" >"$tmp"; then
+    # No chmod: mktemp's 0600 matches what agy itself writes
     mv "$tmp" "$SETTINGS"
     tmp=""
     echo "[agy] Merged settings into $SETTINGS"

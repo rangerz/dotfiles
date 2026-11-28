@@ -98,6 +98,7 @@ git skip git/configs/work.ini
 
 - repo 檔案中的 key 會覆蓋 `~/.gemini/antigravity-cli/settings.json` 中相同的 key。
 - 只存在本機的 key（例如 `permissions.allow`、`model` 或 `trustedWorkspaces`）會保留。
+- `permissions.deny` 會合併而不是取代：你在本機加的禁止規則會保留，再補上 repo 裡的規則。
 - 從 repo 檔案刪除某個 key，不會連帶刪除本機的設定。
 
 如果用 `/config` 或 `/settings` 改了 repo 有追蹤的設定，下次安裝時會被改回來。請改為編輯 `agents/agy/settings.json`。

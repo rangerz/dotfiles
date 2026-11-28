@@ -62,22 +62,31 @@ PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh"
 [[ "$(jq -r '.["dotfiles-next-steps"].Stop[0].command' "$HOOKS_JSON")" == "$HOOK_COMMAND" ]] || fail "next steps hook was not registered"
 [[ "$(jq -r '.mine.Stop[0].command' "$HOOKS_JSON")" == "echo keep" ]] || fail "install changed another hook"
 [[ "$(jq -S . "$SETTINGS")" == "$(jq -S . "$REPO_SETTINGS")" ]] || fail "fresh install does not match the repo file"
-[[ -n "$(find "$SETTINGS" -perm 644)" ]] || fail "settings.json is not 0644"
+# agy writes this file as 0600 itself (it holds the command allow list), so install keeps it that way
+[[ -n "$(find "$SETTINGS" -perm 600)" ]] || fail "settings.json is not 0600"
 compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind for settings.json"
 
-# Existing settings with local-only keys and values the repo overrides
+# Existing settings with local-only keys, a local-only deny rule and values the repo overrides
 cat >"$SETTINGS" <<'EOF'
 {
   "model": "local-model",
-  "permissions": { "allow": ["command(ls)"], "deny": ["command(rm -rf)"] },
+  "agentMode": "local-mode",
+  "permissions": { "allow": ["command(ls)"], "deny": ["command(rm -rf)", "command(git push --force)"] },
   "trustedWorkspaces": ["/local/path"]
 }
 EOF
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
-[[ "$(jq -s '.[0] * .[1] == .[0]' "$SETTINGS" "$REPO_SETTINGS")" == true ]] || fail "repo values not applied"
+cp "$SETTINGS" "$TMP_HOME/first-settings"
+PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
+# Every repo value is applied (deny aside, which is a union, checked below)
+[[ "$(jq -s 'map(del(.permissions.deny)) | .[0] * .[1] == .[0]' "$SETTINGS" "$REPO_SETTINGS")" == true ]] || fail "repo values not applied"
 [[ "$(jq -c .permissions.allow "$SETTINGS")" == '["command(ls)"]' ]] || fail "lost local permissions.allow (shallow merge?)"
 [[ "$(jq -c .trustedWorkspaces "$SETTINGS")" == '["/local/path"]' ]] || fail "lost local-only key"
-[[ -n "$(find "$SETTINGS" -perm 644)" ]] || fail "settings.json is not 0644 after merge"
+jq -e '.permissions.deny | index("command(git push --force)")' "$SETTINGS" >/dev/null || fail "dropped a local-only deny rule"
+[[ "$(jq -s '.[1].permissions.deny - .[0].permissions.deny' "$SETTINGS" "$REPO_SETTINGS")" == '[]' ]] || fail "a repo deny rule is missing"
+[[ "$(jq '.permissions.deny | length == (unique | length)' "$SETTINGS")" == true ]] || fail "deny rules are duplicated"
+cmp -s "$SETTINGS" "$TMP_HOME/first-settings" || fail "rerun changed settings.json"
+[[ -n "$(find "$SETTINGS" -perm 600)" ]] || fail "settings.json is not 0600 after merge"
 compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind"
 
 # Invalid local JSON: left untouched and install still succeeds

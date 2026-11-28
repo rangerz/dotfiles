@@ -98,6 +98,7 @@ If you change a tracked setting with `/model` or `/config`, the next install cha
 
 - Keys in the repo file overwrite the same keys in `~/.gemini/antigravity-cli/settings.json`.
 - Keys that exist only locally (for example `permissions.allow`, `model`, or `trustedWorkspaces`) are kept.
+- `permissions.deny` is merged, not replaced: deny rules you added locally are kept, and the repo's rules are added.
 - Removing a key from the repo file does not remove it locally.
 
 If you change a tracked setting with `/config` or `/settings`, the next install changes it back. Edit `agents/agy/settings.json` instead.
