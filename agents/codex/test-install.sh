@@ -98,7 +98,11 @@ PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" MCP_LOG="$MCP_LOG" HOME="$TMP_HO
 grep -qF '[codex] Marketplace ponytail already added.' "$TMP_HOME/install.log" || fail "added marketplace was not skipped"
 grep -qF '[codex] Plugin ponytail@ponytail already installed.' "$TMP_HOME/install.log" || fail "installed plugin was not skipped"
 [[ "$(cat "$PLUGIN_LOG")" == $'marketplace https://github.com/GoogleChrome/modern-web-guidance.git\nmodern-web-guidance@googlechrome\nshopify@openai-curated' ]] || fail "marketplaces and plugins were not installed in order"
-[[ "$(cat "$MCP_LOG")" == $'mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add atlassian --url https://mcp.atlassian.com/v2/mcp' ]] || fail "MCP servers were not added with their args"
+# One add per server in mcps.txt; http servers use --url, stdio servers keep their args after --
+MCP_COUNT="$(grep -cvE '^[[:space:]]*(#|$)' "$CUR_DIR/../mcps.txt")"
+[[ "$(wc -l <"$MCP_LOG")" -eq "$MCP_COUNT" ]] || fail "not every MCP server in mcps.txt was added"
+grep -qxF 'mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest' "$MCP_LOG" || fail "stdio MCP server was not added with its args"
+grep -qxF 'mcp add atlassian --url https://mcp.atlassian.com/v2/mcp' "$MCP_LOG" || fail "http MCP server was not added with --url"
 [[ "$(readlink "$AGENTS_MD")" == "$AGENTS_SRC" ]] || fail "AGENTS.md was not linked to the shared file"
 [[ "$(cat "$AGENTS_MD.bak")" == "my instructions" ]] || fail "existing AGENTS.md was not backed up"
 [[ -L "$HOOK_SCRIPT" ]] || fail "hook script was not symlinked"
@@ -113,7 +117,7 @@ grep -qF '"five-hour-limit"' "$CODEX_DIR/config.toml" || fail "status line confi
 
 PATH="$MOCK_BIN:$PATH" PLUGIN_LOG="$PLUGIN_LOG" MCP_LOG="$MCP_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >"$TMP_HOME/rerun.log"
 grep -qF '[codex] MCP server atlassian already added.' "$TMP_HOME/rerun.log" || fail "added MCP server was not skipped"
-[[ "$(wc -l <"$MCP_LOG")" -eq 2 ]] || fail "rerun added an MCP server again"
+[[ "$(wc -l <"$MCP_LOG")" -eq "$MCP_COUNT" ]] || fail "rerun added an MCP server again"
 [[ "$(cat "$AGENTS_MD.bak")" == "my instructions" ]] || fail "rerun overwrote the AGENTS.md backup"
 
 # A real file in place of the link (e.g. after `sed -i`) goes to .bak; the older .bak is kept under a timestamp

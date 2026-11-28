@@ -55,8 +55,12 @@ SETTINGS="$TMP_HOME/.gemini/antigravity-cli/settings.json"
 REPO_SETTINGS="$CUR_DIR/settings.json"
 
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
-[[ "$(cat "$AGY_LOG")" == $'plugin import claude\nmcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add atlassian https://mcp.atlassian.com/v2/mcp' ]] ||
-    fail "plugins were not imported or MCP servers were not added with their args: $(cat "$AGY_LOG")"
+[[ "$(head -n 1 "$AGY_LOG")" == 'plugin import claude' ]] || fail "plugins were not imported from Claude first"
+# One add per server in mcps.txt; http URLs are passed as is, stdio servers keep their args after --
+MCP_COUNT="$(grep -cvE '^[[:space:]]*(#|$)' "$CUR_DIR/../mcps.txt")"
+[[ "$(grep -c '^mcp add ' "$AGY_LOG")" -eq "$MCP_COUNT" ]] || fail "not every MCP server in mcps.txt was added"
+grep -qxF 'mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest' "$AGY_LOG" || fail "stdio MCP server was not added with its args"
+grep -qxF 'mcp add atlassian https://mcp.atlassian.com/v2/mcp' "$AGY_LOG" || fail "http MCP server was not added with its URL"
 [[ "$(readlink "$GEMINI_MD")" == "$GLOBAL_SRC" ]] || fail "GEMINI.md was not linked to the shared file"
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "existing GEMINI.md was not backed up"
 [[ "$(jq -r '.["dotfiles-next-steps"].Stop[0].command' "$HOOKS_JSON")" == "$HOOK_COMMAND" ]] || fail "next steps hook was not registered"

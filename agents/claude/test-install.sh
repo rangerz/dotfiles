@@ -47,11 +47,15 @@ grep -qxF "plugin install $last_plugin" "$CLAUDE_LOG" || fail "last plugin in pl
     fail "not every missing plugin was installed"
 [[ "$(grep -c '^plugin marketplace add ' "$CLAUDE_LOG")" -eq "$(($(grep -c '^marketplace ' "$CUR_DIR/plugins.txt") - 1))" ]] ||
     fail "not every missing marketplace was added"
-# MCP: http servers use --transport http, stdio servers keep their args after --
-[[ "$(grep '^mcp add ' "$CLAUDE_LOG")" == $'mcp add --scope user chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add --scope user --transport http atlassian https://mcp.atlassian.com/v2/mcp' ]] ||
-    fail "MCP servers were not added with their args: $(grep '^mcp add ' "$CLAUDE_LOG")"
+# MCP: one add per server in mcps.txt; http servers use --transport http, stdio servers keep their args after --
+MCP_COUNT="$(grep -cvE '^[[:space:]]*(#|$)' "$CUR_DIR/../mcps.txt")"
+[[ "$(grep -c '^mcp add ' "$CLAUDE_LOG")" -eq "$MCP_COUNT" ]] || fail "not every MCP server in mcps.txt was added"
+grep -qxF 'mcp add --scope user chrome-devtools -- npx -y chrome-devtools-mcp@latest' "$CLAUDE_LOG" ||
+    fail "stdio MCP server was not added with its args"
+grep -qxF 'mcp add --scope user --transport http atlassian https://mcp.atlassian.com/v2/mcp' "$CLAUDE_LOG" ||
+    fail "http MCP server was not added with --transport http"
 run_install
-[[ "$(grep -c '^mcp add ' "$CLAUDE_LOG")" -eq 2 ]] || fail "rerun added an MCP server again"
+[[ "$(grep -c '^mcp add ' "$CLAUDE_LOG")" -eq "$MCP_COUNT" ]] || fail "rerun added an MCP server again"
 
 # Existing settings with local-only keys and a value the repo overrides
 cat >"$SETTINGS" <<'EOF'
