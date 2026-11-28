@@ -45,8 +45,8 @@ done
 # Check the staged copy, i.e. what will actually be committed, not the working tree
 fail=0
 for f in "${scripts[@]}"; do
-    # Linting stdin reports the file as "-", so print the real name
-    if ! out=$(git show ":$f" | shfmt -d --filename "$f" 2>&1 && git show ":$f" | shellcheck - 2>&1); then
+    # Lint the staged copy with -x so it follows `source` (e.g. agents/link.sh)
+    if ! out=$(git show ":$f" | shfmt -d --filename "$f" 2>&1 && cd "$index" && shellcheck -x "$f" 2>&1); then
         echo "[pre-commit] $f"
         echo "$out"
         fail=1

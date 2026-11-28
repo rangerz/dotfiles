@@ -5,21 +5,9 @@ CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 # Global instructions shared with Codex
 AGENTS_MD="$(cd "$CUR_DIR/.." && pwd)/global.md"
 
-# Back up an existing real file, or a link to somewhere else, before linking
-# .bak always holds the file moved away last (uninstall restores it); an older .bak gets a timestamp
-link() {
-    local src="$1" target="$2"
-    if [[ -f "$target" && ! -L "$target" ]] ||
-        [[ -L "$target" && "$(readlink "$target")" != "$src" ]]; then
-        if [[ -e "$target.bak" || -L "$target.bak" ]]; then
-            mv "$target.bak" "$target.bak.$(date +%Y%m%d%H%M%S)"
-        fi
-        mv "$target" "$target.bak"
-        echo "[claude] Backed up existing $target to $target.bak"
-    fi
-    mkdir -p "$(dirname "$target")"
-    ln -sfn "$src" "$target"
-}
+AGENT=claude
+# shellcheck source=agents/link.sh
+source "$CUR_DIR/../link.sh"
 
 link "$CUR_DIR/ccstatusline.json" "${XDG_CONFIG_HOME:-$HOME/.config}/ccstatusline/settings.json"
 # Drop our old link (agents/claude/CLAUDE.md, now gone) so it is not backed up as a dangling .bak
