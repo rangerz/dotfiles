@@ -48,24 +48,24 @@ if ! command -v claude >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     echo "[claude] claude or jq not found, skipping plugins."
 else
     # Match marketplaces by repo (case-insensitive): their local name comes from the repo, not from us
-    installed_markets="$(claude plugin marketplace list --json | jq -r '.[].repo // empty' | tr '[:upper:]' '[:lower:]' || true)"
-    installed_plugins="$(claude plugin list --json | jq -r '.[].id' || true)"
+    installed_markets="$(claude plugin marketplace list --json </dev/null | jq -r '.[].repo // empty' | tr '[:upper:]' '[:lower:]' || true)"
+    installed_plugins="$(claude plugin list --json </dev/null | jq -r '.[].id' || true)"
 
-    # `|| [[ -n "$kind" ]]` keeps a last line that has no trailing newline
+    # `|| [[ -n "$kind" ]]` keeps a last line that has no trailing newline; </dev/null keeps claude off the loop's stdin
     while read -r kind value || [[ -n "$kind" ]]; do
         case "$kind" in
         marketplace)
             if grep -qxF "$(tr '[:upper:]' '[:lower:]' <<<"$value")" <<<"$installed_markets"; then
                 echo "[claude] Marketplace $value already added."
             else
-                claude plugin marketplace add "$value" || echo "[claude] Failed to add marketplace $value, continuing."
+                claude plugin marketplace add "$value" </dev/null || echo "[claude] Failed to add marketplace $value, continuing."
             fi
             ;;
         plugin)
             if grep -qxF "$value" <<<"$installed_plugins"; then
                 echo "[claude] Plugin $value already installed."
             else
-                claude plugin install "$value" || echo "[claude] Failed to install plugin $value, continuing."
+                claude plugin install "$value" </dev/null || echo "[claude] Failed to install plugin $value, continuing."
             fi
             ;;
         "" | \#*) ;;

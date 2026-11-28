@@ -6,14 +6,29 @@ CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 TMP_HOME="$(mktemp -d)"
 trap 'rm -rf "$TMP_HOME"' EXIT
 
-# A stub claude that reports nothing installed and accepts every command, so the plugin/MCP loops stay offline
+# A stub claude that logs what install.sh asks of it, so the plugin/MCP loops stay offline
+# It reports one marketplace (in different case) and one plugin as already installed
+CLAUDE_LOG="$TMP_HOME/claude.log"
 mkdir -p "$TMP_HOME/bin" "$TMP_HOME/.claude"
-printf '#!/bin/sh\necho "[]"\n' >"$TMP_HOME/bin/claude"
+cat >"$TMP_HOME/bin/claude" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+# Swallow stdin like an interactive prompt would; install.sh must not feed it the list files
+cat >/dev/null
+case "$*" in
+    "plugin marketplace list --json") printf '[{"repo":"dietrichgebert/PONYTAIL"}]\n' ;;
+    "plugin list --json") printf '[{"id":"ponytail@ponytail"}]\n' ;;
+    # A server exists once a previous run added it
+    "mcp get "*) grep -q "^mcp add .* ${3:?} " "$CLAUDE_LOG" 2>/dev/null ;;
+    "plugin marketplace add "* | "plugin install "* | "mcp add "*) printf '%s\n' "$*" >>"$CLAUDE_LOG" ;;
+    *) exit 1 ;;
+esac
+EOF
 chmod +x "$TMP_HOME/bin/claude"
 
 SETTINGS="$TMP_HOME/.claude/settings.json"
 REPO="$CUR_DIR/settings.json"
-run_install() { env -u XDG_CONFIG_HOME HOME="$TMP_HOME" PATH="$TMP_HOME/bin:$PATH" "$CUR_DIR/install.sh" >/dev/null 2>&1; }
+run_install() { env -u XDG_CONFIG_HOME HOME="$TMP_HOME" PATH="$TMP_HOME/bin:$PATH" CLAUDE_LOG="$CLAUDE_LOG" "$CUR_DIR/install.sh" >/dev/null 2>&1; }
 fail() {
     echo "[claude test] FAIL: $1" >&2
     exit 1
@@ -23,6 +38,20 @@ key() { jq -c "$1" "$SETTINGS"; }
 # Fresh machine: no settings.json yet
 run_install
 [[ "$(jq -S . "$SETTINGS")" == "$(jq -S . "$REPO")" ]] || fail "fresh install does not match the repo file"
+
+# Plugins: installed ones are skipped (marketplaces matched case-insensitively), the rest are added in file order
+grep -qi 'ponytail' "$CLAUDE_LOG" && fail "installed marketplace or plugin was added again"
+last_plugin="$(grep '^plugin ' "$CUR_DIR/plugins.txt" | tail -n 1 | cut -d' ' -f2)"
+grep -qxF "plugin install $last_plugin" "$CLAUDE_LOG" || fail "last plugin in plugins.txt ($last_plugin) was not installed"
+[[ "$(grep -c '^plugin install ' "$CLAUDE_LOG")" -eq "$(($(grep -c '^plugin ' "$CUR_DIR/plugins.txt") - 1))" ]] ||
+    fail "not every missing plugin was installed"
+[[ "$(grep -c '^plugin marketplace add ' "$CLAUDE_LOG")" -eq "$(($(grep -c '^marketplace ' "$CUR_DIR/plugins.txt") - 1))" ]] ||
+    fail "not every missing marketplace was added"
+# MCP: http servers use --transport http, stdio servers keep their args after --
+[[ "$(grep '^mcp add ' "$CLAUDE_LOG")" == $'mcp add --scope user chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add --scope user --transport http atlassian https://mcp.atlassian.com/v2/mcp' ]] ||
+    fail "MCP servers were not added with their args: $(grep '^mcp add ' "$CLAUDE_LOG")"
+run_install
+[[ "$(grep -c '^mcp add ' "$CLAUDE_LOG")" -eq 2 ]] || fail "rerun added an MCP server again"
 
 # Existing settings with local-only keys and a value the repo overrides
 cat >"$SETTINGS" <<'EOF'
