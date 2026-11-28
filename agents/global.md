@@ -11,5 +11,6 @@
 - Fix root causes; never skip tests or silence errors to make checks pass.
 - Verify changes with the smallest relevant test, lint, or build command, and say if it failed or was not run.
 - Do not commit or push unless explicitly requested. Use Conventional Commits.
+- Reply in Traditional Chinese; keep technical terms and code identifiers in English.
 - Write code comments in English only.
 - When I ask for English text (emails, docs, PR descriptions), write it in simple, direct English, then add a Traditional Chinese version right after.
