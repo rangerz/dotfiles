@@ -24,5 +24,9 @@ line="$model${sep}$mode"
 [[ -n "$branch" ]] && line+="${sep}$branch"
 line+="${sep}ctx ${used}%"
 [[ -n "$quota" ]] && line+="${sep}$quota"
-[[ -n "$cwd" ]] && line+="${sep}${cwd/#$HOME/\~}"
+if [[ -n "$cwd" ]]; then
+    # Prefix strip, not ${cwd/#$HOME/\~}: bash 3.2 (macOS /bin/bash) keeps the backslash in that replacement
+    [[ "$cwd" == "$HOME" || "$cwd" == "$HOME"/* ]] && cwd="~${cwd#"$HOME"}"
+    line+="${sep}$cwd"
+fi
 printf '%s\n' "$line"
