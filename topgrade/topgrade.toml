@@ -17,3 +17,7 @@ repos = [
   "~/.dotfiles"
 ]
 pull_predefined = false
+
+[commands]
+# agy cannot update plugins itself; re-copy them from Claude (keeps plugins disabled in agy disabled)
+"Antigravity CLI Plugins" = "if command -v agy >/dev/null 2>&1; then agy plugin import claude --force </dev/null; fi"
