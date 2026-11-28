@@ -3,6 +3,8 @@
   "toolPermission": "proceed-in-sandbox",
   "verbosity": "low",
   "statusLine": {
+    "type": "command",
+    "command": "bash ~/.dotfiles/agents/agy/statusline.sh",
     "enabled": true
   },
   "permissions": {
@@ -12,5 +14,11 @@
       "write_file(.git/)",
       "write_file(.env*)"
     ]
-  }
+  },
+  "altScreenMode": "always",
+  "showFeedbackSurvey": false,
+  "enableTerminalSandbox": true,
+  "showTips": false,
+  "artifactReviewPolicy": "agent-decides",
+  "notifications": true
 }

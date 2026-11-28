@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew 套件與腳本
 ├── agents/       # AI coding agent 設定
 │   ├── claude/   # Claude Code 設定、ccstatusline、plugins
-│   ├── agy/      # Antigravity CLI (agy)：設定、全域指令、next steps hook、從 Claude 匯入的 plugins、MCPs
+│   ├── agy/      # Antigravity CLI (agy)：設定、status line、全域指令、next steps hook、從 Claude 匯入的 plugins、MCPs
 │   ├── codex/    # Codex hooks 與 skills
 │   ├── global.md # Claude Code、Codex 與 agy 共用的全域指令
 │   └── mcps.txt  # Claude Code、Codex 與 agy 共用的 MCP servers

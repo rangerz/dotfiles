@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew packages and scripts
 ├── agents/       # AI coding agent configs
 │   ├── claude/   # Claude Code settings, ccstatusline, plugins
-│   ├── agy/      # Antigravity CLI (agy): settings, instructions, next steps hook, plugins from Claude, MCPs
+│   ├── agy/      # Antigravity CLI (agy): settings, status line, instructions, next steps hook, plugins from Claude, MCPs
 │   ├── codex/    # Codex hooks and skills
 │   ├── global.md # Global instructions shared by Claude Code, Codex and agy
 │   └── mcps.txt  # MCP servers shared by Claude Code, Codex and agy

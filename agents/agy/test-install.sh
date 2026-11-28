@@ -114,6 +114,26 @@ printf '%s\n' '{"type":"PLANNER_RESPONSE","content":"Done\n\nNext steps:\n1. x"}
 rm "$TRANSCRIPT"
 [[ "$(run_hook '{terminationReason: "NO_TOOL_CALL", continuationActive: false}')" == '{}' ]] || fail "hook blocked without a transcript"
 
+# Status line: settings point at the repo script, and it renders the documented payload fields
+[[ "$(jq -r .statusLine.command "$REPO_SETTINGS")" == 'bash ~/.dotfiles/agents/agy/statusline.sh' ]] || fail "statusLine does not run the repo script"
+SL_REPO="$TMP_HOME/project"
+git init -q -b sl-branch "$SL_REPO"
+SEP=$' \e[2m|\e[0m '
+statusline() { HOME="$TMP_HOME" bash "$CUR_DIR/statusline.sh" <<<"$1"; }
+payload="$(jq -cn --arg dir "$SL_REPO" '{
+    cwd: $dir, workspace: {current_dir: $dir}, cycle_mode: "accept-edits",
+    model: {display_name: "Gemini 4 Argon (Medium)"}, context_window: {used_percentage: 14.24},
+    quota: {
+        "gemini-weekly": {remaining_fraction: 0.9378},
+        "gemini-daily": {remaining_fraction: 0.5, disabled: true},
+        "g1-credits": {remaining_amount: 120}
+    }
+}')"
+[[ "$(statusline "$payload")" == "Gemini 4 Argon (Medium)${SEP}accept-edits${SEP}sl-branch${SEP}ctx 14%${SEP}weekly 93%${SEP}~/project" ]] ||
+    fail "status line did not render the full payload: $(statusline "$payload" | cat -v)"
+# Missing fields fall back instead of shifting columns; no cwd means no branch or directory
+[[ "$(statusline '{}')" == "-${SEP}default${SEP}ctx 0%" ]] || fail "status line mishandled an empty payload: $(statusline '{}' | cat -v)"
+
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "rerun overwrote the GEMINI.md backup"
 stamped=("$GEMINI_MD".bak.*)
