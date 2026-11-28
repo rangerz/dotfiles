@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew 套件與腳本
 ├── agents/       # AI coding agent 設定
 │   ├── claude/   # Claude Code 設定、ccstatusline、plugins
-│   ├── agy/      # Antigravity CLI (agy)：全域指令、next steps hook、從 Claude 匯入的 plugins、MCPs
+│   ├── agy/      # Antigravity CLI (agy)：設定、全域指令、next steps hook、從 Claude 匯入的 plugins、MCPs
 │   ├── codex/    # Codex hooks 與 skills
 │   ├── global.md # Claude Code、Codex 與 agy 共用的全域指令
 │   └── mcps.txt  # Claude Code、Codex 與 agy 共用的 MCP servers
@@ -91,6 +91,16 @@ git skip git/configs/work.ini
 - 從 repo 檔案刪除某個 key，不會連帶刪除本機的設定。
 
 如果用 `/model` 或 `/config` 改了 repo 有追蹤的設定，下次安裝時會被改回來。請改為編輯 `agents/claude/settings.json`。
+
+## Antigravity CLI（agy）設定
+
+`agents/agy/install.sh` 不會用 symlink 連結 `agents/agy/settings.json`，因為 agy 會自己改寫 `~/.gemini/antigravity-cli/settings.json`。安裝時改用 `jq` 把 repo 裡的檔案合併進去：
+
+- repo 檔案中的 key 會覆蓋 `~/.gemini/antigravity-cli/settings.json` 中相同的 key。
+- 只存在本機的 key（例如 `permissions.allow`、`model` 或 `trustedWorkspaces`）會保留。
+- 從 repo 檔案刪除某個 key，不會連帶刪除本機的設定。
+
+如果用 `/config` 或 `/settings` 改了 repo 有追蹤的設定，下次安裝時會被改回來。請改為編輯 `agents/agy/settings.json`。
 
 ## Antigravity CLI（agy）Plugins
 

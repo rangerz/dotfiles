@@ -51,6 +51,9 @@ HOOKS_JSON="$TMP_HOME/.gemini/config/hooks.json"
 HOOK_COMMAND="bash \"$CUR_DIR/hooks/next_steps.sh\""
 printf '{"mine": {"Stop": [{"command": "echo keep"}]}}\n' >"$HOOKS_JSON"
 
+SETTINGS="$TMP_HOME/.gemini/antigravity-cli/settings.json"
+REPO_SETTINGS="$CUR_DIR/settings.json"
+
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
 [[ "$(cat "$AGY_LOG")" == $'plugin import claude\nmcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest\nmcp add atlassian https://mcp.atlassian.com/v2/mcp' ]] ||
     fail "plugins were not imported or MCP servers were not added with their args: $(cat "$AGY_LOG")"
@@ -58,6 +61,30 @@ PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh"
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "existing GEMINI.md was not backed up"
 [[ "$(jq -r '.["dotfiles-next-steps"].Stop[0].command' "$HOOKS_JSON")" == "$HOOK_COMMAND" ]] || fail "next steps hook was not registered"
 [[ "$(jq -r '.mine.Stop[0].command' "$HOOKS_JSON")" == "echo keep" ]] || fail "install changed another hook"
+[[ "$(jq -S . "$SETTINGS")" == "$(jq -S . "$REPO_SETTINGS")" ]] || fail "fresh install does not match the repo file"
+[[ -n "$(find "$SETTINGS" -perm 644)" ]] || fail "settings.json is not 0644"
+compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind for settings.json"
+
+# Existing settings with local-only keys and values the repo overrides
+cat >"$SETTINGS" <<'EOF'
+{
+  "model": "local-model",
+  "permissions": { "allow": ["command(ls)"], "deny": ["command(rm -rf)"] },
+  "trustedWorkspaces": ["/local/path"]
+}
+EOF
+PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
+[[ "$(jq -s '.[0] * .[1] == .[0]' "$SETTINGS" "$REPO_SETTINGS")" == true ]] || fail "repo values not applied"
+[[ "$(jq -c .permissions.allow "$SETTINGS")" == '["command(ls)"]' ]] || fail "lost local permissions.allow (shallow merge?)"
+[[ "$(jq -c .trustedWorkspaces "$SETTINGS")" == '["/local/path"]' ]] || fail "lost local-only key"
+[[ -n "$(find "$SETTINGS" -perm 644)" ]] || fail "settings.json is not 0644 after merge"
+compgen -G "$SETTINGS.*" >/dev/null && fail "temp file left behind"
+
+# Invalid local JSON: left untouched and install still succeeds
+echo '{oops' >"$SETTINGS"
+PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null 2>&1 || fail "install failed on invalid settings.json"
+[[ "$(cat "$SETTINGS")" == '{oops' ]] || fail "invalid settings.json was modified"
+rm -f "$SETTINGS"
 
 # The adapter asks for next steps once, only after a normal turn end without them
 TRANSCRIPT="$TMP_HOME/transcript.jsonl"

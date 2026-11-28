@@ -36,7 +36,7 @@ dotfiles/
 ├── brew/         # Homebrew packages and scripts
 ├── agents/       # AI coding agent configs
 │   ├── claude/   # Claude Code settings, ccstatusline, plugins
-│   ├── agy/      # Antigravity CLI (agy): instructions, next steps hook, plugins from Claude, MCPs
+│   ├── agy/      # Antigravity CLI (agy): settings, instructions, next steps hook, plugins from Claude, MCPs
 │   ├── codex/    # Codex hooks and skills
 │   ├── global.md # Global instructions shared by Claude Code, Codex and agy
 │   └── mcps.txt  # MCP servers shared by Claude Code, Codex and agy
@@ -91,6 +91,16 @@ Edit `agents/global.md` to change all of them. If any of these paths already exi
 - Removing a key from the repo file does not remove it locally.
 
 If you change a tracked setting with `/model` or `/config`, the next install changes it back. Edit `agents/claude/settings.json` instead.
+
+## Antigravity CLI (agy) Settings
+
+`agents/agy/install.sh` does not symlink `agents/agy/settings.json`, because agy rewrites `~/.gemini/antigravity-cli/settings.json` itself. It merges the repo file into it with `jq`:
+
+- Keys in the repo file overwrite the same keys in `~/.gemini/antigravity-cli/settings.json`.
+- Keys that exist only locally (for example `permissions.allow`, `model`, or `trustedWorkspaces`) are kept.
+- Removing a key from the repo file does not remove it locally.
+
+If you change a tracked setting with `/config` or `/settings`, the next install changes it back. Edit `agents/agy/settings.json` instead.
 
 ## Antigravity CLI (agy) Plugins
 

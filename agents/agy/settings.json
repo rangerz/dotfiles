@@ -1,0 +1,17 @@
+{
+  "agentMode": "accept-edits",
+  "toolPermission": "proceed-in-sandbox",
+  "verbosity": "low",
+  "enableTelemetry": false,
+  "statusLine": {
+    "enabled": true
+  },
+  "permissions": {
+    "deny": [
+      "command(rm -rf)",
+      "command(sudo)",
+      "write_file(.git/)",
+      "write_file(.env*)"
+    ]
+  }
+}
