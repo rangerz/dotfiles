@@ -1,5 +1,4 @@
 # Claude Code marketplaces and plugins, installed by agents/claude/install.sh
-# Claude Code marketplaces and plugins, installed by agents/claude/install.sh
 # Add-only: removing a line does not uninstall it
 #
 # marketplace <owner/repo>

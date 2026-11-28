@@ -1,5 +1,4 @@
 # Codex plugin marketplaces, added by agents/codex/install.sh before plugins.txt
-# Codex plugin marketplaces, added by agents/codex/install.sh before installing plugins
 # openai-curated is built in and needs no entry
 #
 # <name> <source>

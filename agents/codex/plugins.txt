@@ -1,5 +1,4 @@
 # Codex plugins, installed by agents/codex/install.sh
-# Codex plugins, installed by agents/codex/install.sh
 # Add-only: removing a line does not uninstall it
 #
 # <plugin>@<marketplace>

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CUR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-# Global instructions shared with Codex
+# Global instructions shared with Codex and agy
 AGENTS_MD="$(cd "$CUR_DIR/.." && pwd)/global.md"
 
 AGENT=claude
