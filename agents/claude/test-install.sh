@@ -110,4 +110,32 @@ env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
 [[ ! -L "$CLAUDE_MD" && "$(cat "$CLAUDE_MD")" == edited ]] || fail "uninstall did not restore CLAUDE.md from .bak"
 [[ ! -e "$CLAUDE_MD.bak" && ! -L "$CLAUDE_MD.bak" ]] || fail "uninstall left CLAUDE.md.bak"
 
+# ccstatusline: with no .bak, uninstall leaves a real copy so the status line survives removing the repo
+CCSTATUS="$TMP_HOME/.config/ccstatusline/settings.json"
+CCSTATUS_SRC="$CUR_DIR/ccstatusline.json"
+[[ ! -L "$CCSTATUS" ]] || fail "uninstall did not leave a copy of ccstatusline.json (still a link)"
+cmp -s "$CCSTATUS" "$CCSTATUS_SRC" || fail "uninstall did not leave a copy of ccstatusline.json"
+
+# A real .bak (the user's own config, backed up by install) is put back
+echo '{"mine":true}' >"$CCSTATUS"
+run_install
+[[ "$(readlink "$CCSTATUS")" == "$CCSTATUS_SRC" ]] || fail "install did not link ccstatusline.json"
+env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
+[[ ! -L "$CCSTATUS" && "$(cat "$CCSTATUS")" == '{"mine":true}' ]] || fail "uninstall did not restore ccstatusline .bak"
+[[ ! -e "$CCSTATUS.bak" && ! -L "$CCSTATUS.bak" ]] || fail "uninstall left ccstatusline .bak"
+
+# A dangling .bak is not restored (it would break the status line); a copy is made instead
+rm "$CCSTATUS"
+run_install
+ln -s "$TMP_HOME/gone.json" "$CCSTATUS.bak"
+env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null
+[[ ! -L "$CCSTATUS" ]] || fail "uninstall restored a dangling ccstatusline .bak (still a link)"
+cmp -s "$CCSTATUS" "$CCSTATUS_SRC" || fail "uninstall restored a dangling ccstatusline .bak"
+
+# A link that is not ours is left alone
+rm -f "$CCSTATUS" "$CCSTATUS.bak"
+ln -s "$TMP_HOME/elsewhere.json" "$CCSTATUS"
+env -u XDG_CONFIG_HOME HOME="$TMP_HOME" "$CUR_DIR/uninstall.sh" >/dev/null || fail "uninstall failed on a foreign ccstatusline link"
+[[ "$(readlink "$CCSTATUS")" == "$TMP_HOME/elsewhere.json" ]] || fail "uninstall changed a ccstatusline link it did not create"
+
 echo "[claude test] OK"
