@@ -118,7 +118,9 @@ rm "$TRANSCRIPT"
 [[ "$(jq -r .statusLine.command "$REPO_SETTINGS")" == 'bash ~/.dotfiles/agents/agy/statusline.sh' ]] || fail "statusLine does not run the repo script"
 SL_REPO="$TMP_HOME/project"
 git init -q -b sl-branch "$SL_REPO"
-statusline() { HOME="$TMP_HOME" bash "$CUR_DIR/statusline.sh" <<<"$1"; }
+# TMPDIR keeps the git cache inside the throwaway HOME
+mkdir -p "$TMP_HOME/tmp"
+statusline() { HOME="$TMP_HOME" TMPDIR="$TMP_HOME/tmp" bash "$CUR_DIR/statusline.sh" <<<"$1"; }
 # Compare the text with colors stripped; the powerline arrows stay
 plain() { statusline "$1" | sed $'s/\e\\[[0-9;]*m//g'; }
 payload="$(jq -cn --arg dir "$SL_REPO" '{
@@ -150,6 +152,28 @@ g add b.txt && g commit -qm two
 printf 'more\n' >>"$SL_GIT/a.txt"
 [[ "$(plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1)" == " owner/repo $A main $A +1 -0 $A ↑1 $A ~/gitproj $A" ]] ||
     fail "status line git line is wrong: $(plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1)"
+# Git output is cached for 5s: a new change shows only once the cache is older than that
+printf 'more\n' >>"$SL_GIT/a.txt"
+plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1 | grep -qF ' +1 -0 ' || fail "status line did not reuse the fresh git cache"
+for f in "$TMP_HOME/tmp"/agy-statusline-*/*; do
+    sed 's/^[0-9]*/0/' "$f" >"$f.old" && mv "$f.old" "$f" # age every cache entry past 5s
+done
+plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1 | grep -qF ' +2 -0 ' || fail "status line did not refresh an expired git cache"
+# A corrupt cache entry is rebuilt instead of breaking the status line
+for f in "$TMP_HOME/tmp"/agy-statusline-*/*; do echo garbage >"$f"; done
+plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1 | grep -qF ' +2 -0 ' || fail "status line did not rebuild a corrupt git cache"
+# The cache dir is private to the user
+[[ -n "$(find "$TMP_HOME/tmp"/agy-statusline-* -maxdepth 0 -perm 700)" ]] || fail "status line cache dir is not 0700"
+# A cache dir someone else owns (here a link to /, owned by root) must not break the status line.
+# shortcut: this can't prove the -O check itself (a non-root test can't plant entries in a dir it doesn't own)
+if [[ "$(id -u)" != 0 ]]; then
+    FOREIGN_TMP="$TMP_HOME/foreign-tmp"
+    mkdir -p "$FOREIGN_TMP" && ln -s / "$FOREIGN_TMP/agy-statusline-$(id -u)"
+    foreign() { HOME="$TMP_HOME" TMPDIR="$FOREIGN_TMP" bash "$CUR_DIR/statusline.sh" <<<"{\"cwd\": \"$SL_GIT\"}" | tail -n 1; }
+    foreign >/dev/null
+    printf 'more\n' >>"$SL_GIT/a.txt"
+    foreign | grep -qF ' +3 -0 ' || fail "status line broke on a cache dir it does not own"
+fi
 # Without vcs.branch the branch comes from git
 plain "{\"cwd\": \"$SL_REPO\"}" | grep -qF ' sl-branch ' || fail "status line did not fall back to the git branch"
 # Missing fields fall back instead of shifting columns; no cwd means no git or directory line

@@ -70,19 +70,45 @@ done
 flush
 
 # Line 3: origin owner/repo, branch, changes, ahead/behind, directory
-if [[ -n "$cwd" ]] && git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
-    # shortcut: git runs on every refresh (agy throttles to 300ms); add a cache if big repos lag
-    repo="$(git -C "$cwd" remote get-url origin 2>/dev/null | sed -E 's#(\.git)?$##; s#.*[:/]([^/]+/[^/]+)$#\1#' || true)"
-    [[ -n "$branch" ]] || branch="$(git -C "$cwd" branch --show-current 2>/dev/null || true)"
-    changes="$(git -C "$cwd" diff --numstat HEAD 2>/dev/null | awk '{a += $1; d += $2} END {if (a + d) printf "+%d -%d", a, d}' || true)"
-    [[ -n "$changes" || "$dirty" != true ]] || changes="●"
-    ahead_behind="$(git -C "$cwd" rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null |
+US=$'\x1f'
+git_info() { # <dir> -> repo, branch, changes, ahead/behind joined by \x1f; nothing outside a repo
+    git -C "$1" rev-parse --git-dir >/dev/null 2>&1 || return 0
+    local repo branch changes ahead_behind
+    repo="$(git -C "$1" remote get-url origin 2>/dev/null | sed -E 's#(\.git)?$##; s#.*[:/]([^/]+/[^/]+)$#\1#' || true)"
+    branch="$(git -C "$1" branch --show-current 2>/dev/null || true)"
+    changes="$(git -C "$1" diff --numstat HEAD 2>/dev/null | awk '{a += $1; d += $2} END {if (a + d) printf "+%d -%d", a, d}' || true)"
+    ahead_behind="$(git -C "$1" rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null |
         awk '{s = ""; if ($2) s = "↑" $2; if ($1) s = s (s ? " " : "") "↓" $1; print s}' || true)"
-    seg "$PURPLE" "$DARK" "$repo"
-    seg "$LAVENDER" "$LIGHT" "$branch"
-    seg "$YELLOW" "$DARK" "$changes"
-    seg "$FROST" "$DARK" "$ahead_behind"
+    printf '%s' "$repo$US$branch$US$changes$US$ahead_behind"
+}
+# Cache git output per directory for 5s, like ccstatusline's gitCacheTtlSeconds: agy refreshes up to every 300ms
+info=""
+if [[ -n "$cwd" ]]; then
+    cache_dir="${TMPDIR:-/tmp}/agy-statusline-$UID"
+    # No -p: the parent ($TMPDIR or /tmp) exists, and -m would not apply to parents anyway
+    [[ -d "$cache_dir" ]] || mkdir -m 700 "$cache_dir" 2>/dev/null || true
+    # On a shared /tmp another user could create this dir first and plant entries: use it only if it is ours
+    if [[ -O "$cache_dir" ]]; then
+        cache="$cache_dir/$(printf '%s' "$cwd" | cksum | cut -d' ' -f1)"
+        now="$(date +%s)"
+        ts=""
+        [[ -f "$cache" ]] && IFS="$US" read -r ts info <"$cache"
+        if [[ ! "$ts" =~ ^[0-9]+$ ]] || ((now - ts >= 5)); then
+            info="$(git_info "$cwd")"
+            # Write then rename, so a status line running in another agy session never reads half a file
+            { tmp="$(mktemp "$cache_dir/.XXXXXX")" && printf '%s\n' "$now$US$info" >"$tmp" && mv "$tmp" "$cache"; } 2>/dev/null || true
+        fi
+    else
+        info="$(git_info "$cwd")"
+    fi
 fi
+IFS="$US" read -r repo git_branch changes ahead_behind <<<"$info"
+[[ -n "$branch" ]] || branch="$git_branch"
+[[ -z "$info" || -n "$changes" || "$dirty" != true ]] || changes="●"
+seg "$PURPLE" "$DARK" "$repo"
+seg "$LAVENDER" "$LIGHT" "$branch"
+seg "$YELLOW" "$DARK" "$changes"
+seg "$FROST" "$DARK" "$ahead_behind"
 if [[ -n "$cwd" ]]; then
     # Prefix strip, not ${cwd/#$HOME/\~}: bash 3.2 (macOS /bin/bash) keeps the backslash in that replacement
     [[ "$cwd" == "$HOME" || "$cwd" == "$HOME"/* ]] && cwd="~${cwd#"$HOME"}"
