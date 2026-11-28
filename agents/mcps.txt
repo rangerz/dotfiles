@@ -1,5 +1,5 @@
-# MCP servers shared by Claude Code (user scope) and Codex,
-# installed by agents/claude/install.sh and agents/codex/install.sh
+# MCP servers shared by Claude Code (user scope), Codex and agy,
+# installed by agents/claude/install.sh, agents/codex/install.sh and agents/agy/install.sh
 # Add-only: removing a line does not remove the server
 #
 # <name> <command> [args...]   (args are split on spaces; no quoting)

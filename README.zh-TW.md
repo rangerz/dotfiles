@@ -36,9 +36,10 @@ dotfiles/
 ├── brew/         # Homebrew 套件與腳本
 ├── agents/       # AI coding agent 設定
 │   ├── claude/   # Claude Code 設定、ccstatusline、plugins
+│   ├── agy/      # Antigravity CLI (agy)：全域指令、從 Claude 匯入的 plugins、MCPs
 │   ├── codex/    # Codex hooks 與 skills
-│   ├── global.md # Claude Code 與 Codex 共用的全域指令
-│   └── mcps.txt  # Claude Code 與 Codex 共用的 MCP servers
+│   ├── global.md # Claude Code、Codex 與 agy 共用的全域指令
+│   └── mcps.txt  # Claude Code、Codex 與 agy 共用的 MCP servers
 ├── docs/         # 筆記：macOS、WSL、winget、vscode 等
 ├── git/          # Git 設定、alias、workflow、commit 範本
 ├── macos/        # macOS 輔助腳本（例如修正 hostname）
@@ -73,12 +74,13 @@ git skip git/configs/work.ini
 
 ## 全域 Agent 指令
 
-`agents/global.md` 是 Claude Code 與 Codex 共用的全域指令。安裝程式會把它連結到：
+`agents/global.md` 是 Claude Code、Codex 與 agy 共用的全域指令。安裝程式會把它連結到：
 
 - `~/.claude/CLAUDE.md`（`agents/claude/install.sh`）
 - `~/.codex/AGENTS.md`（`agents/codex/install.sh`）
+- `~/.gemini/GEMINI.md`（`agents/agy/install.sh`）
 
-要同時修改兩邊，編輯 `agents/global.md` 即可。如果這兩個路徑已經有一般檔案，或是指向其他位置的連結，安裝程式會先把它改名成 `.bak`。原本已經存在的 `.bak` 會改名成 `.bak.<時間戳記>` 保留下來，所以 `.bak` 永遠是最後一次被移開的檔案。解除安裝時會移除連結，並把 `.bak` 搬回原位。
+要同時修改全部，編輯 `agents/global.md` 即可。如果這些路徑已經有一般檔案，或是指向其他位置的連結，安裝程式會先把它改名成 `.bak`。原本已經存在的 `.bak` 會改名成 `.bak.<時間戳記>` 保留下來，所以 `.bak` 永遠是最後一次被移開的檔案。解除安裝時會移除連結，並把 `.bak` 搬回原位。
 
 ## Claude Code 設定
 
@@ -89,6 +91,14 @@ git skip git/configs/work.ini
 - 從 repo 檔案刪除某個 key，不會連帶刪除本機的設定。
 
 如果用 `/model` 或 `/config` 改了 repo 有追蹤的設定，下次安裝時會被改回來。請改為編輯 `agents/claude/settings.json`。
+
+## Antigravity CLI（agy）Plugins
+
+agy 無法從 GitHub 加入 marketplace，所以沒有自己的 plugin 清單。`agents/agy/install.sh` 會執行 `agy plugin import claude`，把 Claude Code 依 `agents/claude/plugins.txt` 安裝的 plugins 複製過去。要幫 agy 加 plugin，就加到 `agents/claude/plugins.txt`。
+
+- topgrade 負責同步：它更新完 Claude Code 的 plugins 後，會執行 `agy plugin import claude --force`（見 `topgrade/topgrade.toml`）。在 agy 裡停用的 plugin 會維持停用。
+- 從 Claude Code 移除的 plugin，不會從 agy 移除。
+- 只為 Claude Code 寫的 plugin 在 agy 裡沒有作用。例如 `next-steps` 只有一個 Claude Code hook（`hooks/register.tsx`），agy 匯入後不會有任何元件。
 
 ## 授權
 

@@ -51,6 +51,7 @@ main() {
     "$DOTFILES/topgrade/uninstall.sh"
     "$DOTFILES/agents/claude/uninstall.sh"
     "$DOTFILES/agents/codex/uninstall.sh"
+    "$DOTFILES/agents/agy/uninstall.sh"
 
     # Runs after shell/uninstall.sh: it renames ~/.zshrc and restores the pre-oh-my-zsh one
     "$DOTFILES/oh-my-zsh/uninstall.sh" || echo "oh-my-zsh uninstall failed, continuing"

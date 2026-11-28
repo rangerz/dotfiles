@@ -24,7 +24,7 @@ download_dotfiles() {
 }
 
 # Install order matters: brew provides the tools that the later modules use
-MODULES="wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude codex"
+MODULES="wsl zsh oh-my-zsh brew shell git ssh vim mise topgrade claude codex agy"
 
 usage() {
     echo "Usage: install.sh [--only <module>[,<module>...]]"
@@ -60,6 +60,7 @@ run_module() {
     wsl) "$DOTFILES/wsl/install.sh" || echo "WSL setup skipped/failed, continuing" ;;
     codex) "$DOTFILES/agents/codex/install.sh" ;;
     claude) "$DOTFILES/agents/claude/install.sh" ;;
+    agy) "$DOTFILES/agents/agy/install.sh" ;;
     *) "$DOTFILES/$1/install.sh" ;;
     esac
 }

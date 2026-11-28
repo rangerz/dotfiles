@@ -36,9 +36,10 @@ dotfiles/
 ├── brew/         # Homebrew packages and scripts
 ├── agents/       # AI coding agent configs
 │   ├── claude/   # Claude Code settings, ccstatusline, plugins
+│   ├── agy/      # Antigravity CLI (agy): instructions, plugins from Claude, MCPs
 │   ├── codex/    # Codex hooks and skills
-│   ├── global.md # Global instructions shared by Claude Code and Codex
-│   └── mcps.txt  # MCP servers shared by Claude Code and Codex
+│   ├── global.md # Global instructions shared by Claude Code, Codex and agy
+│   └── mcps.txt  # MCP servers shared by Claude Code, Codex and agy
 ├── docs/         # Notes: macOS, WSL, winget, vscode, etc.
 ├── git/          # Git config, aliases, workflow, commit templates
 ├── macos/        # macOS helper scripts (e.g. fix hostname)
@@ -73,12 +74,13 @@ git skip git/configs/work.ini
 
 ## Global Agent Instructions
 
-`agents/global.md` holds the global instructions that Claude Code and Codex share. The installers link it to:
+`agents/global.md` holds the global instructions that Claude Code, Codex and agy share. The installers link it to:
 
 - `~/.claude/CLAUDE.md` (`agents/claude/install.sh`)
 - `~/.codex/AGENTS.md` (`agents/codex/install.sh`)
+- `~/.gemini/GEMINI.md` (`agents/agy/install.sh`)
 
-Edit `agents/global.md` to change both. If either path already exists as a real file or a link to somewhere else, the installer renames it to `.bak` first. An older `.bak` is kept as `.bak.<timestamp>`, so `.bak` always holds the file moved away last. Uninstall removes the link and moves `.bak` back.
+Edit `agents/global.md` to change all of them. If any of these paths already exists as a real file or a link to somewhere else, the installer renames it to `.bak` first. An older `.bak` is kept as `.bak.<timestamp>`, so `.bak` always holds the file moved away last. Uninstall removes the link and moves `.bak` back.
 
 ## Claude Code Settings
 
@@ -89,6 +91,14 @@ Edit `agents/global.md` to change both. If either path already exists as a real 
 - Removing a key from the repo file does not remove it locally.
 
 If you change a tracked setting with `/model` or `/config`, the next install changes it back. Edit `agents/claude/settings.json` instead.
+
+## Antigravity CLI (agy) Plugins
+
+agy cannot add marketplaces from GitHub, so it has no plugin list of its own. `agents/agy/install.sh` runs `agy plugin import claude`, which copies the plugins Claude Code installed from `agents/claude/plugins.txt`. To add a plugin to agy, add it to `agents/claude/plugins.txt`.
+
+- topgrade keeps them in sync: after it updates the Claude Code plugins, it runs `agy plugin import claude --force` (see `topgrade/topgrade.toml`). Plugins you disabled in agy stay disabled.
+- Plugins removed from Claude Code are not removed from agy.
+- Plugins built only for Claude Code do nothing in agy. For example, `next-steps` only has a Claude Code hook (`hooks/register.tsx`), so agy imports it without any component.
 
 ## License
 
