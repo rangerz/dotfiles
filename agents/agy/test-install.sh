@@ -118,21 +118,44 @@ rm "$TRANSCRIPT"
 [[ "$(jq -r .statusLine.command "$REPO_SETTINGS")" == 'bash ~/.dotfiles/agents/agy/statusline.sh' ]] || fail "statusLine does not run the repo script"
 SL_REPO="$TMP_HOME/project"
 git init -q -b sl-branch "$SL_REPO"
-SEP=$' \e[2m|\e[0m '
 statusline() { HOME="$TMP_HOME" bash "$CUR_DIR/statusline.sh" <<<"$1"; }
+# Compare the text with colors stripped; the powerline arrows stay
+plain() { statusline "$1" | sed $'s/\e\\[[0-9;]*m//g'; }
 payload="$(jq -cn --arg dir "$SL_REPO" '{
-    cwd: $dir, workspace: {current_dir: $dir}, cycle_mode: "accept-edits",
-    model: {display_name: "Gemini 4 Argon (Medium)"}, context_window: {used_percentage: 14.24},
+    agent_state: "working", cwd: $dir, workspace: {current_dir: $dir}, cycle_mode: "accept-edits",
+    model: {display_name: "Gemini 4 Argon (Medium)", effort: "medium"}, context_window: {used_percentage: 14.24},
     quota: {
-        "gemini-weekly": {remaining_fraction: 0.9378},
+        "gemini-weekly": {remaining_fraction: 0.9378, reset_in_seconds: 560580},
         "gemini-daily": {remaining_fraction: 0.5, disabled: true},
         "g1-credits": {remaining_amount: 120}
-    }
+    },
+    cost: {total_usd: 0.4213}, vcs: {type: "git", branch: "agy-branch", dirty: true}
 }')"
-[[ "$(statusline "$payload")" == "Gemini 4 Argon (Medium)${SEP}accept-edits${SEP}sl-branch${SEP}ctx 14%${SEP}weekly 93%${SEP}~/project" ]] ||
-    fail "status line did not render the full payload: $(statusline "$payload" | cat -v)"
-# Missing fields fall back instead of shifting columns; no cwd means no branch or directory
-[[ "$(statusline '{}')" == "-${SEP}default${SEP}ctx 0%" ]] || fail "status line mishandled an empty payload: $(statusline '{}' | cat -v)"
+A=$'\xee\x82\xb0' # powerline arrow, written as bytes so no invisible glyph sits in the source
+expected=" ⚙ working $A Gemini 4 Argon $A medium $A ctx 14% $A accept-edits $A"$'\n'
+expected+=" weekly 93% ↻155h $A \$0.42 $A"$'\n'
+expected+=" agy-branch $A ● $A ~/project $A"
+[[ "$(plain "$payload")" == "$expected" ]] || fail "status line did not render the full payload: $(plain "$payload")"
+# Git line: owner/repo from an https origin, +/- line counts and ↑ahead from git itself
+SL_GIT="$TMP_HOME/gitproj"
+git init -q -b main "$SL_GIT"
+g() { git -C "$SL_GIT" -c user.name=test -c user.email=test@example.com -c commit.gpgSign=false "$@"; }
+printf 'one\n' >"$SL_GIT/a.txt"
+g add a.txt && g commit -qm one
+g remote add origin https://github.com/owner/repo.git
+g update-ref refs/remotes/origin/main HEAD
+g branch -q --set-upstream-to=origin/main
+printf 'two\n' >"$SL_GIT/b.txt"
+g add b.txt && g commit -qm two
+printf 'more\n' >>"$SL_GIT/a.txt"
+[[ "$(plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1)" == " owner/repo $A main $A +1 -0 $A ↑1 $A ~/gitproj $A" ]] ||
+    fail "status line git line is wrong: $(plain "{\"cwd\": \"$SL_GIT\"}" | tail -n 1)"
+# Without vcs.branch the branch comes from git
+plain "{\"cwd\": \"$SL_REPO\"}" | grep -qF ' sl-branch ' || fail "status line did not fall back to the git branch"
+# Missing fields fall back instead of shifting columns; no cwd means no git or directory line
+[[ "$(plain '{}')" == " ● ready $A - $A ctx 0% $A default $A" ]] || fail "status line mishandled an empty payload: $(plain '{}')"
+# default mode (a mode that did not apply) is flagged in red
+statusline '{}' | grep -qF $'\e[48;5;131m default' || fail "default mode is not shown in red"
 
 PATH="$MOCK_BIN:$PATH" AGY_LOG="$AGY_LOG" HOME="$TMP_HOME" "$CUR_DIR/install.sh" >/dev/null
 [[ "$(cat "$GEMINI_MD.bak")" == "my instructions" ]] || fail "rerun overwrote the GEMINI.md backup"
